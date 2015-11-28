@@ -1,7 +1,7 @@
 # QShell
 
 A shell-like plug and play widget made with Qt, supporting QtScript by default. My requirement was to have a reusable widget ready to 
-be promoted to QPlainTextEdit.
+be promoted from QPlainTextEdit.
 
 Some features:
 
