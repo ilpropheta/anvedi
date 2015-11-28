@@ -7,6 +7,7 @@
 class QStringList;
 class QString;
 class QShell;
+class ClearConsole;
 
 class QSHELL_EXPORT QShellEngine_Qt : public QShellEngine
 {
@@ -17,6 +18,7 @@ public:
 	QStringList Suggest(const QString& value);
 	std::unique_ptr<QShellEngineResult> LoadScript(const QString& toEval);
 	void RegisterPrintFunction(QPlainTextEdit& console);
+	ClearConsole& RegisterAndGetClc();
 
 protected:
 	// just a sort of decoration of this engine

@@ -6,6 +6,7 @@
 #include "KeyPressHandler.h"
 
 class QShell;
+class ClearConsole;
 
 typedef std::vector<IKeyPressHandler*> HandlersVec;
 
@@ -20,6 +21,7 @@ public:
 	void onContextMenuEvent(QContextMenuEvent *event);
 	void onInsertFromMimeData ( const QMimeData * source );
 	void SetHandlers(HandlersVec h);
+	void SetClc(ClearConsole& clc);
 private slots:
 	void onClearAction();
 	void onLoadScriptAction();

@@ -10,6 +10,7 @@
 #include "ScriptEvaluatorKeyHandler.h"
 #include "CompleterKeyHandler.h"
 #include "DefaultKeyHandler.h"
+#include "ClearConsole.h"
 
 using namespace std;
 
@@ -99,4 +100,12 @@ void CommandProvider::onLoadScriptAction()
 		emit ScriptLoadRequested(file);
 	}
 }
+
+void CommandProvider::SetClc(ClearConsole& clc)
+{
+	connect(&clc, &ClearConsole::ClcCalled, [this]{
+		shell.clear();
+	});
+}
+
 // *************************************************** Context Menu actions

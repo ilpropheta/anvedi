@@ -12,6 +12,7 @@ QShell::QShell( QWidget* parent, const QString& promptString /*= "Q> "*/ )
 	QObject::connect(&commands, SIGNAL(ScriptLoadRequested(const QString&)), this, SIGNAL(LoadScriptRequested(const QString&)));
 	auto engine = std::make_shared<QShellEngine_Qt>();
 	engine->RegisterPrintFunction(*this);
+	commands.SetClc(engine->RegisterAndGetClc());
 	SetEngine(engine);
 }
 

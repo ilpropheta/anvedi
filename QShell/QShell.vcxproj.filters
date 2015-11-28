@@ -137,6 +137,15 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="qshell.cpp" />
+    <ClCompile Include="ClearConsole.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ClearConsole.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ClearConsole.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_ShellWidget.h">
@@ -208,5 +217,8 @@
       <Filter>Core</Filter>
     </CustomBuild>
     <CustomBuild Include="qshell.h" />
+    <CustomBuild Include="ClearConsole.h">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

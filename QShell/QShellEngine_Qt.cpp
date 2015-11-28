@@ -3,12 +3,19 @@
 #include "qshell.h"
 #include "QShellEngineResult_qt.h"
 #include "QShellScriptUtilis.h"
-
+#include "ClearConsole.h"
 
 QShellEngine_Qt::QShellEngine_Qt()
 {
 	m_engine.globalObject().setProperty("exit", m_engine.newFunction(QtShellScriptUtils::ExitFunction));
 	m_engine.globalObject().setProperty("load", m_engine.newFunction(QtShellScriptUtils::LoadScript, 1));
+}
+
+ClearConsole& QShellEngine_Qt::RegisterAndGetClc()
+{
+	static ClearConsole clc;
+	m_engine.globalObject().setProperty("clc", m_engine.newQObject(&clc));
+	return clc;
 }
 
 void QShellEngine_Qt::RegisterPrintFunction(QPlainTextEdit& console)
