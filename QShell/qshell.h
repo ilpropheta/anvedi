@@ -6,6 +6,7 @@
 #include "CommandProvider.h"
 #include "QShellEngine.h"
 #include "KeyHandlersManager.h"
+#include "QShellEngine_Qt.h"
 
 class QSHELL_EXPORT QShell : public QPlainTextEdit
 {
@@ -15,6 +16,7 @@ public:
 
 	// setters
 	void SetEngine(std::shared_ptr<QShellEngine> engine);
+	void SetEngine(std::shared_ptr<QShellEngine_Qt> engine);
 	void SetPrompt(const QString& newPrompt);
 	void SetHandlers(HandlersVec handlers);
 

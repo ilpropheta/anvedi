@@ -36,6 +36,13 @@ void QShell::SetEngine( std::shared_ptr<QShellEngine> engine )
 	handlersMananger.SetEngine(engine);
 }
 
+void QShell::SetEngine(std::shared_ptr<QShellEngine_Qt> engine)
+{
+	engine->RegisterPrintFunction(*this);
+	commands.SetClc(engine->RegisterAndGetClc());
+	handlersMananger.SetEngine(engine);
+}
+
 // *************************************************************** handlers
 void QShell::keyPressEvent( QKeyEvent *e )
 {
