@@ -1,0 +1,14 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Anvedi/GeneratedFiles
+/Anvedi/x64
+/QShell/GeneratedFiles
+/QShell/x64/Debug
+/x64/Debug
+/Anvedi.sdf
+/Anvedi.v12.suo
+/Anvedi/Anvedi.v12.suo
+/Anvedi/Anvedi.vcxproj.user
+/QShell/QShell.vcxproj.user
