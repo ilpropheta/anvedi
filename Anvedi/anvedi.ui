@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>654</width>
+    <width>736</width>
     <height>566</height>
    </rect>
   </property>
@@ -41,7 +41,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>654</width>
+     <width>736</width>
      <height>21</height>
     </rect>
    </property>
@@ -234,7 +234,23 @@
         </widget>
        </item>
        <item>
-        <widget class="QTableWidget" name="signalList"/>
+        <widget class="QTableWidget" name="signalList">
+         <column>
+          <property name="text">
+           <string>Signal</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Cursor Value</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Color</string>
+          </property>
+         </column>
+        </widget>
        </item>
       </layout>
      </item>
@@ -291,8 +307,42 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionImport</sender>
+   <signal>triggered()</signal>
+   <receiver>AnvediClass</receiver>
+   <slot>OnDataImport()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>326</x>
+     <y>282</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionClear</sender>
+   <signal>triggered()</signal>
+   <receiver>AnvediClass</receiver>
+   <slot>OnDataClear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>326</x>
+     <y>282</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>OnExit()</slot>
+  <slot>OnDataImport()</slot>
+  <slot>OnDataClear()</slot>
  </slots>
 </ui>

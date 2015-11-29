@@ -23,9 +23,10 @@ public:
 
 	// setters
 	void setStep(qreal newStep);
-
 public slots:
 	void OnMouseEvent(QMouseEvent*);
+signals:
+	void CursorChanged(qreal);
 private:
 	void move(qreal delta);
 

@@ -13,7 +13,14 @@ public:
 	Anvedi(QWidget *parent = 0);
 public slots:
 	void OnExit();
+	void OnDataImport();
+	void OnDataClear();
+	void OnCursorChanged(qreal);
+signals:
+	void GraphColorChanged(int);
 private:
+	void AddGraph(const QString& name, const QVector<qreal>& x, const QVector<qreal>& y);
+	
 	Ui::AnvediClass ui;
 
 	// graphic

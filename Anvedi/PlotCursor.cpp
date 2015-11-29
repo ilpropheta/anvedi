@@ -44,6 +44,8 @@ void PlotCursor::set(qreal xVal)
 	const auto y2 = cursor->point2->coords().y();
 	cursor->point1->setCoords(xVal, y1);
 	cursor->point2->setCoords(xVal, y2);
+
+	emit CursorChanged(xVal);
 }
 
 void PlotCursor::move(qreal delta)
