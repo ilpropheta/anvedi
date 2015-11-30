@@ -5,6 +5,7 @@ class QCPItemStraightLine;
 class QCustomPlot;
 class QMouseEvent;
 class QKeyEvent;
+class QCPItemText;
 
 class PlotCursor : public QObject
 {
@@ -23,7 +24,7 @@ public:
 
 	// setters
 	void setStep(qreal newStep);
-public slots:
+	public slots:
 	void OnMouseEvent(QMouseEvent*);
 signals:
 	void CursorChanged(qreal);

@@ -11,50 +11,30 @@ Anvedi::Anvedi(QWidget *parent)
 	QObject::connect(cursor.get(), SIGNAL(CursorChanged(qreal)), this, SLOT(OnCursorChanged(qreal)));
 	ui.console->SetEngine(std::make_shared<QShellEngine_Qt>());
 
-	const auto& tableHFont = ui.signalList->horizontalHeader()->font();
-	QFontMetrics fm(tableHFont);
-	auto colorLabelWidth = fm.width(ui.signalList->horizontalHeaderItem(2)->text());
-	ui.signalList->setColumnWidth(2, colorLabelWidth + 7);
-	
-	QVector<double> x(101), y(101); // initialize with entries 0..100
-	for (int i = 0; i < 101; ++i)
-	{
-		x[i] = i / 50.0 - 1; // x goes from -1 to 1
-		y[i] = x[i] * x[i]; // let's plot a quadratic function
-	}
-	AddGraph("parabola", x, y);
+	signalListPresenter = make_unique<SignalListPresenter>(ui.signalList, ui.signalCountLabel);
+	graphPresenter = make_unique<GraphPresenter>(ui.plot);
+
+	// list -> graph
+	QObject::connect(signalListPresenter.get(), SIGNAL(GraphColorChanged(const QString&, const QColor&)), graphPresenter.get(), SLOT(OnGraphColorChanged(const QString&, const QColor&)));
+	QObject::connect(signalListPresenter.get(), SIGNAL(DisplayGraph(const QString&)), graphPresenter.get(), SLOT(OnSignalAdded(const QString&)));
+	QObject::connect(signalListPresenter.get(), SIGNAL(HideGraph(const QString&)), graphPresenter.get(), SLOT(OnSignalRemoved(const QString&)));
+
+	// main controller -> list
+	QObject::connect(this, SIGNAL(NewData(const DataMap&)), signalListPresenter.get(), SLOT(OnNewData(const DataMap&)));
+	QObject::connect(this, &Anvedi::NewData, [this](){
+		emit ui.filterEdit->textEdited(ui.filterEdit->text());
+	});
+	QObject::connect(ui.filterEdit, SIGNAL(textEdited(QString)), signalListPresenter.get(), SLOT(OnSignalFilterEdited(const QString&)));
+	QObject::connect(this, SIGNAL(DataCleared()), signalListPresenter.get(), SLOT(OnClearData()));
+
+	// main controller -> graph
+	QObject::connect(this, SIGNAL(NewData(const DataMap&)), graphPresenter.get(), SLOT(OnNewData(const DataMap&)));
+	QObject::connect(this, SIGNAL(DataCleared()), graphPresenter.get(), SLOT(OnClearData()));
 }
 
 void Anvedi::AddGraph(const QString& name, const QVector<qreal>& x, const QVector<qreal>& y)
 {
-	auto plot = ui.plot;
-	auto myY = plot->axisRect(0)->addAxis(QCPAxis::atLeft);
-	myY->setVisible(false);
-	auto graph = plot->addGraph(plot->xAxis, myY);
-	plot->graph(0)->setPen(QPen(Qt::blue));
-	graph->setData(x, y);
-	graph->rescaleAxes();
-	plot->replot();
-
-	auto signalList = ui.signalList;
-	const auto currentCount = signalList->rowCount();
-	signalList->setRowCount(currentCount + 1);
-	auto chanNameItem = new QTableWidgetItem(name);
-	chanNameItem->setCheckState(Qt::Unchecked);
-	auto chanValueItem = new QTableWidgetItem();
-	chanValueItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-	auto colorButton = new QPushButton();
-	colorButton->setStyleSheet(QString("QPushButton {background-color: blue;}"));
-	signalList->setItem(currentCount, 0, chanNameItem);
-	signalList->setItem(currentCount, 1, chanValueItem);
-	signalList->setCellWidget(currentCount, 2, colorButton);
-	colorButton->setAutoFillBackground(true);
-	QObject::connect(colorButton, &QPushButton::clicked, [colorButton, currentCount, this]{
-		emit GraphColorChanged(currentCount);
-		//auto newColor = OnActionChangeColor(i - 1);
-		//QString s = "background-color: ";
-		//colorButton->setStyleSheet(s + newColor.name());
-	});
+	emit GraphAdded(name);
 }
 
 void Anvedi::OnExit()
@@ -64,16 +44,31 @@ void Anvedi::OnExit()
 
 void Anvedi::OnDataImport()
 {
-	auto files = QFileDialog::getOpenFileNames(this, "Import files", ".", "*.*");
+	//auto files = QFileDialog::getOpenFileNames(this, "Import files", ".", "*.*");
 
+	QVector<double> x(101), y(101), x1(101), y1(101);
+	for (int i = 0; i < 101; ++i)
+	{
+		x[i] = i / 50.0 - 1; // x goes from -1 to 1
+		y[i] = x[i] * x[i]; // let's plot a quadratic function
+	}
+
+	for (int i = 0; i < 101; ++i)
+	{
+		x1[i] = i / 50.0 - 1; // x goes from -1 to 1
+		y1[i] = x1[i] * x1[i] * x1[i]; // let's plot a quadratic function
+	}
+
+	emit NewData({ { "parabola", { x, y } } });
+	emit NewData({ { "pippo", { x1, y1 } } });
 }
 
 void Anvedi::OnDataClear()
 {
-	ui.plot->clearGraphs();
-	ui.plot->replot();
+	emit DataCleared();
 }
 
+// to move
 void Anvedi::OnCursorChanged(qreal xVal)
 {
 	auto plot = ui.plot;

@@ -5,26 +5,34 @@
 #include "ui_anvedi.h"
 #include "PlotCursor.h"
 #include <memory>
+#include "SignalListPresenter.h"
+#include "GraphPresenter.h"
+#include <map>
 
 class Anvedi : public QMainWindow
 {
 	Q_OBJECT
 public:
 	Anvedi(QWidget *parent = 0);
-public slots:
+	public slots:
 	void OnExit();
 	void OnDataImport();
 	void OnDataClear();
 	void OnCursorChanged(qreal);
 signals:
-	void GraphColorChanged(int);
+	void NewData(const DataMap&);
+	void DataCleared();
+	void GraphAdded(const QString&);
 private:
 	void AddGraph(const QString& name, const QVector<qreal>& x, const QVector<qreal>& y);
-	
+
 	Ui::AnvediClass ui;
 
 	// graphic
 	std::unique_ptr<PlotCursor> cursor;
+
+	std::unique_ptr<SignalListPresenter> signalListPresenter;
+	std::unique_ptr<GraphPresenter> graphPresenter;
 };
 
 #endif // ANVEDI_H

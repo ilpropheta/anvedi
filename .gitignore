@@ -10,6 +10,8 @@
 /Anvedi.sdf
 /Anvedi.v12.suo
 /Anvedi/Anvedi.v12.suo
-/Anvedi/Anvedi.vcxproj.user
-/QShell/QShell.vcxproj.user
 *.opensdf
+/x64/Release
+/QShell/x64/Release/QShell.tlog
+*.obj
+*.log

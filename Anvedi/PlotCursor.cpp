@@ -28,6 +28,8 @@ PlotCursor::PlotCursor(QCustomPlot* parent, qreal pStepSize)
 
 void PlotCursor::set(qreal xVal)
 {
+	// todo: should just report cursor movement
+
 	if (!plot->graphCount())
 		return;
 
@@ -38,14 +40,14 @@ void PlotCursor::set(qreal xVal)
 
 	const auto rangeMin = xData->begin()->key;
 	const auto rangeMax = (xData->end() - 1)->key;
-	xVal = (xVal >= rangeMin) ? xVal : rangeMin;
-	xVal = (xVal > rangeMax) ? rangeMax : xData->lowerBound(xVal)->key;
+	auto domainVal = (xVal >= rangeMin) ? xVal : rangeMin;
+	domainVal = (domainVal > rangeMax) ? rangeMax : xData->lowerBound(domainVal)->key;
 	const auto y1 = cursor->point1->coords().y();
 	const auto y2 = cursor->point2->coords().y();
-	cursor->point1->setCoords(xVal, y1);
-	cursor->point2->setCoords(xVal, y2);
+	cursor->point1->setCoords(domainVal, y1);
+	cursor->point2->setCoords(domainVal, y2);
 
-	emit CursorChanged(xVal);
+	emit CursorChanged(domainVal);
 }
 
 void PlotCursor::move(qreal delta)
