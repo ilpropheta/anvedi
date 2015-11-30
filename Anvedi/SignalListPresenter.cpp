@@ -13,15 +13,18 @@ SignalListPresenter::SignalListPresenter(QTableWidget* signalList, QLabel* signa
 	signalList->setColumnWidth(2, colorLabelWidth + 7);
 
 	QObject::connect(signalList, &QTableWidget::itemClicked, [this](QTableWidgetItem* item){
-		if (item->checkState() == Qt::Checked)
+		if (item->column() == 0)
 		{
-			this->signalList->cellWidget(item->row(), 2)->setEnabled(true);
-			emit DisplayGraph(item->text());
-		}
-		else
-		{
-			this->signalList->cellWidget(item->row(), 2)->setEnabled(false);
-			emit HideGraph(item->text());
+			if (item->checkState() == Qt::Checked)
+			{
+				this->signalList->cellWidget(item->row(), 2)->setEnabled(true);
+				emit DisplayGraph(item->text());
+			}
+			else
+			{
+				this->signalList->cellWidget(item->row(), 2)->setEnabled(false);
+				emit HideGraph(item->text());
+			}
 		}
 	});
 }

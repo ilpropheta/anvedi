@@ -21,6 +21,6 @@ public:
 	void OnClearData();
 private:
 	QCustomPlot* plot;
-	DataMap data;
+	DataMap data; // estrarre model
 	std::map<QString, QCPGraph*> displayedGraphs;
 };

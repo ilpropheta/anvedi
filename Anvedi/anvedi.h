@@ -28,9 +28,7 @@ private:
 
 	Ui::AnvediClass ui;
 
-	// graphic
 	std::unique_ptr<PlotCursor> cursor;
-
 	std::unique_ptr<SignalListPresenter> signalListPresenter;
 	std::unique_ptr<GraphPresenter> graphPresenter;
 };
