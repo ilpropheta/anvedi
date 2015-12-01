@@ -15,8 +15,7 @@ PlotCursor::PlotCursor(QCustomPlot* parent, qreal pStepSize)
 	: cursor(nullptr), plot(parent), cursorStepSize(pStepSize)
 {
 	cursor = new QCPItemStraightLine(parent);
-	cursor->point1->setCoords(0.0, 0.0);
-	cursor->point2->setCoords(0.0, 1.0);
+	initLinePos();
 
 	// todo: switch to complementary color if background color is close to cursor color
 	cursor->setPen(QPen(QBrush(Qt::black), 1.5));
@@ -26,8 +25,17 @@ PlotCursor::PlotCursor(QCustomPlot* parent, qreal pStepSize)
 	QObject::connect(plot, SIGNAL(mouseMove(QMouseEvent*)), this, SLOT(OnMouseEvent(QMouseEvent*)));
 }
 
+void PlotCursor::initLinePos()
+{
+	cursor->point1->setCoords(plot->xAxis->pixelToCoord(0.0), 0.0);
+	cursor->point2->setCoords(plot->xAxis->pixelToCoord(0.0), 1.0);
+}
+
 void PlotCursor::reset()
 {
+	initLinePos();
+	plot->replot();
+
 	if (plot->graphCount())
 	{
 		auto val = plot->graph(0)->data()->begin()->key;

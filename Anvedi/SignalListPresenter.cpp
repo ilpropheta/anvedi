@@ -78,6 +78,7 @@ void SignalListPresenter::OnClearData()
 {
 	signalCntLabel->setText("Showing 0 signals of 0");
 	signalList->setRowCount(0);
+	domainLabel->setText("Domain at cursor: ");
 }
 
 template<typename Pred>

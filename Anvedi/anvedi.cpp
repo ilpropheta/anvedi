@@ -64,4 +64,5 @@ void Anvedi::OnDataClear()
 {
 	m_data.clear();
 	scriptManager->InitWorkspace(m_data, *ui.console);
+	cursor->reset();
 }

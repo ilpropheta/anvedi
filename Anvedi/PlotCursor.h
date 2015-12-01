@@ -31,6 +31,7 @@ signals:
 	void CursorChanged(qreal, size_t);
 private:
 	void move(qreal delta);
+	void initLinePos();
 
 	QCPItemStraightLine *cursor;
 	QCustomPlot* plot;
