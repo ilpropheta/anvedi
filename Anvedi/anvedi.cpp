@@ -10,6 +10,7 @@ Anvedi::Anvedi(QWidget *parent)
 	ui.setupUi(this);
 
 	cursor = make_unique<PlotCursor>(ui.plot, 0.01);
+	rectZoomer = make_unique<RectZoomer>(ui.plot);
 	scriptManager = make_unique<ScriptManager>(m_data, *ui.console);
 	signalListPresenter = make_unique<SignalListPresenter>(ui.signalList, ui.filterEdit, ui.signalCountLabel, ui.domainLabel, m_data);
 	graphPresenter = make_unique<GraphPresenter>(ui.plot);
@@ -17,11 +18,6 @@ Anvedi::Anvedi(QWidget *parent)
 	// cursor -> list
 	QObject::connect(cursor.get(), SIGNAL(CursorChanged(qreal, size_t)), signalListPresenter.get(), SLOT(OnCursorValueChanged(qreal, size_t)));
 	
-	// model -> filter
-	QObject::connect(&m_data, &SignalData::DataAdded, [this]{
-		emit ui.filterEdit->textEdited(ui.filterEdit->text());
-	});
-
 	// model -> graph
 	QObject::connect(&m_data, SIGNAL(DataAdded(const DataMap&)), graphPresenter.get(), SLOT(OnNewData(const DataMap&)));
 	QObject::connect(&m_data, SIGNAL(DataCleared()), graphPresenter.get(), SLOT(OnClearData()));

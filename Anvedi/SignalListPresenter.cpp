@@ -50,7 +50,7 @@ void SignalListPresenter::OnNewData(const DataMap& dataMap)
 		const auto& currentSignal = sign.second;
 		auto chanNameItem = new QTableWidgetItem(name);
 		auto chanValueItem = new QTableWidgetItem();
-		auto colorButton = new QPushButton();
+		auto colorButton = new QPushButton(signalList);
 		colorButton->setEnabled(currentSignal.visible);
 		colorButton->setStyleSheet(MakeBackgroundStylesheet(currentSignal.color));
 		signalList->setItem(currentCount, 0, chanNameItem);
@@ -72,6 +72,8 @@ void SignalListPresenter::OnNewData(const DataMap& dataMap)
 		});
 		currentCount++;
 	}
+
+	OnSignalFilterEdited(filterEdit->text());
 }
 
 void SignalListPresenter::OnClearData()

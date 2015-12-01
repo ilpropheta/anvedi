@@ -10,6 +10,7 @@
 #include <map>
 #include "SignalData.h"
 #include "ScriptManager.h"
+#include "RectZoomer.h"
 
 class Anvedi : public QMainWindow
 {
@@ -24,6 +25,7 @@ private:
 	Ui::AnvediClass ui;
 
 	std::unique_ptr<PlotCursor> cursor;
+	std::unique_ptr<RectZoomer> rectZoomer;
 	std::unique_ptr<SignalListPresenter> signalListPresenter;
 	std::unique_ptr<GraphPresenter> graphPresenter;
 

@@ -116,6 +116,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_SignalData.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="RectZoomer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_RectZoomer.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_RectZoomer.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="anvedi.h">
@@ -149,6 +158,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="SignalHandle.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="RectZoomer.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
