@@ -26,28 +26,35 @@ PlotCursor::PlotCursor(QCustomPlot* parent, qreal pStepSize)
 	QObject::connect(plot, SIGNAL(mouseMove(QMouseEvent*)), this, SLOT(OnMouseEvent(QMouseEvent*)));
 }
 
+void PlotCursor::reset()
+{
+	if (plot->graphCount())
+	{
+		auto val = plot->graph(0)->data()->begin()->key;
+		set(val);
+	}
+}
+
 void PlotCursor::set(qreal xVal)
 {
-	// todo: should just report cursor movement
-
-	if (!plot->graphCount())
+	if (!plot->graphCount() || plot->graph(0)->data()->empty())
 		return;
 
 	// assumes the same domain for each graph
 	const auto xData = plot->graph(0)->data();
-	if (xData->empty())
-		return;
-
 	const auto rangeMin = xData->begin()->key;
 	const auto rangeMax = (xData->end() - 1)->key;
+	// saturate
 	auto domainVal = (xVal >= rangeMin) ? xVal : rangeMin;
-	domainVal = (domainVal > rangeMax) ? rangeMax : xData->lowerBound(domainVal)->key;
-	const auto y1 = cursor->point1->coords().y();
-	const auto y2 = cursor->point2->coords().y();
-	cursor->point1->setCoords(domainVal, y1);
-	cursor->point2->setCoords(domainVal, y2);
+	const auto lbIt = xData->lowerBound(domainVal);
+	domainVal = (domainVal > rangeMax) ? rangeMax : lbIt->key;
+	const auto domPos = (domainVal >= rangeMax) ? (xData->size() - 1) : std::distance(xData->begin(), lbIt);
 
-	emit CursorChanged(domainVal);
+	cursor->point1->setCoords(domainVal, cursor->point1->coords().y());
+	cursor->point2->setCoords(domainVal, cursor->point2->coords().y());
+	plot->replot(QCustomPlot::rpHint);
+
+	emit CursorChanged(domainVal, domPos);
 }
 
 void PlotCursor::move(qreal delta)
@@ -88,6 +95,5 @@ void PlotCursor::OnMouseEvent(QMouseEvent* e)
 	{
 		const auto mouseClickAxesCoords = plot->xAxis->pixelToCoord(e->pos().x());
 		set(mouseClickAxesCoords);
-		plot->replot(QCustomPlot::rpHint);
 	}
 }

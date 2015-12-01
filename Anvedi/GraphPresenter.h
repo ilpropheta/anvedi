@@ -3,10 +3,9 @@
 #include <map>
 #include <utility>
 #include "qcustomplot.h"
+#include "SignalData.h"
 
 class QCustomPlot;
-
-using DataMap = std::map < QString, std::pair<QVector<qreal>, QVector<qreal>> > ;
 
 class GraphPresenter : public QObject
 {
@@ -14,13 +13,12 @@ class GraphPresenter : public QObject
 public:
 	GraphPresenter(QCustomPlot* plot);
 	public slots:
-	void OnGraphColorChanged(const QString&, const QColor&);
-	void OnSignalAdded(const QString& name);
-	void OnSignalRemoved(const QString& name);
 	void OnNewData(const DataMap& data);
 	void OnClearData();
+	void OnGraphDataChanged(const Signal& signal);
+	void OnGraphColorChanged(const Signal& signal);
+	void OnGraphVisibilityChanged(const Signal& signal);
 private:
 	QCustomPlot* plot;
-	DataMap data; // estrarre model
 	std::map<QString, QCPGraph*> displayedGraphs;
 };

@@ -4,21 +4,25 @@
 
 class QTableWidget;
 class QLabel;
+class SignalData;
+class QLineEdit;
 
 class SignalListPresenter : public QObject
 {
 	Q_OBJECT
 public:
-	SignalListPresenter(QTableWidget* signalList, QLabel* signalCntLabel);
-	public slots:
+	SignalListPresenter(QTableWidget* signalList, QLineEdit* filterEdit, QLabel* signalCntLabel, QLabel* domainLabel, SignalData& data);
+public slots:
 	void OnNewData(const DataMap& data);
 	void OnClearData();
 	void OnSignalFilterEdited(const QString& filter);
-signals:
-	void GraphColorChanged(const QString&, const QColor&);
-	void DisplayGraph(const QString&);
-	void HideGraph(const QString&);
+	void OnSignalVisibilityChanged(const Signal& signal);
+	void OnSignalColorChanged(const Signal& signal);
+	void OnCursorValueChanged(qreal xVal, size_t idx);
 private:
 	QTableWidget* signalList;
+	QLineEdit* filterEdit;
 	QLabel* signalCntLabel;
+	QLabel* domainLabel;
+	SignalData& data;
 };

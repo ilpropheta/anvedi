@@ -36,6 +36,11 @@ QShellSyntaxHighlighter::QShellSyntaxHighlighter(QTextDocument *parent)
 	rule.format = quotationFormat;
 	highlightingRules.append(rule);
 
+	singleQuotationFormat.setForeground(Qt::darkGreen);
+	rule.pattern = QRegExp("'.*'");
+	rule.format = singleQuotationFormat;
+	highlightingRules.append(rule);
+
 	functionFormat.setFontItalic(true);
 	functionFormat.setForeground(Qt::blue);
 	rule.pattern = QRegExp("\\b[A-Za-z0-9_]+(?=\\()");

@@ -6,59 +6,76 @@ GraphPresenter::GraphPresenter(QCustomPlot* plot)
 	plot->yAxis->setVisible(false);
 }
 
-void GraphPresenter::OnGraphColorChanged(const QString& name, const QColor& col)
+void GraphPresenter::OnNewData(const DataMap& data)
 {
-	auto it = displayedGraphs.find(name);
+	for (const auto& signal : data)
+	{
+		if (signal.second.visible)
+			OnGraphVisibilityChanged(signal.second);
+	}
+}
+
+void GraphPresenter::OnGraphColorChanged(const Signal& signal)
+{
+	auto it = displayedGraphs.find(signal.name);
 	if (it != end(displayedGraphs))
 	{
-		it->second->setPen(QPen(col));
+		it->second->setPen(QPen(signal.color));
 		plot->replot(QCustomPlot::rpQueued);
 	}
 }
 
-void GraphPresenter::OnSignalAdded(const QString& name)
+void GraphPresenter::OnGraphVisibilityChanged(const Signal& signal)
 {
-	auto it = displayedGraphs.find(name);
+	auto it = displayedGraphs.find(signal.name);
 	if (it != end(displayedGraphs))
 	{
-		it->second->setVisible(true);
+		it->second->setVisible(signal.visible);
 		it->second->rescaleValueAxis();
 		it->second->rescaleKeyAxis();
 	}
 	else
 	{
-		const auto xy = data.at(name);
 		auto myY = plot->axisRect(0)->addAxis(QCPAxis::atLeft);
 		myY->setVisible(false);
 		auto graph = plot->addGraph(plot->xAxis, myY);
-		graph->setPen(QPen(Qt::blue));
-		graph->setData(xy.first, xy.second);
+		graph->setPen(QPen(signal.color));
+		graph->setData(signal.x, signal.y);
 		graph->rescaleAxes();
-		displayedGraphs[name] = graph;
+		displayedGraphs[signal.name] = graph;
+		graph->setVisible(signal.visible);
 	}
 
 	plot->replot();
-}
-
-void GraphPresenter::OnSignalRemoved(const QString& name)
-{
-	auto it = displayedGraphs.find(name);
-	if (it != end(displayedGraphs))
-	{
-		displayedGraphs[name]->setVisible(false);
-		plot->replot();
-	}
-}
-
-void GraphPresenter::OnNewData(const DataMap& newData)
-{
-	data.insert(begin(newData), end(newData));
 }
 
 void GraphPresenter::OnClearData()
 {
 	displayedGraphs.clear();
 	plot->clearGraphs();
-	data.clear();
 	plot->replot();
+}
+
+void GraphPresenter::OnGraphDataChanged(const Signal& signal)
+{
+	if (signal.visible)
+	{
+		auto it = displayedGraphs.find(signal.name);
+		if (it != end(displayedGraphs))
+		{
+			it->second->setData(signal.x, signal.y);
+			it->second->rescaleAxes();
+		}
+		else
+		{
+			auto myY = plot->axisRect(0)->addAxis(QCPAxis::atLeft);
+			myY->setVisible(false);
+			auto graph = plot->addGraph(plot->xAxis, myY);
+			graph->setPen(QPen(signal.color));
+			graph->setData(signal.x, signal.y);
+			graph->rescaleAxes();
+			displayedGraphs[signal.name] = graph;
+		}
+		plot->replot();
+	}
 }

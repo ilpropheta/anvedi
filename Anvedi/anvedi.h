@@ -8,6 +8,8 @@
 #include "SignalListPresenter.h"
 #include "GraphPresenter.h"
 #include <map>
+#include "SignalData.h"
+#include "ScriptManager.h"
 
 class Anvedi : public QMainWindow
 {
@@ -18,19 +20,16 @@ public:
 	void OnExit();
 	void OnDataImport();
 	void OnDataClear();
-	void OnCursorChanged(qreal);
-signals:
-	void NewData(const DataMap&);
-	void DataCleared();
-	void GraphAdded(const QString&);
 private:
-	void AddGraph(const QString& name, const QVector<qreal>& x, const QVector<qreal>& y);
-
 	Ui::AnvediClass ui;
 
 	std::unique_ptr<PlotCursor> cursor;
 	std::unique_ptr<SignalListPresenter> signalListPresenter;
 	std::unique_ptr<GraphPresenter> graphPresenter;
+
+	std::unique_ptr<ScriptManager> scriptManager;
+
+	SignalData m_data; // model
 };
 
 #endif // ANVEDI_H

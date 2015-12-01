@@ -14,6 +14,7 @@ public:
 	PlotCursor(QCustomPlot* parent, qreal pStepSize);
 
 	// movement
+	void reset();
 	void set(qreal xVal);
 	void moveForward();
 	void moveBackward();
@@ -27,7 +28,7 @@ public:
 	public slots:
 	void OnMouseEvent(QMouseEvent*);
 signals:
-	void CursorChanged(qreal);
+	void CursorChanged(qreal, size_t);
 private:
 	void move(qreal delta);
 

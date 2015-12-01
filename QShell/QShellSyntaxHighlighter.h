@@ -29,5 +29,6 @@ private:
 	QTextCharFormat singleLineCommentFormat;
 	QTextCharFormat multiLineCommentFormat;
 	QTextCharFormat quotationFormat;
+	QTextCharFormat singleQuotationFormat;
 	QTextCharFormat functionFormat;
 };

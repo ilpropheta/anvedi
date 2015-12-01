@@ -1,4 +1,6 @@
 #include "anvedi.h"
+#include <QtScript\QScriptContext>
+#include "SignalHandle.h"
 
 using namespace std;
 
@@ -8,33 +10,24 @@ Anvedi::Anvedi(QWidget *parent)
 	ui.setupUi(this);
 
 	cursor = make_unique<PlotCursor>(ui.plot, 0.01);
-	QObject::connect(cursor.get(), SIGNAL(CursorChanged(qreal)), this, SLOT(OnCursorChanged(qreal)));
-	ui.console->SetEngine(std::make_shared<QShellEngine_Qt>());
-
-	signalListPresenter = make_unique<SignalListPresenter>(ui.signalList, ui.signalCountLabel);
+	scriptManager = make_unique<ScriptManager>(m_data, *ui.console);
+	signalListPresenter = make_unique<SignalListPresenter>(ui.signalList, ui.filterEdit, ui.signalCountLabel, ui.domainLabel, m_data);
 	graphPresenter = make_unique<GraphPresenter>(ui.plot);
 
-	// list -> graph
-	QObject::connect(signalListPresenter.get(), SIGNAL(GraphColorChanged(const QString&, const QColor&)), graphPresenter.get(), SLOT(OnGraphColorChanged(const QString&, const QColor&)));
-	QObject::connect(signalListPresenter.get(), SIGNAL(DisplayGraph(const QString&)), graphPresenter.get(), SLOT(OnSignalAdded(const QString&)));
-	QObject::connect(signalListPresenter.get(), SIGNAL(HideGraph(const QString&)), graphPresenter.get(), SLOT(OnSignalRemoved(const QString&)));
-
-	// main controller -> list
-	QObject::connect(this, SIGNAL(NewData(const DataMap&)), signalListPresenter.get(), SLOT(OnNewData(const DataMap&)));
-	QObject::connect(this, &Anvedi::NewData, [this](){
+	// cursor -> list
+	QObject::connect(cursor.get(), SIGNAL(CursorChanged(qreal, size_t)), signalListPresenter.get(), SLOT(OnCursorValueChanged(qreal, size_t)));
+	
+	// model -> filter
+	QObject::connect(&m_data, &SignalData::DataAdded, [this]{
 		emit ui.filterEdit->textEdited(ui.filterEdit->text());
 	});
-	QObject::connect(ui.filterEdit, SIGNAL(textEdited(QString)), signalListPresenter.get(), SLOT(OnSignalFilterEdited(const QString&)));
-	QObject::connect(this, SIGNAL(DataCleared()), signalListPresenter.get(), SLOT(OnClearData()));
 
-	// main controller -> graph
-	QObject::connect(this, SIGNAL(NewData(const DataMap&)), graphPresenter.get(), SLOT(OnNewData(const DataMap&)));
-	QObject::connect(this, SIGNAL(DataCleared()), graphPresenter.get(), SLOT(OnClearData()));
-}
-
-void Anvedi::AddGraph(const QString& name, const QVector<qreal>& x, const QVector<qreal>& y)
-{
-	emit GraphAdded(name);
+	// model -> graph
+	QObject::connect(&m_data, SIGNAL(DataAdded(const DataMap&)), graphPresenter.get(), SLOT(OnNewData(const DataMap&)));
+	QObject::connect(&m_data, SIGNAL(DataCleared()), graphPresenter.get(), SLOT(OnClearData()));
+	QObject::connect(&m_data, SIGNAL(SignalColorChanged(const Signal&)), graphPresenter.get(), SLOT(OnGraphColorChanged(const Signal&)));
+	QObject::connect(&m_data, SIGNAL(SignalVisibilityChanged(const Signal&)), graphPresenter.get(), SLOT(OnGraphVisibilityChanged(const Signal&)));
+	QObject::connect(&m_data, SIGNAL(SignalChanged(const Signal&)), graphPresenter.get(), SLOT(OnGraphDataChanged(const Signal&)));
 }
 
 void Anvedi::OnExit()
@@ -59,25 +52,16 @@ void Anvedi::OnDataImport()
 		y1[i] = x1[i] * x1[i] * x1[i]; // let's plot a quadratic function
 	}
 
-	emit NewData({ { "parabola", { x, y } } });
-	emit NewData({ { "pippo", { x1, y1 } } });
+	m_data.add({
+		{ "parabola", Signal{ "parabola", Qt::blue, true, x, y } },
+		{ "pippo", Signal{ "pippo", Qt::red, false, x1, y1 } }
+	});
+
+	cursor->reset();
 }
 
 void Anvedi::OnDataClear()
 {
-	emit DataCleared();
-}
-
-// to move
-void Anvedi::OnCursorChanged(qreal xVal)
-{
-	auto plot = ui.plot;
-	const auto graphCount = plot->graphCount();
-
-	for (auto i = 0; i < graphCount; ++i)
-	{
-		auto cursorValue = plot->graph(i)->data()->lowerBound(xVal)->value;
-		auto channelVal = ui.signalList->item(i, 1);
-		channelVal->setText(QString("%1").arg(cursorValue));
-	}
+	m_data.clear();
+	scriptManager->InitWorkspace(m_data, *ui.console);
 }
