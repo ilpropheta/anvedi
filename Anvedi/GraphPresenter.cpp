@@ -1,4 +1,5 @@
 #include "GraphPresenter.h"
+#include <QColorDialog>
 
 GraphPresenter::GraphPresenter(QCustomPlot* plot)
 	: plot(plot)
@@ -77,5 +78,16 @@ void GraphPresenter::OnGraphDataChanged(const Signal& signal)
 			displayedGraphs[signal.name] = graph;
 		}
 		plot->replot();
+	}
+}
+
+void GraphPresenter::OnChangeBackground()
+{
+	const auto color = QColorDialog::getColor(backgroundColor, plot, "Change the background color");
+	if (color.isValid())
+	{
+		plot->setBackground(color);
+		backgroundColor = color;
+		plot->replot(QCustomPlot::rpQueued);
 	}
 }

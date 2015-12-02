@@ -24,11 +24,7 @@ void RectZoomer::OnMousePress(QMouseEvent* mevent)
 		rubberBand.show();
 		break;
 	case Qt::MiddleButton:
-		for (auto i = 0; i < plot->graphCount(); ++i)
-		{
-			plot->graph(i)->rescaleAxes();
-		}
-		plot->replot();
+		OnResetZoom();
 		break;
 	}
 }
@@ -63,4 +59,13 @@ void RectZoomer::OnMouseRelease(QMouseEvent*)
 void RectZoomer::OnMouseMove(QMouseEvent* mevent)
 {
 	rubberBand.setGeometry(QRect(origin, mevent->pos()).normalized());
+}
+
+void RectZoomer::OnResetZoom()
+{
+	for (auto i = 0; i < plot->graphCount(); ++i)
+	{
+		plot->graph(i)->rescaleAxes();
+	}
+	plot->replot();
 }

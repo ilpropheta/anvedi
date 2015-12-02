@@ -15,6 +15,9 @@ Anvedi::Anvedi(QWidget *parent)
 	signalListPresenter = make_unique<SignalListPresenter>(ui.signalList, ui.filterEdit, ui.signalCountLabel, ui.domainLabel, m_data);
 	graphPresenter = make_unique<GraphPresenter>(ui.plot);
 
+	// window -> zoomer
+	QObject::connect(ui.actionResetZoom, SIGNAL(triggered()), rectZoomer.get(), SLOT(OnResetZoom()));
+
 	// cursor -> list
 	QObject::connect(cursor.get(), SIGNAL(CursorChanged(qreal, size_t)), signalListPresenter.get(), SLOT(OnCursorValueChanged(qreal, size_t)));
 	
@@ -24,6 +27,8 @@ Anvedi::Anvedi(QWidget *parent)
 	QObject::connect(&m_data, SIGNAL(SignalColorChanged(const Signal&)), graphPresenter.get(), SLOT(OnGraphColorChanged(const Signal&)));
 	QObject::connect(&m_data, SIGNAL(SignalVisibilityChanged(const Signal&)), graphPresenter.get(), SLOT(OnGraphVisibilityChanged(const Signal&)));
 	QObject::connect(&m_data, SIGNAL(SignalChanged(const Signal&)), graphPresenter.get(), SLOT(OnGraphDataChanged(const Signal&)));
+	// window -> graph
+	QObject::connect(ui.actionChangeBackground, SIGNAL(triggered()), graphPresenter.get(), SLOT(OnChangeBackground()));
 }
 
 void Anvedi::OnExit()

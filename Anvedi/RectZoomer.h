@@ -15,6 +15,7 @@ public slots:
 	void OnMousePress(QMouseEvent*);
 	void OnMouseRelease(QMouseEvent*);
 	void OnMouseMove(QMouseEvent*);
+	void OnResetZoom();
 private:
 	QRubberBand rubberBand;
 	QPoint origin;

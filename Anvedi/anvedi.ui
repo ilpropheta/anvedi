@@ -1,363 +1,381 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-  <class>AnvediClass</class>
-  <widget class="QMainWindow" name="AnvediClass">
-	<property name="geometry">
-	  <rect>
-		<x>0</x>
-		<y>0</y>
-		<width>736</width>
-		<height>566</height>
-	  </rect>
-	</property>
-	<property name="windowTitle">
-	  <string>Anvedi</string>
-	</property>
-	<widget class="QWidget" name="centralWidget">
-	  <layout class="QGridLayout" name="gridLayout">
-		<item row="0" column="0">
-		  <widget class="QCustomPlot" name="plot" native="true">
-			<property name="sizePolicy">
-			  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-				<horstretch>0</horstretch>
-				<verstretch>0</verstretch>
-			  </sizepolicy>
-			</property>
-			<property name="minimumSize">
-			  <size>
-				<width>50</width>
-				<height>50</height>
-			  </size>
-			</property>
-			<property name="focusPolicy">
-			  <enum>Qt::ClickFocus</enum>
-			</property>
-		  </widget>
-		</item>
-	  </layout>
-	</widget>
-	<widget class="QMenuBar" name="menuBar">
-	  <property name="geometry">
-		<rect>
-		  <x>0</x>
-		  <y>0</y>
-		  <width>736</width>
-		  <height>21</height>
-		</rect>
-	  </property>
-	  <widget class="QMenu" name="menuData">
-		<property name="title">
-		  <string>Data</string>
-		</property>
-		<addaction name="actionImport"/>
-		<addaction name="actionClear"/>
-		<addaction name="separator"/>
-		<addaction name="actionExit"/>
-	  </widget>
-	  <addaction name="menuData"/>
-	</widget>
-	<widget class="QStatusBar" name="statusBar"/>
-	<widget class="QDockWidget" name="consoleDock">
-	  <property name="windowTitle">
-		<string>Console</string>
-	  </property>
-	  <attribute name="dockWidgetArea">
-		<number>8</number>
-	  </attribute>
-	  <widget class="QWidget" name="dockWidgetContents_4">
-		<layout class="QGridLayout" name="gridLayout_3">
-		  <item row="0" column="0">
-			<widget class="QShell" name="console">
-			  <property name="palette">
-				<palette>
-				  <active>
-					<colorrole role="Button">
-					  <brush brushstyle="SolidPattern">
-						<color alpha="255">
-						  <red>0</red>
-						  <green>0</green>
-						  <blue>0</blue>
-						</color>
-					  </brush>
-					</colorrole>
-					<colorrole role="Text">
-					  <brush brushstyle="SolidPattern">
-						<color alpha="255">
-						  <red>255</red>
-						  <green>255</green>
-						  <blue>255</blue>
-						</color>
-					  </brush>
-					</colorrole>
-					<colorrole role="Base">
-					  <brush brushstyle="SolidPattern">
-						<color alpha="255">
-						  <red>0</red>
-						  <green>0</green>
-						  <blue>0</blue>
-						</color>
-					  </brush>
-					</colorrole>
-					<colorrole role="Window">
-					  <brush brushstyle="SolidPattern">
-						<color alpha="255">
-						  <red>0</red>
-						  <green>0</green>
-						  <blue>0</blue>
-						</color>
-					  </brush>
-					</colorrole>
-				  </active>
-				  <inactive>
-					<colorrole role="Button">
-					  <brush brushstyle="SolidPattern">
-						<color alpha="255">
-						  <red>0</red>
-						  <green>0</green>
-						  <blue>0</blue>
-						</color>
-					  </brush>
-					</colorrole>
-					<colorrole role="Text">
-					  <brush brushstyle="SolidPattern">
-						<color alpha="255">
-						  <red>255</red>
-						  <green>255</green>
-						  <blue>255</blue>
-						</color>
-					  </brush>
-					</colorrole>
-					<colorrole role="Base">
-					  <brush brushstyle="SolidPattern">
-						<color alpha="255">
-						  <red>0</red>
-						  <green>0</green>
-						  <blue>0</blue>
-						</color>
-					  </brush>
-					</colorrole>
-					<colorrole role="Window">
-					  <brush brushstyle="SolidPattern">
-						<color alpha="255">
-						  <red>0</red>
-						  <green>0</green>
-						  <blue>0</blue>
-						</color>
-					  </brush>
-					</colorrole>
-				  </inactive>
-				  <disabled>
-					<colorrole role="Button">
-					  <brush brushstyle="SolidPattern">
-						<color alpha="255">
-						  <red>0</red>
-						  <green>0</green>
-						  <blue>0</blue>
-						</color>
-					  </brush>
-					</colorrole>
-					<colorrole role="Text">
-					  <brush brushstyle="SolidPattern">
-						<color alpha="255">
-						  <red>120</red>
-						  <green>120</green>
-						  <blue>120</blue>
-						</color>
-					  </brush>
-					</colorrole>
-					<colorrole role="Base">
-					  <brush brushstyle="SolidPattern">
-						<color alpha="255">
-						  <red>0</red>
-						  <green>0</green>
-						  <blue>0</blue>
-						</color>
-					  </brush>
-					</colorrole>
-					<colorrole role="Window">
-					  <brush brushstyle="SolidPattern">
-						<color alpha="255">
-						  <red>0</red>
-						  <green>0</green>
-						  <blue>0</blue>
-						</color>
-					  </brush>
-					</colorrole>
-				  </disabled>
-				</palette>
-			  </property>
-			  <property name="font">
-				<font>
-				  <family>Consolas</family>
-				  <pointsize>11</pointsize>
-				</font>
-			  </property>
-			  <property name="toolTip">
-				<string>Console</string>
-			  </property>
-			  <property name="styleSheet">
-				<string notr="true"/>
-			  </property>
-			</widget>
-		  </item>
-		</layout>
-	  </widget>
-	</widget>
-	<widget class="QDockWidget" name="legendDock">
-	  <property name="features">
-		<set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable</set>
-	  </property>
-	  <property name="allowedAreas">
-		<set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
-	  </property>
-	  <property name="windowTitle">
-		<string>Legend</string>
-	  </property>
-	  <attribute name="dockWidgetArea">
-		<number>2</number>
-	  </attribute>
-	  <widget class="QWidget" name="dockWidgetContents_3">
-		<layout class="QGridLayout" name="gridLayout_4">
-		  <item row="0" column="0">
-			<layout class="QVBoxLayout" name="verticalLayout">
-			  <item>
-				<widget class="QLineEdit" name="filterEdit">
-				  <property name="font">
-					<font>
-					  <family>Segoe UI</family>
-					  <pointsize>10</pointsize>
-					</font>
-				  </property>
-				  <property name="placeholderText">
-					<string>Type to filter...</string>
-				  </property>
-				</widget>
-			  </item>
-			  <item>
-				<widget class="QLabel" name="signalCountLabel">
-				  <property name="text">
-					<string>Showing 0 signals of 0</string>
-				  </property>
-				</widget>
-			  </item>
-			  <item>
-				<widget class="QLabel" name="domainLabel">
-				  <property name="text">
-					<string>Domain at cursor: </string>
-				  </property>
-				</widget>
-			  </item>
-			  <item>
-				<widget class="QTableWidget" name="signalList">
-				  <column>
-					<property name="text">
-					  <string>Signal</string>
-					</property>
-				  </column>
-				  <column>
-					<property name="text">
-					  <string>Cursor Value</string>
-					</property>
-				  </column>
-				  <column>
-					<property name="text">
-					  <string>Color</string>
-					</property>
-				  </column>
-				</widget>
-			  </item>
-			</layout>
-		  </item>
-		</layout>
-	  </widget>
-	</widget>
-	<action name="actionImport">
-	  <property name="text">
-		<string>Import</string>
-	  </property>
-	</action>
-	<action name="actionExit">
-	  <property name="text">
-		<string>Exit</string>
-	  </property>
-	</action>
-	<action name="actionClear">
-	  <property name="text">
-		<string>Clear all</string>
-	  </property>
-	</action>
+ <class>AnvediClass</class>
+ <widget class="QMainWindow" name="AnvediClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>736</width>
+    <height>566</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Anvedi</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QCustomPlot" name="plot" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>50</width>
+        <height>50</height>
+       </size>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::ClickFocus</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
-  <layoutdefault spacing="6" margin="11"/>
-  <customwidgets>
-	<customwidget>
-	  <class>QCustomPlot</class>
-	  <extends>QWidget</extends>
-	  <header>qcustomplot.h</header>
-	  <container>1</container>
-	</customwidget>
-	<customwidget>
-	  <class>QShell</class>
-	  <extends>QPlainTextEdit</extends>
-	  <header>qshell.h</header>
-	</customwidget>
-  </customwidgets>
-  <resources>
-	<include location="anvedi.qrc"/>
-  </resources>
-  <connections>
-	<connection>
-	  <sender>actionExit</sender>
-	  <signal>triggered()</signal>
-	  <receiver>AnvediClass</receiver>
-	  <slot>OnExit()</slot>
-	  <hints>
-		<hint type="sourcelabel">
-		  <x>-1</x>
-		  <y>-1</y>
-		</hint>
-		<hint type="destinationlabel">
-		  <x>326</x>
-		  <y>282</y>
-		</hint>
-	  </hints>
-	</connection>
-	<connection>
-	  <sender>actionImport</sender>
-	  <signal>triggered()</signal>
-	  <receiver>AnvediClass</receiver>
-	  <slot>OnDataImport()</slot>
-	  <hints>
-		<hint type="sourcelabel">
-		  <x>-1</x>
-		  <y>-1</y>
-		</hint>
-		<hint type="destinationlabel">
-		  <x>326</x>
-		  <y>282</y>
-		</hint>
-	  </hints>
-	</connection>
-	<connection>
-	  <sender>actionClear</sender>
-	  <signal>triggered()</signal>
-	  <receiver>AnvediClass</receiver>
-	  <slot>OnDataClear()</slot>
-	  <hints>
-		<hint type="sourcelabel">
-		  <x>-1</x>
-		  <y>-1</y>
-		</hint>
-		<hint type="destinationlabel">
-		  <x>326</x>
-		  <y>282</y>
-		</hint>
-	  </hints>
-	</connection>
-  </connections>
-  <slots>
-	<slot>OnExit()</slot>
-	<slot>OnDataImport()</slot>
-	<slot>OnDataClear()</slot>
-	<slot>OnSignalFilterEdited(QString)</slot>
-  </slots>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>736</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuData">
+    <property name="title">
+     <string>Data</string>
+    </property>
+    <addaction name="actionImport"/>
+    <addaction name="actionClear"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuViewer">
+    <property name="title">
+     <string>Viewer</string>
+    </property>
+    <addaction name="actionResetZoom"/>
+    <addaction name="actionChangeBackground"/>
+   </widget>
+   <addaction name="menuData"/>
+   <addaction name="menuViewer"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QDockWidget" name="consoleDock">
+   <property name="windowTitle">
+    <string>Console</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4">
+    <layout class="QGridLayout" name="gridLayout_3">
+     <item row="0" column="0">
+      <widget class="QShell" name="console">
+       <property name="palette">
+        <palette>
+         <active>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Text">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Base">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Window">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Text">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Base">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Window">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Text">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>120</red>
+             <green>120</green>
+             <blue>120</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Base">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Window">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </disabled>
+        </palette>
+       </property>
+       <property name="font">
+        <font>
+         <family>Consolas</family>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>Console</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="legendDock">
+   <property name="features">
+    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Legend</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QGridLayout" name="gridLayout_4">
+     <item row="0" column="0">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLineEdit" name="filterEdit">
+         <property name="font">
+          <font>
+           <family>Segoe UI</family>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="placeholderText">
+          <string>Type to filter...</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="signalCountLabel">
+         <property name="text">
+          <string>Showing 0 signals of 0</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="domainLabel">
+         <property name="text">
+          <string>Domain at cursor: </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTableWidget" name="signalList">
+         <column>
+          <property name="text">
+           <string>Signal</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Cursor Value</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Color</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <action name="actionImport">
+   <property name="text">
+    <string>Import</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionClear">
+   <property name="text">
+    <string>Clear Workspace</string>
+   </property>
+  </action>
+  <action name="actionResetZoom">
+   <property name="text">
+    <string>Reset Zoom</string>
+   </property>
+  </action>
+  <action name="actionChangeBackground">
+   <property name="text">
+    <string>Change Background</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header>qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QShell</class>
+   <extends>QPlainTextEdit</extends>
+   <header>qshell.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="anvedi.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>AnvediClass</receiver>
+   <slot>OnExit()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>326</x>
+     <y>282</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionImport</sender>
+   <signal>triggered()</signal>
+   <receiver>AnvediClass</receiver>
+   <slot>OnDataImport()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>326</x>
+     <y>282</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionClear</sender>
+   <signal>triggered()</signal>
+   <receiver>AnvediClass</receiver>
+   <slot>OnDataClear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>326</x>
+     <y>282</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>OnExit()</slot>
+  <slot>OnDataImport()</slot>
+  <slot>OnDataClear()</slot>
+  <slot>OnSignalFilterEdited(QString)</slot>
+ </slots>
 </ui>
