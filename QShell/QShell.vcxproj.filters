@@ -137,14 +137,14 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="qshell.cpp" />
-    <ClCompile Include="ClearConsole.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_ClearConsole.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_ClearConsole.cpp">
       <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="ClearConsole.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -218,7 +218,7 @@
     </CustomBuild>
     <CustomBuild Include="qshell.h" />
     <CustomBuild Include="ClearConsole.h">
-      <Filter>Generated Files</Filter>
+      <Filter>Engine</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>
