@@ -25,8 +25,9 @@ public:
 
 	// setters
 	void setStep(qreal newStep);
-	public slots:
+public slots:
 	void OnMouseEvent(QMouseEvent*);
+	void OnBackgroundChanged(const QColor&);
 signals:
 	void CursorChanged(qreal, size_t);
 private:

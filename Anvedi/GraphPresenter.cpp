@@ -5,6 +5,9 @@ GraphPresenter::GraphPresenter(QCustomPlot* plot)
 	: plot(plot)
 {
 	plot->yAxis->setVisible(false);
+	//plot->xAxis->setAutoTickStep(false);
+	//plot->xAxis->setTickStep(10);
+	plot->xAxis->setTickLabels(false);
 }
 
 void GraphPresenter::OnNewData(const DataMap& data)
@@ -89,5 +92,6 @@ void GraphPresenter::OnChangeBackground()
 		plot->setBackground(color);
 		backgroundColor = color;
 		plot->replot(QCustomPlot::rpQueued);
+		emit BackgroundChanged(color);
 	}
 }
