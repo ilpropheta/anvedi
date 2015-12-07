@@ -11,6 +11,7 @@
 #include "SignalData.h"
 #include "ScriptManager.h"
 #include "RectZoomer.h"
+#include "PlotInfo.h"
 
 class Anvedi : public QMainWindow
 {
@@ -31,7 +32,8 @@ private:
 
 	std::unique_ptr<ScriptManager> scriptManager;
 
-	SignalData m_data; // model
+	SignalData m_data;
+	PlotInfo m_plotInfo;
 };
 
 #endif // ANVEDI_H

@@ -11,7 +11,7 @@ Anvedi::Anvedi(QWidget *parent)
 
 	cursor = make_unique<PlotCursor>(ui.plot, 0.01);
 	rectZoomer = make_unique<RectZoomer>(ui.plot);
-	scriptManager = make_unique<ScriptManager>(m_data, *ui.console);
+	scriptManager = make_unique<ScriptManager>(m_data, m_plotInfo, *ui.console);
 	signalListPresenter = make_unique<SignalListPresenter>(ui.signalList, ui.filterEdit, ui.signalCountLabel, ui.domainLabel, m_data);
 	graphPresenter = make_unique<GraphPresenter>(ui.plot);
 
@@ -27,12 +27,17 @@ Anvedi::Anvedi(QWidget *parent)
 	QObject::connect(&m_data, SIGNAL(SignalColorChanged(const Signal&)), graphPresenter.get(), SLOT(OnGraphColorChanged(const Signal&)));
 	QObject::connect(&m_data, SIGNAL(SignalVisibilityChanged(const Signal&)), graphPresenter.get(), SLOT(OnGraphVisibilityChanged(const Signal&)));
 	QObject::connect(&m_data, SIGNAL(SignalChanged(const Signal&)), graphPresenter.get(), SLOT(OnGraphDataChanged(const Signal&)));
-	
+	// plot info -> graph
+	QObject::connect(&m_plotInfo, SIGNAL(BackgroundColorChanged(const QColor&)), graphPresenter.get(), SLOT(OnBackgroundChanged(const QColor&)));
+	// plot info -> cursor
+	QObject::connect(&m_plotInfo, SIGNAL(BackgroundColorChanged(const QColor&)), cursor.get(), SLOT(OnBackgroundChanged(const QColor&)));
+
 	// window -> graph
-	QObject::connect(ui.actionChangeBackground, SIGNAL(triggered()), graphPresenter.get(), SLOT(OnChangeBackground()));
-	
-	// graph -> cursor
-	QObject::connect(graphPresenter.get(), SIGNAL(BackgroundChanged(const QColor&)), cursor.get(), SLOT(OnBackgroundChanged(const QColor&)));
+	QObject::connect(ui.actionChangeBackground, &QAction::triggered, [this]{
+		const auto color = QColorDialog::getColor(m_plotInfo.getBackgroundColor(), this, "Change the background color");
+		if (color.isValid())
+			m_plotInfo.setBackgroundColor(color);
+	});
 }
 
 void Anvedi::OnExit()
@@ -68,6 +73,6 @@ void Anvedi::OnDataImport()
 void Anvedi::OnDataClear()
 {
 	m_data.clear();
-	scriptManager->InitWorkspace(m_data, *ui.console);
+	scriptManager->InitWorkspace(m_data, m_plotInfo, *ui.console);
 	cursor->reset();
 }

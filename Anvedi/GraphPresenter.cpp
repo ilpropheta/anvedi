@@ -84,14 +84,8 @@ void GraphPresenter::OnGraphDataChanged(const Signal& signal)
 	}
 }
 
-void GraphPresenter::OnChangeBackground()
+void GraphPresenter::OnBackgroundChanged(const QColor& color)
 {
-	const auto color = QColorDialog::getColor(backgroundColor, plot, "Change the background color");
-	if (color.isValid())
-	{
-		plot->setBackground(color);
-		backgroundColor = color;
-		plot->replot(QCustomPlot::rpQueued);
-		emit BackgroundChanged(color);
-	}
+	plot->setBackground(color);
+	plot->replot(QCustomPlot::rpQueued);
 }

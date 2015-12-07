@@ -131,6 +131,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_PlotHandle.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_PlotInfo.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_PlotInfo.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="PlotInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="anvedi.h">
@@ -170,6 +179,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="PlotHandle.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="PlotInfo.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
