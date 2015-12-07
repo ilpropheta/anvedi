@@ -8,15 +8,26 @@ message("You are running qmake on a generated .pro file. This may not work!")
 
 
 HEADERS += ./anvedi.h \
+    ./PlotHandle.h \
+    ./RectZoomer.h \
+    ./SignalHandle.h \
+    ./SignalData.h \
+    ./ScriptManager.h \
+    ./Signal.h \
     ./SignalListPresenter.h \
     ./PlotCursor.h \
     ./GraphPresenter.h \
     ./qcustomplot.h
 SOURCES += ./anvedi.cpp \
     ./GraphPresenter.cpp \
-    ./main.cpp \
     ./PlotCursor.cpp \
+    ./PlotHandle.cpp \
     ./qcustomplot.cpp \
-    ./SignalListPresenter.cpp
+    ./RectZoomer.cpp \
+    ./ScriptManager.cpp \
+    ./SignalData.cpp \
+    ./SignalHandle.cpp \
+    ./SignalListPresenter.cpp \
+    ./Signal.cpp
 FORMS += ./anvedi.ui
 RESOURCES += anvedi.qrc

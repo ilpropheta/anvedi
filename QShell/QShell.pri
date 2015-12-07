@@ -19,6 +19,7 @@ HEADERS += ./qshell.h \
     ./QShellEngineResult.h \
     ./QShellEngineResult_qt.h \
     ./QShellEngine_Qt.h \
+    ./ClearConsole.h \
     ./resource.h \
     ./HistoryRecorder.h \
     ./QShellUtils.h \
@@ -34,6 +35,7 @@ SOURCES += ./qshell.cpp \
     ./HistoryKeyHandler.cpp \
     ./MiscKeyHandler.cpp \
     ./ScriptEvaluatorKeyHandler.cpp \
+    ./ClearConsole.cpp \
     ./QShellEngineResult_qt.cpp \
     ./QShellEngine_Qt.cpp \
     ./QShellScriptUtilis.cpp \
