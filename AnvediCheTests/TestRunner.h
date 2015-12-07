@@ -6,6 +6,8 @@
 #include <QSharedPointer>
 #include <iostream>
 
+class QStringList;
+
 //////////////////////////////////////////////////////////////////////////
 // Test Runner allows automatic execution of tests
 class TestRunner
@@ -13,8 +15,10 @@ class TestRunner
 public:
 	static TestRunner& Instance();
 	void RegisterTest(QObject* test);
-	int RunAll(int argc, char *argv []);
+	int RunAll(int argc, char** argv);
+	int RunAllColorized(int argc, char** argv);
 private:
+	int RunAll(const QStringList& cmd);
 	std::list<QObject*> m_tests;
 };
 
@@ -39,3 +43,6 @@ public:
 
 // Use this macro to execute all tests
 #define RUN_ALL_TESTS(argc, argv) TestRunner::Instance().RunAll(argc, argv)
+
+// Use this macro to execute all tests (colored out)
+#define RUN_ALL_TESTS_COLOR(argc, argv) TestRunner::Instance().RunAllColorized(argc, argv)
