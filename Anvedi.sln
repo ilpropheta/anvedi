@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Anvedi", "Anvedi\Anvedi.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AnvediCheTests", "AnvediCheTests\AnvediCheTests.vcxproj", "{FD2AD455-8E00-4607-BDC7-B38417F2A2E6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AnvediCheExe", "AnvediCheExe\AnvediCheExe.vcxproj", "{F3EE3FF2-E78E-42B0-A476-B2EF187EA200}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -41,6 +43,14 @@ Global
 		{FD2AD455-8E00-4607-BDC7-B38417F2A2E6}.Release|Win32.Build.0 = Release|Win32
 		{FD2AD455-8E00-4607-BDC7-B38417F2A2E6}.Release|x64.ActiveCfg = Release|x64
 		{FD2AD455-8E00-4607-BDC7-B38417F2A2E6}.Release|x64.Build.0 = Release|x64
+		{F3EE3FF2-E78E-42B0-A476-B2EF187EA200}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F3EE3FF2-E78E-42B0-A476-B2EF187EA200}.Debug|Win32.Build.0 = Debug|Win32
+		{F3EE3FF2-E78E-42B0-A476-B2EF187EA200}.Debug|x64.ActiveCfg = Debug|x64
+		{F3EE3FF2-E78E-42B0-A476-B2EF187EA200}.Debug|x64.Build.0 = Debug|x64
+		{F3EE3FF2-E78E-42B0-A476-B2EF187EA200}.Release|Win32.ActiveCfg = Release|Win32
+		{F3EE3FF2-E78E-42B0-A476-B2EF187EA200}.Release|Win32.Build.0 = Release|Win32
+		{F3EE3FF2-E78E-42B0-A476-B2EF187EA200}.Release|x64.ActiveCfg = Release|x64
+		{F3EE3FF2-E78E-42B0-A476-B2EF187EA200}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
