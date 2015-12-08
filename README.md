@@ -1,6 +1,6 @@
 # anvedi
 
-A simple Qt Data Viewer made with QCustomPlot.
+A simple Qt Data Viewer made with [QCustomPlot][http://qcustomplot.com].
 
 ## Why "anvedi"?
 
