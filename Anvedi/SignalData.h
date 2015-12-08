@@ -20,7 +20,7 @@ public:
 	void setVisible(const QString& name, bool visible);  // to move
 	const Signal& get(const QString& name) const;
 	Signal& getOrInsert(const QString& name);
-	void onSignals(std::function<void(Signal&)> fun);
+	void onSignals(std::function<void(const Signal&)> fun) const;
 	std::pair<qreal, size_t> nearestDomainValueTo(qreal val);
 signals:
 	void DataAdded(const DataMap&);

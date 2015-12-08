@@ -146,7 +146,7 @@ void SignalListPresenter::OnCursorValueChanged(qreal xVal, size_t idx)
 {
 	domainLabel->setText(QString("Domain at cursor: %1").arg(xVal));
 	auto i = 0;
-	data.onSignals([&, this](Signal& signal){
+	data.onSignals([&, this](const Signal& signal){
 		auto signValueItem = signalList->item(i, 1);
 		if (signal.y.size() > idx)
 		{

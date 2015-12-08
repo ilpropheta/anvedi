@@ -56,9 +56,9 @@ Signal& SignalData::getOrInsert(const QString& name)
 	return inserted;
 }
 
-void SignalData::onSignals(std::function<void(Signal&)> fun)
+void SignalData::onSignals(std::function<void(const Signal&)> fun) const
 {
-	for (auto& signal : m_data)
+	for (const auto& signal : m_data)
 		fun(signal.second);
 }
 
