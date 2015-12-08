@@ -31,17 +31,17 @@ void GraphPresenter::OnGraphColorChanged(const Signal& signal)
 
 void GraphPresenter::OnGraph(const Signal& signal, std::function<void(QCPGraph*)> action)
 {
-	auto it = displayedGraphs.find(signal.name);
-	if (it != end(displayedGraphs))
+	auto it = displayedGraphs.equal_range(signal.name);
+	if (it.first != it.second)
 	{
-		action(it->second);
+		action(it.first->second);
 	}
 	else
 	{
 		auto myY = plot->axisRect(0)->addAxis(QCPAxis::atLeft);
 		myY->setVisible(false);
 		auto graph = plot->addGraph(plot->xAxis, myY);
-		displayedGraphs[signal.name] = graph;
+		displayedGraphs.emplace_hint(it.first, signal.name, graph);
 		graph->setData(signal.x, signal.y);
 		graph->setPen(QPen(signal.color));
 		graph->rescaleAxes();
