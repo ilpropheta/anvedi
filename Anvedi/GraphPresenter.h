@@ -20,6 +20,8 @@ public slots:
 	void OnGraphVisibilityChanged(const Signal& signal);
 	void OnBackgroundChanged(const QColor& color);
 private:
+	void OnGraph(const Signal& signal, std::function<void(QCPGraph*)> action);
+
 	QCustomPlot* plot;
 	std::map<QString, QCPGraph*> displayedGraphs;
 };

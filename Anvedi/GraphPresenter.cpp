@@ -29,28 +29,41 @@ void GraphPresenter::OnGraphColorChanged(const Signal& signal)
 	}
 }
 
-void GraphPresenter::OnGraphVisibilityChanged(const Signal& signal)
+void GraphPresenter::OnGraph(const Signal& signal, std::function<void(QCPGraph*)> action)
 {
 	auto it = displayedGraphs.find(signal.name);
 	if (it != end(displayedGraphs))
 	{
-		it->second->setVisible(signal.visible);
-		it->second->rescaleValueAxis();
-		it->second->rescaleKeyAxis();
+		action(it->second);
 	}
 	else
 	{
 		auto myY = plot->axisRect(0)->addAxis(QCPAxis::atLeft);
 		myY->setVisible(false);
 		auto graph = plot->addGraph(plot->xAxis, myY);
-		graph->setPen(QPen(signal.color));
-		graph->setData(signal.x, signal.y);
-		graph->rescaleAxes();
 		displayedGraphs[signal.name] = graph;
+		graph->setData(signal.x, signal.y);
+		graph->setPen(QPen(signal.color));
+		graph->rescaleAxes();
 		graph->setVisible(signal.visible);
 	}
-
 	plot->replot();
+}
+
+void GraphPresenter::OnGraphVisibilityChanged(const Signal& signal)
+{
+	OnGraph(signal, [&](QCPGraph* graph){
+		graph->setPen(QPen(signal.color));
+		graph->setVisible(signal.visible);
+	});
+}
+
+void GraphPresenter::OnGraphDataChanged(const Signal& signal)
+{
+	OnGraph(signal, [&](QCPGraph* graph){
+		graph->setData(signal.x, signal.y);
+		graph->rescaleAxes();
+	});
 }
 
 void GraphPresenter::OnClearData()
@@ -58,30 +71,6 @@ void GraphPresenter::OnClearData()
 	displayedGraphs.clear();
 	plot->clearGraphs();
 	plot->replot();
-}
-
-void GraphPresenter::OnGraphDataChanged(const Signal& signal)
-{
-	if (signal.visible)
-	{
-		auto it = displayedGraphs.find(signal.name);
-		if (it != end(displayedGraphs))
-		{
-			it->second->setData(signal.x, signal.y);
-			it->second->rescaleAxes();
-		}
-		else
-		{
-			auto myY = plot->axisRect(0)->addAxis(QCPAxis::atLeft);
-			myY->setVisible(false);
-			auto graph = plot->addGraph(plot->xAxis, myY);
-			graph->setPen(QPen(signal.color));
-			graph->setData(signal.x, signal.y);
-			graph->rescaleAxes();
-			displayedGraphs[signal.name] = graph;
-		}
-		plot->replot();
-	}
 }
 
 void GraphPresenter::OnBackgroundChanged(const QColor& color)
