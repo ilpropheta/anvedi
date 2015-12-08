@@ -1,20 +1,8 @@
 #include "PlotCursor.h"
 #include "qcustomplot.h"
+#include "utils.h"
 #include <complex>
 #include <QEvent>
-
-bool close(const QColor& c1, const QColor& c2)
-{
-	return std::sqrt(
-		std::norm(c1.red() - c2.red()) +
-		std::norm(c1.green() - c2.green()) +
-		std::norm(c1.blue() - c2.blue())) < 10;
-}
-
-inline QColor invert(const QColor& col)
-{
-	return {255-col.red(), 255-col.green(), 255-col.blue()};
-}
 
 PlotCursor::PlotCursor(QCustomPlot* parent, qreal pStepSize)
 	: cursor(nullptr), plot(parent), cursorStepSize(pStepSize)

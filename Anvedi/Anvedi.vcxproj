@@ -247,6 +247,7 @@
     <ClCompile Include="SignalHandle.cpp" />
     <ClCompile Include="SignalListPresenter.cpp" />
     <ClCompile Include="Signal.cpp" />
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="anvedi.h">
@@ -290,6 +291,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_anvedi.h" />
+    <ClInclude Include="Utils.h" />
     <CustomBuild Include="PlotInfo.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing PlotInfo.h...</Message>

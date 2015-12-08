@@ -1,5 +1,6 @@
 #include "GraphPresenter.h"
 #include <QColorDialog>
+#include "Utils.h"
 
 GraphPresenter::GraphPresenter(QCustomPlot* plot)
 	: plot(plot)
@@ -76,5 +77,11 @@ void GraphPresenter::OnClearData()
 void GraphPresenter::OnBackgroundChanged(const QColor& color)
 {
 	plot->setBackground(color);
+	auto tickPen = plot->xAxis->basePen();
+	if (close(color, tickPen.color()))
+	{
+		tickPen.setColor(invert(color));
+		plot->xAxis->setBasePen(tickPen);
+	}
 	plot->replot(QCustomPlot::rpQueued);
 }
