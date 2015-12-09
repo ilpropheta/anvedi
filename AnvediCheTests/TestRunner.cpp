@@ -91,6 +91,13 @@ int TestRunner::RunAllColorized(int argc, char** argv)
 		cout << line << endl;
 	}
 
+	if (exitCode)
+	{
+		ColorGuard guard;
+		SetConsoleColor(hred);
+		cout << ">>>>> TESTS FAILED!!!" << endl;
+	}
+
 	return exitCode;
 }
 
