@@ -21,13 +21,13 @@ int TestRunner::RunAll(int argc, char** argv)
 	return RunAll(FromCmdArgs(argc, argv));
 }
 
-int TestRunner::RunAll(const QStringList& cmd)
+int TestRunner::RunAll(const QStringList& cmd, std::function<void(QObject* test)> fn)
 {
 	int errorCode = 0;
 	for (auto test : m_tests)
 	{
 		errorCode |= QTest::qExec(test, cmd);
-		std::cout << std::endl;
+		fn(test);
 	};
 	if (m_tests.empty())
 		cout << "Sad test project with no tests... :(" << endl;
@@ -64,38 +64,47 @@ private:
 	WORD m_color;
 };
 
-
 int TestRunner::RunAllColorized(int argc, char** argv)
 {
 	auto cmd = FromCmdArgs(argc, argv);
 	cmd.push_back("-o");
 	cmd.push_back("tmpLog,txt");
-	auto exitCode = RunAll(cmd);
+
+	auto cnt = m_tests.size();
+	auto exitCode = RunAll(cmd, [&cnt](QObject*){
+		ifstream file("tmpLog");
+		string line;
+		const regex fail("(FAIL.*)");
+		const regex pass("(PASS.*)");
+
+		while (getline(file, line))
+		{
+			ColorGuard guard;
+			if (regex_match(line, fail))
+			{
+				SetConsoleColor(hred);
+			}
+			if (regex_match(line, pass))
+			{
+				SetConsoleColor(hgreen);
+			}
+			cout << line << endl;
+		}
+		--cnt;
+	});
 	
-	ifstream file("tmpLog");
-	string line;
-	const regex fail("(FAIL.*)");
-	const regex pass("(PASS.*)");
-
-	while (getline(file, line))
-	{
-		ColorGuard guard;
-		if (regex_match(line, fail))
-		{
-			SetConsoleColor(hred);
-		}
-		if (regex_match(line, pass))
-		{
-			SetConsoleColor(hgreen);
-		}
-		cout << line << endl;
-	}
-
 	if (exitCode)
 	{
 		ColorGuard guard;
 		SetConsoleColor(hred);
 		cout << ">>>>> TESTS FAILED!!!" << endl;
+	}
+	
+	if (!cnt)
+	{
+		ColorGuard guard;
+		SetConsoleColor(hgreen);
+		cout << ":) :) :) :) TESTS OK!!!" << endl;
 	}
 
 	return exitCode;

@@ -5,6 +5,7 @@
 #include <list>
 #include <QSharedPointer>
 #include <iostream>
+#include <functional>
 
 class QStringList;
 
@@ -18,7 +19,7 @@ public:
 	int RunAll(int argc, char** argv);
 	int RunAllColorized(int argc, char** argv);
 private:
-	int RunAll(const QStringList& cmd);
+	int RunAll(const QStringList& cmd, std::function<void(QObject* test)> fn = [](QObject*){ std::cout << std::endl; });
 	std::list<QObject*> m_tests;
 };
 

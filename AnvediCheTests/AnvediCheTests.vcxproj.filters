@@ -44,9 +44,21 @@
     <ClCompile Include="GeneratedFiles\Release\moc_SignalDataTests.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="SignalListPresenterTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_SignalListPresenterTests.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_SignalListPresenterTests.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="SignalDataTests.h">
+      <Filter>Tests</Filter>
+    </CustomBuild>
+    <CustomBuild Include="SignalListPresenterTests.h">
       <Filter>Tests</Filter>
     </CustomBuild>
   </ItemGroup>
