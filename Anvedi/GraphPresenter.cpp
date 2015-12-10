@@ -11,11 +11,13 @@ GraphPresenter::GraphPresenter(QCustomPlot* plot, SignalData& data)
 	//plot->xAxis->setTickStep(10);
 	plot->xAxis->setTickLabels(false);
 
-	QObject::connect(&data, &SignalData::DomainChanged, [this](const Signal& newDomain){
-		this->data.onSignals([this](const Signal& signal){
-			this->OnGraphDataChanged(signal);
-		});
-	});
+	// model
+	QObject::connect(&data, SIGNAL(DataAdded(const DataMap&)), this, SLOT(OnNewData(const DataMap&)));
+	QObject::connect(&data, SIGNAL(DataCleared()), this, SLOT(OnClearData()));
+	QObject::connect(&data, SIGNAL(SignalColorChanged(const Signal&)), this, SLOT(OnGraphColorChanged(const Signal&)));
+	QObject::connect(&data, SIGNAL(SignalVisibilityChanged(const Signal&)), this, SLOT(OnGraphVisibilityChanged(const Signal&)));
+	QObject::connect(&data, SIGNAL(SignalChanged(const Signal&)), this, SLOT(OnGraphDataChanged(const Signal&)));
+	QObject::connect(&data, SIGNAL(DomainChanged(const Signal&)), this, SLOT(OnDomainChanged(const Signal&)));
 }
 
 void GraphPresenter::OnNewData(const DataMap& d)
@@ -102,4 +104,11 @@ void GraphPresenter::SetGraphicInfoFrom(QCPGraph& graph, const Signal& signal)
 {
 	graph.setPen(QPen(signal.color));
 	graph.setVisible(signal.visible);
+}
+
+void GraphPresenter::OnDomainChanged(const Signal& domain)
+{
+	data.onSignals([this](const Signal& signal){
+		this->OnGraphDataChanged(signal);
+	});
 }

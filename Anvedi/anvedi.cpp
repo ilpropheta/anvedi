@@ -17,21 +17,12 @@ Anvedi::Anvedi(QWidget *parent)
 
 	// window -> zoomer
 	QObject::connect(ui.actionResetZoom, SIGNAL(triggered()), rectZoomer.get(), SLOT(OnResetZoom()));
-
 	// cursor -> list
 	QObject::connect(cursor.get(), SIGNAL(CursorChanged(qreal, size_t)), signalListPresenter.get(), SLOT(OnCursorValueChanged(qreal, size_t)));
-	
-	// model -> graph
-	QObject::connect(&m_data, SIGNAL(DataAdded(const DataMap&)), graphPresenter.get(), SLOT(OnNewData(const DataMap&)));
-	QObject::connect(&m_data, SIGNAL(DataCleared()), graphPresenter.get(), SLOT(OnClearData()));
-	QObject::connect(&m_data, SIGNAL(SignalColorChanged(const Signal&)), graphPresenter.get(), SLOT(OnGraphColorChanged(const Signal&)));
-	QObject::connect(&m_data, SIGNAL(SignalVisibilityChanged(const Signal&)), graphPresenter.get(), SLOT(OnGraphVisibilityChanged(const Signal&)));
-	QObject::connect(&m_data, SIGNAL(SignalChanged(const Signal&)), graphPresenter.get(), SLOT(OnGraphDataChanged(const Signal&)));
 	// plot info -> graph
 	QObject::connect(&m_plotInfo, SIGNAL(BackgroundColorChanged(const QColor&)), graphPresenter.get(), SLOT(OnBackgroundChanged(const QColor&)));
 	// plot info -> cursor
 	QObject::connect(&m_plotInfo, SIGNAL(BackgroundColorChanged(const QColor&)), cursor.get(), SLOT(OnBackgroundChanged(const QColor&)));
-
 	// window -> plot info
 	QObject::connect(ui.actionChangeBackground, &QAction::triggered, [this]{
 		const auto color = QColorDialog::getColor(m_plotInfo.getBackgroundColor(), this, "Change the background color");

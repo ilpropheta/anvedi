@@ -19,6 +19,7 @@ public slots:
 	void OnGraphDataChanged(const Signal& signal);
 	void OnGraphColorChanged(const Signal& signal);
 	void OnGraphVisibilityChanged(const Signal& signal);
+	void OnDomainChanged(const Signal& domain);
 	void OnBackgroundChanged(const QColor& color);
 private:
 	void OnGraph(const Signal& signal, std::function<void(QCPGraph*)> action);
