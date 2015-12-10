@@ -13,7 +13,7 @@ Anvedi::Anvedi(QWidget *parent)
 	rectZoomer = make_unique<RectZoomer>(ui.plot);
 	scriptManager = make_unique<ScriptManager>(m_data, m_plotInfo, *ui.console);
 	signalListPresenter = make_unique<SignalListPresenter>(ui.signalList, ui.filterEdit, ui.signalCountLabel, ui.domainLabel, m_data);
-	graphPresenter = make_unique<GraphPresenter>(ui.plot);
+	graphPresenter = make_unique<GraphPresenter>(ui.plot, m_data);
 
 	// window -> zoomer
 	QObject::connect(ui.actionResetZoom, SIGNAL(triggered()), rectZoomer.get(), SLOT(OnResetZoom()));
@@ -32,7 +32,7 @@ Anvedi::Anvedi(QWidget *parent)
 	// plot info -> cursor
 	QObject::connect(&m_plotInfo, SIGNAL(BackgroundColorChanged(const QColor&)), cursor.get(), SLOT(OnBackgroundChanged(const QColor&)));
 
-	// window -> graph
+	// window -> plot info
 	QObject::connect(ui.actionChangeBackground, &QAction::triggered, [this]{
 		const auto color = QColorDialog::getColor(m_plotInfo.getBackgroundColor(), this, "Change the background color");
 		if (color.isValid())
@@ -49,7 +49,7 @@ void Anvedi::OnDataImport()
 {
 	//auto files = QFileDialog::getOpenFileNames(this, "Import files", ".", "*.*");
 
-	QVector<double> x(101), y(101), x1(101), y1(101);
+	QVector<double> x(101), y(101), y1(101);
 	for (int i = 0; i < 101; ++i)
 	{
 		x[i] = i / 50.0 - 1; // x goes from -1 to 1
@@ -58,13 +58,13 @@ void Anvedi::OnDataImport()
 
 	for (int i = 0; i < 101; ++i)
 	{
-		x1[i] = i / 50.0 - 1; // x goes from -1 to 1
-		y1[i] = x1[i] * x1[i] * x1[i]; // let's plot a quadratic function
+		y1[i] = x[i] * x[i] * x[i]; // let's plot a quadratic function
 	}
 
 	m_data.add({
-		{ "parabola", Signal{ "parabola", Qt::blue, true, x, y } },
-		{ "pippo", Signal{ "pippo", Qt::red, false, x1, y1 } }
+		{ "parabola", Signal{ "parabola", Qt::blue, true, y } },
+		{ "pippo", Signal{ "pippo", Qt::red, false, y1 } },
+		{ "line", Signal{ "line", Qt::red, false, x } }
 	});
 
 	cursor->reset();

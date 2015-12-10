@@ -7,12 +7,9 @@
 
 struct Signal
 {
-	static Signal Create(QString);
-
 	QString name;
-	QColor color;  // to move
-	bool visible;  // to move
-	QVector<qreal> x;  // to move
+	QColor color;
+	bool visible;
 	QVector<qreal> y;
 };
 

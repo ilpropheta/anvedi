@@ -6,12 +6,13 @@
 #include <QLineEdit>
 
 SignalListPresenter::SignalListPresenter(QTableWidget* signalList, QLineEdit* filterEdit, QLabel* signalCntLabel, QLabel* domainLabel, SignalData& data)
-	: signalList(signalList), filterEdit(filterEdit), signalCntLabel(signalCntLabel), domainLabel(domainLabel), data(data)
+	: signalList(signalList), filterEdit(filterEdit), signalCntLabel(signalCntLabel), domainLabel(domainLabel), domain(nullptr), data(data)
 {
 	const auto& tableHFont = signalList->horizontalHeader()->font();
 	QFontMetrics fm(tableHFont);
 	const auto colorLabelWidth = fm.width(signalList->horizontalHeaderItem(2)->text());
 	signalList->setColumnWidth(2, colorLabelWidth + 7);
+	signalList->verticalHeader()->setVisible(false);
 
 	// table
 	QObject::connect(signalList, &QTableWidget::itemClicked, [this](QTableWidgetItem* item){
@@ -23,6 +24,13 @@ SignalListPresenter::SignalListPresenter(QTableWidget* signalList, QLineEdit* fi
 		}
 	});
 
+	QObject::connect(signalList, &QTableWidget::itemDoubleClicked, [this](QTableWidgetItem* item){
+		if (item->column() == 0)
+		{
+			this->data.setAsDomain(item->text());
+		}
+	});
+	
 	// filter
 	QObject::connect(filterEdit, SIGNAL(textEdited(QString)), this, SLOT(OnSignalFilterEdited(const QString&)));
 
@@ -31,6 +39,7 @@ SignalListPresenter::SignalListPresenter(QTableWidget* signalList, QLineEdit* fi
 	QObject::connect(&data, SIGNAL(DataCleared()), this, SLOT(OnClearData()));
 	QObject::connect(&data, SIGNAL(SignalColorChanged(const Signal&)), this, SLOT(OnSignalColorChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalVisibilityChanged(const Signal&)), this, SLOT(OnSignalVisibilityChanged(const Signal&)));
+	QObject::connect(&data, SIGNAL(DomainChanged(const Signal&)), this, SLOT(OnDomainChanged(const Signal&)));
 }
 
 inline QString MakeBackgroundStylesheet(const QColor& color)
@@ -62,7 +71,7 @@ void SignalListPresenter::OnNewData(const DataMap& dataMap)
 
 		colorButton->setAutoFillBackground(true);
 		const auto& currColor = currentSignal.color;
-		QObject::connect(colorButton, &QPushButton::clicked, [name, currColor, colorButton, this]{
+		QObject::connect(colorButton, &QPushButton::clicked, [&currColor, name, colorButton, this]{
 			const auto color = QColorDialog::getColor(currColor, this->signalList, QString("Change color of %1").arg(name));
 			if (color.isValid())
 			{
@@ -73,11 +82,17 @@ void SignalListPresenter::OnNewData(const DataMap& dataMap)
 		currentCount++;
 	}
 
+	if (auto domain = data.getDomain())
+	{
+		OnDomainChanged(*domain);
+	}
+
 	OnSignalFilterEdited(filterEdit->text());
 }
 
 void SignalListPresenter::OnClearData()
 {
+	domain = nullptr;
 	signalCntLabel->setText("Showing 0 signals of 0");
 	signalList->setRowCount(0);
 	domainLabel->setText("Domain at cursor: ");
@@ -125,6 +140,7 @@ void SignalListPresenter::OnSignalVisibilityChanged(const Signal& signal)
 {
 	auto items = signalList->findItems(signal.name, Qt::MatchExactly);
 	items.at(0)->setCheckState(signal.visible ? Qt::Checked : Qt::Unchecked);
+	signalList->cellWidget(items.at(0)->row(), 2)->setEnabled(signal.visible);
 	OnSignalFilterEdited(filterEdit->text());
 }
 
@@ -154,4 +170,18 @@ void SignalListPresenter::OnCursorValueChanged(qreal xVal, size_t idx)
 		}
 		i++;
 	});
+}
+
+void SignalListPresenter::OnDomainChanged(const Signal& newDomain)
+{
+	auto items = signalList->findItems(newDomain.name, Qt::MatchExactly);
+	auto oldFont = items.at(0)->font();
+	if (domain)
+	{
+		domain->setFont(oldFont);	
+	}
+	oldFont.setBold(true);
+	oldFont.setItalic(true);
+	items.at(0)->setFont(oldFont);
+	domain = items.at(0);
 }

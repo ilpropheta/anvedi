@@ -246,7 +246,6 @@
     <ClCompile Include="SignalData.cpp" />
     <ClCompile Include="SignalHandle.cpp" />
     <ClCompile Include="SignalListPresenter.cpp" />
-    <ClCompile Include="Signal.cpp" />
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>

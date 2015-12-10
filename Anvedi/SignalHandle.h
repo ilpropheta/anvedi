@@ -20,7 +20,10 @@ public:
 	QString getColor() const;
 	void setColor(const QString& color);
 	QVariant getValues() const;
-	void setValues(const QVariant& values);
+	void setValues(const QVariant& values);	
+	void SetThisAsDomain();
+public slots:	
+	QString toString() const;
 private:
 	QString signalName;
 	SignalData& data;

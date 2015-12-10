@@ -1,19 +1,26 @@
 #include "GraphPresenter.h"
 #include <QColorDialog>
 #include "Utils.h"
+#include "SignalData.h"
 
-GraphPresenter::GraphPresenter(QCustomPlot* plot)
-	: plot(plot)
+GraphPresenter::GraphPresenter(QCustomPlot* plot, SignalData& data)
+	: plot(plot), data(data)
 {
 	plot->yAxis->setVisible(false);
 	//plot->xAxis->setAutoTickStep(false);
 	//plot->xAxis->setTickStep(10);
 	plot->xAxis->setTickLabels(false);
+
+	QObject::connect(&data, &SignalData::DomainChanged, [this](const Signal& newDomain){
+		this->data.onSignals([this](const Signal& signal){
+			this->OnGraphDataChanged(signal);
+		});
+	});
 }
 
-void GraphPresenter::OnNewData(const DataMap& data)
+void GraphPresenter::OnNewData(const DataMap& d)
 {
-	for (const auto& signal : data)
+	for (const auto& signal : d)
 	{
 		if (signal.second.visible)
 			OnGraphVisibilityChanged(signal.second);
@@ -43,10 +50,8 @@ void GraphPresenter::OnGraph(const Signal& signal, std::function<void(QCPGraph*)
 		myY->setVisible(false);
 		auto graph = plot->addGraph(plot->xAxis, myY);
 		displayedGraphs.emplace_hint(it.first, signal.name, graph);
-		graph->setData(signal.x, signal.y);
-		graph->setPen(QPen(signal.color));
-		graph->rescaleAxes();
-		graph->setVisible(signal.visible);
+		SetGraphicInfoFrom(*graph, signal);
+		SetGraphDataFrom(*graph, signal);
 	}
 	plot->replot();
 }
@@ -54,16 +59,14 @@ void GraphPresenter::OnGraph(const Signal& signal, std::function<void(QCPGraph*)
 void GraphPresenter::OnGraphVisibilityChanged(const Signal& signal)
 {
 	OnGraph(signal, [&](QCPGraph* graph){
-		graph->setPen(QPen(signal.color));
-		graph->setVisible(signal.visible);
+		SetGraphicInfoFrom(*graph, signal);
 	});
 }
 
 void GraphPresenter::OnGraphDataChanged(const Signal& signal)
 {
 	OnGraph(signal, [&](QCPGraph* graph){
-		graph->setData(signal.x, signal.y);
-		graph->rescaleAxes();
+		SetGraphDataFrom(*graph, signal);
 	});
 }
 
@@ -84,4 +87,19 @@ void GraphPresenter::OnBackgroundChanged(const QColor& color)
 		plot->xAxis->setBasePen(tickPen);
 	}
 	plot->replot(QCustomPlot::rpQueued);
+}
+
+void GraphPresenter::SetGraphDataFrom(QCPGraph& graph, const Signal& signal)
+{
+	if (data.getDomain())
+	{
+		graph.setData(data.getDomain()->y, signal.y);
+		graph.rescaleAxes();
+	}
+}
+
+void GraphPresenter::SetGraphicInfoFrom(QCPGraph& graph, const Signal& signal)
+{
+	graph.setPen(QPen(signal.color));
+	graph.setVisible(signal.visible);
 }

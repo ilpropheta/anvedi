@@ -6,12 +6,13 @@
 #include "SignalData.h"
 
 class QCustomPlot;
+class SignalData;
 
 class GraphPresenter : public QObject
 {
 	Q_OBJECT
 public:
-	GraphPresenter(QCustomPlot* plot);
+	GraphPresenter(QCustomPlot* plot, SignalData& data);
 public slots:
 	void OnNewData(const DataMap& data);
 	void OnClearData();
@@ -21,7 +22,10 @@ public slots:
 	void OnBackgroundChanged(const QColor& color);
 private:
 	void OnGraph(const Signal& signal, std::function<void(QCPGraph*)> action);
+	void SetGraphDataFrom(QCPGraph& graph, const Signal& signal);
+	void SetGraphicInfoFrom(QCPGraph& graph, const Signal& signal);
 
 	QCustomPlot* plot;
 	std::map<QString, QCPGraph*> displayedGraphs;
+	SignalData& data;
 };

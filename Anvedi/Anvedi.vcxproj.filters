@@ -83,9 +83,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_SignalListPresenter.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="Signal.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ScriptManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

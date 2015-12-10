@@ -6,6 +6,7 @@ class QTableWidget;
 class QLabel;
 class SignalData;
 class QLineEdit;
+class QTableWidgetItem;
 
 class SignalListPresenter : public QObject
 {
@@ -19,10 +20,12 @@ public slots:
 	void OnSignalVisibilityChanged(const Signal& signal);
 	void OnSignalColorChanged(const Signal& signal);
 	void OnCursorValueChanged(qreal xVal, size_t idx);
+	void OnDomainChanged(const Signal& newDomain);
 private:
 	QTableWidget* signalList;
 	QLineEdit* filterEdit;
 	QLabel* signalCntLabel;
 	QLabel* domainLabel;
+	QTableWidgetItem* domain;
 	SignalData& data;
 };

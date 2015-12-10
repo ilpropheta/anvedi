@@ -9,7 +9,7 @@ SignalHandle::SignalHandle(QString name, SignalData& data)
 
 bool SignalHandle::isVisible() const
 {
-	return data.getOrInsert(signalName).visible;
+	return static_cast<const SignalData&>(data).get(signalName).visible;
 }
 
 void SignalHandle::setVisible(bool visible)
@@ -19,7 +19,7 @@ void SignalHandle::setVisible(bool visible)
 
 QString SignalHandle::getColor() const
 {
-	return data.getOrInsert(signalName).color.name();
+	return static_cast<const SignalData&>(data).get(signalName).color.name();
 }
 
 void SignalHandle::setColor(const QString& color)
@@ -29,28 +29,30 @@ void SignalHandle::setColor(const QString& color)
 
 QVariant SignalHandle::getValues() const
 {
-	QVariantList vals;
-	const auto& signal = data.get(signalName);
-	for (const auto& val : signal.y)
-	{
-		vals.push_back(val);
-	}
+	const auto& signal = static_cast<const SignalData&>(data).get(signalName);
+	QVariantList vals; vals.reserve(signal.y.size());
+	std::copy(signal.y.begin(), signal.y.end(), std::back_inserter(vals));
 	return vals;
 }
 
 void SignalHandle::setValues(const QVariant& values)
 {
-	QVector<qreal> vals;
-	QVector<qreal> x(1);
-	for (const auto& item : values.toList())
-	{
-		vals.push_back(item.toReal());
-		x.push_back(x.back() + 1);
-	}
-	x.pop_back();
-
+	const auto varList = values.toList();
+	QVector<qreal> vals; vals.reserve(varList.size());
+	std::transform(varList.begin(), varList.end(), std::back_inserter(vals), [](const QVariant& v) {
+		return v.toReal();
+	});
 	data.set(signalName, [&](Signal& s){
 		s.y = std::move(vals);
-		s.x = std::move(x);
 	});
+}
+
+void SignalHandle::SetThisAsDomain() 
+{
+	data.setAsDomain(signalName);
+}
+
+QString SignalHandle::toString() const
+{
+	return QString("Handle to signal '%1'").arg(signalName);
 }
