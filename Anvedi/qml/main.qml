@@ -50,7 +50,7 @@ Item {
 						
 				onTriggered: {
 					
-					var newX = [];
+					/*var newX = [];
 					var newY = [];
 					for (var i = 0; i < 5; i++) 
 					{
@@ -59,12 +59,12 @@ Item {
 						xCurr += i;
 					}
 					customPlot.addData(0, newX, newY);
-					//customPlot.addData(1, newX, newY);
+					customPlot.addData(1, newX, newY);*/
 				}
 			}
 
 			Component.onCompleted: {		
-				/*var domain = [];
+				var domain = [];
 				var y = [];
 				
 				for (var i=0; i<20; ++i)
@@ -74,7 +74,7 @@ Item {
 				}
 								
 				addData(0, domain, y);
-				addData(1, domain, y);*/
+				addData(1, domain, y);
 			}
         }	
 }

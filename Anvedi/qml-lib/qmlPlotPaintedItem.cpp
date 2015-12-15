@@ -54,11 +54,14 @@ QColor qmlPlotPaintedItem::getBackground() const
 
 QQmlListProperty<qmlGraph> qmlPlotPaintedItem::getGraphs()
 {
-	return QQmlListProperty<qmlGraph>(this, &m_listInfo, &qmlPlotPaintedItem::appendGraph,
+	return QQmlListProperty<qmlGraph>(
+		this, 
+		&m_listInfo, 
+		&qmlPlotPaintedItem::appendGraph,
 		&qmlPlotPaintedItem::graphSize,
 		&qmlPlotPaintedItem::graphAt,
-		&qmlPlotPaintedItem::clearGraphs);
-
+		&qmlPlotPaintedItem::clearGraphs
+	);
 }
 
 qmlLegend* qmlPlotPaintedItem::getLegend() const
@@ -72,13 +75,20 @@ void qmlPlotPaintedItem::setLegend(qmlLegend* g)
 	m_CustomPlot.legend->setFont(g->getFont());
 }
 
+inline ListInfo& Info(QQmlListProperty<qmlGraph> *list)
+{
+	return *static_cast<ListInfo*>(list->data);
+}
+
 void qmlPlotPaintedItem::appendGraph(QQmlListProperty<qmlGraph> *list, qmlGraph *pdt)
 {
-	auto& info = *((ListInfo*) list->data);
+	auto& info = Info(list);
 	auto& m_CustomPlot = *info.plot;
 	info.m_graphs.append(pdt);
 
 	auto xAxis = m_CustomPlot.xAxis;
+	auto yAxis = m_CustomPlot.yAxis;
+
 	if (auto xAxisInfo = pdt->getXAxis())
 	{
 		if (!xAxisInfo->isDefault())
@@ -86,8 +96,6 @@ void qmlPlotPaintedItem::appendGraph(QQmlListProperty<qmlGraph> *list, qmlGraph 
 
 		xAxis->setLabel(xAxisInfo->getLabel());
 	}
-
-	auto yAxis = m_CustomPlot.yAxis;
 	if (auto yAxisInfo = pdt->getYAxis())
 	{
 		if (!yAxisInfo->isDefault())
@@ -101,9 +109,7 @@ void qmlPlotPaintedItem::appendGraph(QQmlListProperty<qmlGraph> *list, qmlGraph 
 	graph->setPen(pdt->getPen()->getPen());
 	graph->setLineStyle(pdt->getLineStyle());
 
-	auto scatterInfo = pdt->getScatter();
-
-	if (scatterInfo)
+	if (auto scatterInfo = pdt->getScatter())
 	{
 		graph->setScatterStyle(scatterInfo->getStyle());
 	}
@@ -112,30 +118,28 @@ void qmlPlotPaintedItem::appendGraph(QQmlListProperty<qmlGraph> *list, qmlGraph 
 
 void qmlPlotPaintedItem::clearGraphs(QQmlListProperty<qmlGraph> *p)
 {
-	auto& info = *((ListInfo*) p->data);
+	auto& info = Info(p);
 	info.m_graphs.clear();
 	info.plot->clearGraphs();
 }
 
 int qmlPlotPaintedItem::graphSize(QQmlListProperty<qmlGraph> *p)
 {
-	return ((ListInfo*) p->data)->m_graphs.size();
+	return Info(p).m_graphs.size();
 }
 
 qmlGraph * qmlPlotPaintedItem::graphAt(QQmlListProperty<qmlGraph> *p, int index)
 {
-	return ((ListInfo*) p->data)->m_graphs.at(index);
+	return Info(p).m_graphs.at(index);
 }
 
 void qmlPlotPaintedItem::mousePressEvent(QMouseEvent* event)
 {
-	qDebug() << Q_FUNC_INFO;
 	routeMouseEvents(event);
 }
 
 void qmlPlotPaintedItem::mouseReleaseEvent(QMouseEvent* event)
 {
-	qDebug() << Q_FUNC_INFO;
 	routeMouseEvents(event);
 }
 
@@ -146,7 +150,6 @@ void qmlPlotPaintedItem::mouseMoveEvent(QMouseEvent* event)
 
 void qmlPlotPaintedItem::mouseDoubleClickEvent(QMouseEvent* event)
 {
-	qDebug() << Q_FUNC_INFO;
 	routeMouseEvents(event);
 }
 
@@ -163,7 +166,6 @@ void qmlPlotPaintedItem::wheelEvent(QWheelEvent *event)
 
 void qmlPlotPaintedItem::onGraphClicked(QCPAbstractPlottable* plottable)
 {
-	qDebug() << Q_FUNC_INFO << QString("Clicked on graph '%1 ").arg(plottable->name());
 }
 
 void qmlPlotPaintedItem::routeMouseEvents(QMouseEvent* event)
@@ -180,7 +182,6 @@ void qmlPlotPaintedItem::onUpdateCustomPlotSize()
 
 void qmlPlotPaintedItem::onCustomReplot()
 {
-	qDebug() << Q_FUNC_INFO;
 	update();
 }
 
