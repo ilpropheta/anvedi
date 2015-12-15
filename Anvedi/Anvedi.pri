@@ -7,7 +7,9 @@
 message("You are running qmake on a generated .pro file. This may not work!")
 
 
-HEADERS += ./anvedi.h \
+HEADERS += ./Utils.h \
+    ./anvedi.h \
+    ./PlotInfo.h \
     ./PlotHandle.h \
     ./RectZoomer.h \
     ./SignalHandle.h \
@@ -17,17 +19,32 @@ HEADERS += ./anvedi.h \
     ./SignalListPresenter.h \
     ./PlotCursor.h \
     ./GraphPresenter.h \
-    ./qcustomplot.h
+    ./qcustomplot.h \
+    ./qml-lib/qmlPen.h \
+    ./qml-lib/qmlScatterStyle.h \
+    ./qml-lib/qmlLegend.h \
+    ./qml-lib/qmlAxis.h \
+    ./qml-lib/qmlGraph.h \
+    ./qml-lib/qmlPlotPaintedItem.h \
+    ./qml-lib/RegisterAll.h
 SOURCES += ./anvedi.cpp \
     ./GraphPresenter.cpp \
     ./PlotCursor.cpp \
     ./PlotHandle.cpp \
+    ./PlotInfo.cpp \
     ./qcustomplot.cpp \
     ./RectZoomer.cpp \
     ./ScriptManager.cpp \
     ./SignalData.cpp \
     ./SignalHandle.cpp \
     ./SignalListPresenter.cpp \
-    ./Signal.cpp
+    ./Utils.cpp \
+    ./qml-lib/qmlPen.cpp \
+    ./qml-lib/qmlScatterStyle.cpp \
+    ./qml-lib/qmlLegend.cpp \
+    ./qml-lib/qmlAxis.cpp \
+    ./qml-lib/qmlGraph.cpp \
+    ./qml-lib/qmlPlotPaintedItem.cpp \
+    ./qml-lib/RegisterAll.cpp
 FORMS += ./anvedi.ui
 RESOURCES += anvedi.qrc

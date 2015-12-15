@@ -33,6 +33,9 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="qml-lib">
+      <UniqueIdentifier>{6c95314f-507a-414e-8b88-6a8a606adde5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="anvedi.cpp">
@@ -140,6 +143,63 @@
     <ClCompile Include="Utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_qmlPen.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_qmlPen.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="qml-lib\qmlPen.cpp">
+      <Filter>qml-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_qmlScatterStyle.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="qml-lib\qmlScatterStyle.cpp">
+      <Filter>qml-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_qmlScatterStyle.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_qmlLegend.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_qmlLegend.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="qml-lib\qmlLegend.cpp">
+      <Filter>qml-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_qmlAxis.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="qml-lib\qmlAxis.cpp">
+      <Filter>qml-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_qmlGraph.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="qml-lib\qmlGraph.cpp">
+      <Filter>qml-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_qmlGraph.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_qmlPlotPaintedItem.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_qmlPlotPaintedItem.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="qml-lib\qmlPlotPaintedItem.cpp">
+      <Filter>qml-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_qmlAxis.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="qml-lib\RegisterAll.cpp">
+      <Filter>qml-lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="anvedi.h">
@@ -184,6 +244,24 @@
     <CustomBuild Include="PlotInfo.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="qml-lib\qmlPen.h">
+      <Filter>qml-lib</Filter>
+    </CustomBuild>
+    <CustomBuild Include="qml-lib\qmlScatterStyle.h">
+      <Filter>qml-lib</Filter>
+    </CustomBuild>
+    <CustomBuild Include="qml-lib\qmlLegend.h">
+      <Filter>qml-lib</Filter>
+    </CustomBuild>
+    <CustomBuild Include="qml-lib\qmlAxis.h">
+      <Filter>qml-lib</Filter>
+    </CustomBuild>
+    <CustomBuild Include="qml-lib\qmlGraph.h">
+      <Filter>qml-lib</Filter>
+    </CustomBuild>
+    <CustomBuild Include="qml-lib\qmlPlotPaintedItem.h">
+      <Filter>qml-lib</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_anvedi.h">
@@ -191,6 +269,9 @@
     </ClInclude>
     <ClInclude Include="Utils.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="qml-lib\RegisterAll.h">
+      <Filter>qml-lib</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

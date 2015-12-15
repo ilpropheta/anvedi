@@ -15,3 +15,6 @@
 /QShell/x64/Release/QShell.tlog
 *.obj
 *.log
+/AnvediCheExe/x64/Debug
+/AnvediCheTests/GeneratedFiles/Debug
+/AnvediCheTests/x64/Debug
