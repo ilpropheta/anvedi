@@ -1,6 +1,7 @@
 #include "anvedi.h"
 #include <QtScript\QScriptContext>
 #include "SignalHandle.h"
+#include "WorkspaceSerializer.h"
 
 using namespace std;
 
@@ -40,25 +41,38 @@ void Anvedi::OnDataImport()
 {
 	//auto files = QFileDialog::getOpenFileNames(this, "Import files", ".", "*.*");
 
-	QVector<double> x(101), y(101), y1(101);
-	for (int i = 0; i < 101; ++i)
+	//QVector<double> x(101), y(101), y1(101);
+	//for (int i = 0; i < 101; ++i)
+	//{
+	//	x[i] = i / 50.0 - 1; // x goes from -1 to 1
+	//	y[i] = x[i] * x[i]; // let's plot a quadratic function
+	//}
+
+	//for (int i = 0; i < 101; ++i)
+	//{
+	//	y1[i] = x[i] * x[i] * x[i]; // let's plot a quadratic function
+	//}
+
+	//m_data.add({
+	//	{ "parabola", Signal{ "parabola", Qt::blue, true, y } },
+	//	{ "pippo", Signal{ "pippo", Qt::red, false, y1 } },
+	//	{ "line", Signal{ "line", Qt::red, false, x } }
+	//});
+
+	const auto files = QFileDialog::getOpenFileNames(this, "Import as JSON", ".", "*.json");
+	for (const auto& file : files)
 	{
-		x[i] = i / 50.0 - 1; // x goes from -1 to 1
-		y[i] = x[i] * x[i]; // let's plot a quadratic function
+		WorkspaceSerializer::Read(file, m_data, m_plotInfo);
 	}
-
-	for (int i = 0; i < 101; ++i)
-	{
-		y1[i] = x[i] * x[i] * x[i]; // let's plot a quadratic function
-	}
-
-	m_data.add({
-		{ "parabola", Signal{ "parabola", Qt::blue, true, y } },
-		{ "pippo", Signal{ "pippo", Qt::red, false, y1 } },
-		{ "line", Signal{ "line", Qt::red, false, x } }
-	});
-
 	cursor->reset();
+}
+
+void Anvedi::OnDataExport()
+{
+	auto file = QFileDialog::getSaveFileName(this, "Export as JSON", ".", "*.json");
+	if (!file.endsWith(".json"))
+		file.append(".json");
+	WorkspaceSerializer::Write(file, m_data, m_plotInfo);
 }
 
 void Anvedi::OnDataClear()

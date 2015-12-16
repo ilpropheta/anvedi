@@ -200,6 +200,9 @@
     <ClCompile Include="qml-lib\RegisterAll.cpp">
       <Filter>qml-lib</Filter>
     </ClCompile>
+    <ClCompile Include="WorkspaceSerializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="anvedi.h">
@@ -272,6 +275,9 @@
     </ClInclude>
     <ClInclude Include="qml-lib\RegisterAll.h">
       <Filter>qml-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkspaceSerializer.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

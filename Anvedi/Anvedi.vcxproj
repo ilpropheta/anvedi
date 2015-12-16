@@ -302,6 +302,7 @@
     <ClCompile Include="SignalHandle.cpp" />
     <ClCompile Include="SignalListPresenter.cpp" />
     <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="WorkspaceSerializer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="anvedi.h">
@@ -345,6 +346,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_anvedi.h" />
+    <ClInclude Include="WorkspaceSerializer.h" />
     <CustomBuild Include="qml-lib\qmlPen.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing qmlPen.h...</Message>

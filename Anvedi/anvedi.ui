@@ -50,6 +50,7 @@
      <string>Data</string>
     </property>
     <addaction name="actionImport"/>
+    <addaction name="actionExport"/>
     <addaction name="actionClear"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
@@ -297,7 +298,7 @@
   </action>
   <action name="actionClear">
    <property name="text">
-    <string>Clear Workspace</string>
+    <string>Clear</string>
    </property>
   </action>
   <action name="actionResetZoom">
@@ -308,6 +309,11 @@
   <action name="actionChangeBackground">
    <property name="text">
     <string>Change Background</string>
+   </property>
+  </action>
+  <action name="actionExport">
+   <property name="text">
+    <string>Export</string>
    </property>
   </action>
  </widget>
@@ -377,11 +383,28 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionExport</sender>
+   <signal>triggered()</signal>
+   <receiver>AnvediClass</receiver>
+   <slot>OnDataExport()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>367</x>
+     <y>282</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>OnExit()</slot>
   <slot>OnDataImport()</slot>
   <slot>OnDataClear()</slot>
   <slot>OnSignalFilterEdited(QString)</slot>
+  <slot>OnDataExport()</slot>
  </slots>
 </ui>

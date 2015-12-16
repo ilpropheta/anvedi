@@ -18,9 +18,10 @@ class Anvedi : public QMainWindow
 	Q_OBJECT
 public:
 	Anvedi(QWidget *parent = 0);
-	public slots:
+public slots:
 	void OnExit();
 	void OnDataImport();
+	void OnDataExport();
 	void OnDataClear();
 private:
 	Ui::AnvediClass ui;
