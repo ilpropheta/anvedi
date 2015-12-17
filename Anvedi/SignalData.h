@@ -15,18 +15,14 @@ public:
 	void add(DataMap data);
 	void addEmptyIfNotExists(const QString& name);
 	void clear();
-	
 	const Signal& get(const QString& name) const;
 	const Signal* getDomain() const;
-	
 	void set(const QString& name, std::function<void(Signal&)> setter);
 	void setAsDomain(const QString& name);
 	void setColor(const QString& name, const QColor& col);
 	void setVisible(const QString& name, bool visible);
-	
 	void onSignals(std::function<void(const Signal&)> fun) const;
-	
-	std::pair<qreal, size_t> nearestDomainValueTo(qreal val) const;
+	std::pair<qreal, size_t> domainLowerBound(qreal val) const;
 signals:
 	void DataAdded(const DataMap&);
 	void SignalChanged(const Signal&);

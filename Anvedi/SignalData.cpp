@@ -72,13 +72,21 @@ void SignalData::onSignals(std::function<void(const Signal&)> fun) const
 		fun(signal.second);
 }
 
-std::pair<qreal, size_t> SignalData::nearestDomainValueTo(qreal val) const
+std::pair<qreal, size_t> SignalData::domainLowerBound(qreal val) const
 {
 	if (domain)
 	{
 		const auto& x = domain->y;
-		const auto it = std::lower_bound(x.begin(), x.end(), val);
-		return{ *it, std::distance(x.begin(), it) };
+		const auto eRange = std::equal_range(x.begin(), x.end(), val);
+		if (eRange.first == x.end()) // saturate right
+		{
+			return{ x.back(), x.size() - 1 };
+		}
+		if (eRange.first == x.begin()) // saturate left
+		{
+			return{ x.front(), 0u };
+		}
+		return{ *eRange.first, std::distance(x.begin(), eRange.first) };
 	}
 	return{ std::numeric_limits<qreal>::quiet_NaN(), 0u };
 }

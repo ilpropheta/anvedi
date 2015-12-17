@@ -3,9 +3,10 @@
 #include "utils.h"
 #include <complex>
 #include <QEvent>
+#include "SignalData.h"
 
-PlotCursor::PlotCursor(QCustomPlot* parent, qreal pStepSize)
-	: cursor(nullptr), plot(parent), cursorStepSize(pStepSize)
+PlotCursor::PlotCursor(QCustomPlot* parent, SignalData& data, qreal pStepSize)
+	: cursor(nullptr), plot(parent), data(data), cursorStepSize(pStepSize)
 {
 	cursor = new QCPItemStraightLine(parent);
 	initLinePos();
@@ -38,24 +39,16 @@ void PlotCursor::reset()
 
 void PlotCursor::set(qreal xVal)
 {
-	if (!plot->graphCount() || plot->graph(0)->data()->empty())
-		return;
+	auto domainValInfo = data.domainLowerBound(xVal);
+	if (!std::isnan(domainValInfo.first))
+	{
+		const auto domainVal = domainValInfo.first;
+		cursor->point1->setCoords(domainVal, cursor->point1->coords().y());
+		cursor->point2->setCoords(domainVal, cursor->point2->coords().y());
+		plot->replot(QCustomPlot::rpHint);
 
-	// assumes the same domain for each graph
-	const auto xData = plot->graph(0)->data();
-	const auto rangeMin = xData->begin()->key;
-	const auto rangeMax = (xData->end() - 1)->key;
-	// saturate
-	auto domainVal = (xVal >= rangeMin) ? xVal : rangeMin;
-	const auto lbIt = xData->lowerBound(domainVal);
-	domainVal = (domainVal > rangeMax) ? rangeMax : lbIt->key;
-	const auto domPos = (domainVal >= rangeMax) ? (xData->size() - 1) : std::distance(xData->begin(), lbIt);
-
-	cursor->point1->setCoords(domainVal, cursor->point1->coords().y());
-	cursor->point2->setCoords(domainVal, cursor->point2->coords().y());
-	plot->replot(QCustomPlot::rpHint);
-
-	emit CursorChanged(domainVal, domPos);
+		emit CursorChanged(domainVal, domainValInfo.second);
+	}
 }
 
 void PlotCursor::move(qreal delta)

@@ -6,12 +6,13 @@ class QCustomPlot;
 class QMouseEvent;
 class QKeyEvent;
 class QCPItemText;
+class SignalData;
 
 class PlotCursor : public QObject
 {
 	Q_OBJECT
 public:
-	PlotCursor(QCustomPlot* parent, qreal pStepSize);
+	PlotCursor(QCustomPlot* parent, SignalData& data, qreal pStepSize);
 
 	// movement
 	void reset();
@@ -37,5 +38,6 @@ private:
 	QCPItemStraightLine *cursor;
 	QCustomPlot* plot;
 	qreal cursorStepSize;
+	SignalData& data;
 };
 
