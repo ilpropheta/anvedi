@@ -17,12 +17,12 @@ public slots:
 	void OnNewData(const DataMap& data);
 	void OnClearData();
 	void OnGraphDataChanged(const Signal& signal);
-	void OnGraphColorChanged(const Signal& signal);
 	void OnGraphVisibilityChanged(const Signal& signal);
 	void OnDomainChanged(const Signal& domain);
 	void OnBackgroundChanged(const QColor& color);
 private:
 	void OnGraph(const Signal& signal, std::function<void(QCPGraph*)> action);
+	void OnGraphAndReplot(const Signal& signal, std::function<void(QCPGraph*)> action);
 	void SetGraphDataFrom(QCPGraph& graph, const Signal& signal);
 	void SetGraphicInfoFrom(QCPGraph& graph, const Signal& signal);
 

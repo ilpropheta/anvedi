@@ -29,12 +29,7 @@ void PlotCursor::reset()
 {
 	initLinePos();
 	plot->replot();
-
-	if (plot->graphCount())
-	{
-		auto val = plot->graph(0)->data()->begin()->key;
-		set(val);
-	}
+	set(std::numeric_limits<qreal>::min());
 }
 
 void PlotCursor::set(qreal xVal)

@@ -17,24 +17,26 @@ QVector<qreal> ToVector(const QJsonArray& arr)
 	return vec;
 }
 
-void ReadGraph(const QJsonObject& obj, SignalData& data)
+void ReadGraph(const QJsonObject& obj, DataMap& data)
 {
 	auto it = obj.find("name");
 	if (it != obj.end())
 	{
 		const auto sigName = it->toString();
-		data.addEmptyIfNotExists(sigName);
+		Signal signal{sigName};
+
 		it = obj.find("color");
 		if (it != obj.end())
-			data.setColor(sigName, it->toString());
+			signal.color = it->toString();
 		it = obj.find("visible");
 		if (it != obj.end())
-			data.setVisible(sigName, it->toBool());
+			signal.visible = it->toBool();
 		it = obj.find("values");
 		if (it != obj.end() && it->isArray())
 		{
-			data.setValues(sigName, ToVector(it->toArray()));
+			signal.y = ToVector(it->toArray());
 		}
+		data.emplace(std::move(sigName), std::move(signal));
 	}
 }
 
@@ -59,13 +61,15 @@ void WorkspaceSerializer::Read(const QString& fileName, SignalData& data, PlotIn
 	auto graphIt = json.find("signals");
 	if ((graphIt != json.end()) && graphIt->isArray())
 	{
+		DataMap newData;
 		for (const auto& elem : graphIt->toArray())
 		{
 			if (elem.isObject())
 			{
-				ReadGraph(elem.toObject(), data);
+				ReadGraph(elem.toObject(), newData);
 			}
 		}
+		data.add(std::move(newData));
 	}
 }
 

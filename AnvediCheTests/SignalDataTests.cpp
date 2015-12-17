@@ -23,6 +23,19 @@ void SignalDataTests::On_add_ShouldEmit_DataAdded()
 	QCOMPARE(spy.count(), 1); 
 }
 
+void SignalDataTests::On_add_Should_AllowOverwritingElements()
+{
+	SignalData data;
+	data.add({ { "signal", { "signal", {}, true } } });
+	QCOMPARE(data.get("signal").visible, true);
+	data.add({ 
+		{ "signal", { "signal", {}, false } },
+		{ "other", { "other", {}, true } }
+	});
+	QCOMPARE(data.get("signal").visible, false);
+	QCOMPARE(data.get("other").visible, true);
+}
+
 void SignalDataTests::On_clear_ShouldEmit_DataCleared()
 {
 	SignalData data;

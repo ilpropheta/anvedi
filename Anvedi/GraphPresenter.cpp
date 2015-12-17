@@ -14,7 +14,7 @@ GraphPresenter::GraphPresenter(QCustomPlot* plot, SignalData& data)
 	// model
 	QObject::connect(&data, SIGNAL(DataAdded(const DataMap&)), this, SLOT(OnNewData(const DataMap&)));
 	QObject::connect(&data, SIGNAL(DataCleared()), this, SLOT(OnClearData()));
-	QObject::connect(&data, SIGNAL(SignalColorChanged(const Signal&)), this, SLOT(OnGraphColorChanged(const Signal&)));
+	QObject::connect(&data, SIGNAL(SignalColorChanged(const Signal&)), this, SLOT(OnGraphVisibilityChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalVisibilityChanged(const Signal&)), this, SLOT(OnGraphVisibilityChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalValuesChanged(const Signal&)), this, SLOT(OnGraphDataChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(DomainChanged(const Signal&)), this, SLOT(OnDomainChanged(const Signal&)));
@@ -25,18 +25,20 @@ void GraphPresenter::OnNewData(const DataMap& d)
 	for (const auto& signal : d)
 	{
 		if (signal.second.visible)
-			OnGraphVisibilityChanged(signal.second);
+		{
+			OnGraph(signal.second, [&](QCPGraph* graph){
+				SetGraphicInfoFrom(*graph, signal.second);
+				SetGraphDataFrom(*graph, signal.second);
+			});
+		}
 	}
+	plot->replot();
 }
 
-void GraphPresenter::OnGraphColorChanged(const Signal& signal)
+void GraphPresenter::OnGraphAndReplot(const Signal& signal, std::function<void(QCPGraph*)> action)
 {
-	auto it = displayedGraphs.find(signal.name);
-	if (it != end(displayedGraphs))
-	{
-		it->second->setPen(QPen(signal.color));
-		plot->replot(QCustomPlot::rpQueued);
-	}
+	OnGraph(signal, action);
+	plot->replot();
 }
 
 void GraphPresenter::OnGraph(const Signal& signal, std::function<void(QCPGraph*)> action)
@@ -52,22 +54,20 @@ void GraphPresenter::OnGraph(const Signal& signal, std::function<void(QCPGraph*)
 		myY->setVisible(false);
 		auto graph = plot->addGraph(plot->xAxis, myY);
 		displayedGraphs.emplace_hint(it.first, signal.name, graph);
-		SetGraphicInfoFrom(*graph, signal);
-		SetGraphDataFrom(*graph, signal);
+		action(graph);
 	}
-	plot->replot();
 }
 
 void GraphPresenter::OnGraphVisibilityChanged(const Signal& signal)
 {
-	OnGraph(signal, [&](QCPGraph* graph){
+	OnGraphAndReplot(signal, [&](QCPGraph* graph){
 		SetGraphicInfoFrom(*graph, signal);
 	});
 }
 
 void GraphPresenter::OnGraphDataChanged(const Signal& signal)
 {
-	OnGraph(signal, [&](QCPGraph* graph){
+	OnGraphAndReplot(signal, [&](QCPGraph* graph){
 		SetGraphDataFrom(*graph, signal);
 	});
 }
@@ -96,7 +96,7 @@ void GraphPresenter::SetGraphDataFrom(QCPGraph& graph, const Signal& signal)
 	if (data.getDomain())
 	{
 		graph.setData(data.getDomain()->y, signal.y);
-		graph.rescaleAxes();
+		graph.rescaleAxes(); // range is set to show the whole graph
 	}
 }
 
@@ -109,6 +109,9 @@ void GraphPresenter::SetGraphicInfoFrom(QCPGraph& graph, const Signal& signal)
 void GraphPresenter::OnDomainChanged(const Signal& domain)
 {
 	data.onSignals([this](const Signal& signal){
-		this->OnGraphDataChanged(signal);
+		OnGraph(signal, [&](QCPGraph* graph){
+			SetGraphDataFrom(*graph, signal);
+		});
 	});
+	plot->replot();
 }

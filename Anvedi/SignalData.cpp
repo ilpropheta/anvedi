@@ -13,7 +13,16 @@ void SignalData::add(DataMap data)
 {
 	if (!data.empty())
 	{
-		m_data.insert(make_move_iterator(data.begin()), make_move_iterator(data.end()));
+		for (auto&& elem : data)
+		{
+			auto it = m_data.equal_range(elem.first);
+			if (it.first != it.second)
+				it.first->second = std::move(elem.second);
+			else
+			{
+				m_data.insert(it.first, std::move(elem));
+			}
+		}
 		emit DataAdded(m_data);
 	}
 }
@@ -69,7 +78,7 @@ void SignalData::onSignals(std::function<void(const Signal&)> fun) const
 
 std::pair<qreal, size_t> SignalData::domainLowerBound(qreal val) const
 {
-	if (domain)
+	if (domain && !domain->y.empty())
 	{
 		const auto& x = domain->y;
 		const auto eRange = std::equal_range(x.begin(), x.end(), val);
