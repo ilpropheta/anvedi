@@ -28,6 +28,8 @@ void SignalData::set(const QString& name, std::function<void(Signal&)> setter)
 	auto& signal = get(name);
 	setter(signal);
 	emit SignalChanged(signal);
+	if (&signal == domain)
+		emit DomainChanged(signal);
 }
 
 void SignalData::setColor(const QString& name, const QColor& col)
