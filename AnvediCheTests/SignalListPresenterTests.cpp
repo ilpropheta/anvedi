@@ -22,7 +22,75 @@ void SignalListPresenterTests::initTestCase()
 	signalList->setObjectName(QStringLiteral("signalList"));
 	signalList->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	signalList->setDragDropOverwriteMode(false);
+}
 
+void SignalListPresenterTests::OnNewData_Should_PopulateTableWidget()
+{
+	PrepareTest();
+	data.add({ 
+		{ "domain", { "domain"} },
+		{ "signal", { "signal"} },
+	});
+
+	QCOMPARE(2, signalList->rowCount());
+}
+
+void SignalListPresenterTests::OnClear_Should_EmptyTableWidget()
+{
+	PrepareTest();
+	data.add({
+		{ "domain", { "domain" } },
+		{ "signal", { "signal" } },
+	});
+	data.clear();
+
+	QCOMPARE(signalList->rowCount(), 0);
+}
+
+void SignalListPresenterTests::OnSignalVisibilityChanged_Should_ChangeCorrespondingTableEntry()
+{
+	PrepareTest();
+	data.add({
+		{ "domain", { "domain", {}, false } },
+	});
+	
+	QCOMPARE(signalList->item(0, 0)->checkState(), Qt::Unchecked);
+	data.setVisible("domain", true);
+	QCOMPARE(signalList->item(0, 0)->checkState(), Qt::Checked);
+}
+
+void SignalListPresenterTests::OnDomainChanged_Should_BoldCorrespondingTableEntry()
+{
+	PrepareTest();
+	data.add({
+		{ "domain", { "domain" } },
+		{ "signal", { "signal" } },
+	});
+	
+	QCOMPARE(signalList->item(0, 0)->font().bold(), false);
+	data.setAsDomain("domain");
+	QCOMPARE(signalList->item(0, 0)->font().bold(), true);
+}
+
+// filter -> presenter
+
+void SignalListPresenterTests::OnSignalFilterEdited_Should_HideNonMatchingRows()
+{
+	PrepareTest();
+	data.add({
+		{ "domain", { "domain" } },
+		{ "signal", { "signal" } },
+	});
+
+	QTest::keyClicks(filterEdit.get(), "doma");
+
+	QVERIFY(!signalList->isRowHidden(0));
+	QVERIFY(signalList->isRowHidden(1));
+}
+
+void SignalListPresenterTests::PrepareTest()
+{	
+	data.clear();
 	filterEdit.reset(new QLineEdit());
 	signalCntLabel.reset(new QLabel());
 	domainLabel.reset(new QLabel());
@@ -32,27 +100,4 @@ void SignalListPresenterTests::initTestCase()
 		signalCntLabel.get(),
 		domainLabel.get(),
 		data);
-}
-
-void SignalListPresenterTests::OnNewData_Should_PopulateTableWidget()
-{
-	data.add({ 
-		{ "domain", { "domain"} },
-		{ "signal", { "signal"} },
-	});
-
-	QCOMPARE(2, signalList->rowCount());
-}
-
-void SignalListPresenterTests::OnSignalFilterEdited_Should_HideNonMatchingRows()
-{
-	data.add({
-		{ "domain", { "domain"} },
-		{ "signal", { "signal"} },
-	});
-
-	QTest::keyClicks(filterEdit.get(), "doma");
-
-	QVERIFY(!signalList->isRowHidden(0));
-	QVERIFY(signalList->isRowHidden(1));
 }

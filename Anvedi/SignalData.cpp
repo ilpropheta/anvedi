@@ -23,35 +23,30 @@ void SignalData::addEmptyIfNotExists(const QString& name)
 	getOrInsert(name);
 }
 
-void SignalData::set(const QString& name, std::function<void(Signal&)> setter)
+void SignalData::setValues(const QString& name, QVector<qreal> vec)
 {
-	auto& signal = get(name);
-	setter(signal);
-	emit SignalChanged(signal);
+	auto& signal = m_data.at(name);
+	signal.y = std::move(vec);
+	emit SignalValuesChanged(signal);
 	if (&signal == domain)
 		emit DomainChanged(signal);
 }
 
 void SignalData::setColor(const QString& name, const QColor& col)
 {
-	auto& signal = get(name);
+	auto& signal = m_data.at(name);
 	signal.color = col;
 	emit SignalColorChanged(signal);
 }
 
 void SignalData::setVisible(const QString& name, bool visible)
 {
-	auto& signal = get(name);
+	auto& signal = m_data.at(name);
 	signal.visible = visible;
 	emit SignalVisibilityChanged(signal);
 }
 
 const Signal& SignalData::get(const QString& name) const
-{
-	return m_data.at(name);
-}
-
-Signal& SignalData::get(const QString& name)
 {
 	return m_data.at(name);
 }
@@ -98,6 +93,6 @@ const Signal* SignalData::getDomain() const
 
 void SignalData::setAsDomain(const QString& name)
 {
-	domain = &get(name);
+	domain = &m_data.at(name);
 	emit DomainChanged(*domain);
 }

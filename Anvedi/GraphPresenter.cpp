@@ -16,7 +16,7 @@ GraphPresenter::GraphPresenter(QCustomPlot* plot, SignalData& data)
 	QObject::connect(&data, SIGNAL(DataCleared()), this, SLOT(OnClearData()));
 	QObject::connect(&data, SIGNAL(SignalColorChanged(const Signal&)), this, SLOT(OnGraphColorChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalVisibilityChanged(const Signal&)), this, SLOT(OnGraphVisibilityChanged(const Signal&)));
-	QObject::connect(&data, SIGNAL(SignalChanged(const Signal&)), this, SLOT(OnGraphDataChanged(const Signal&)));
+	QObject::connect(&data, SIGNAL(SignalValuesChanged(const Signal&)), this, SLOT(OnGraphDataChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(DomainChanged(const Signal&)), this, SLOT(OnDomainChanged(const Signal&)));
 }
 

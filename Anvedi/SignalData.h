@@ -15,23 +15,26 @@ public:
 	void add(DataMap data);
 	void addEmptyIfNotExists(const QString& name);
 	void clear();
+	// getters
 	const Signal& get(const QString& name) const;
 	const Signal* getDomain() const;
-	void set(const QString& name, std::function<void(Signal&)> setter);
+	// setters
 	void setAsDomain(const QString& name);
 	void setColor(const QString& name, const QColor& col);
 	void setVisible(const QString& name, bool visible);
+	void setValues(const QString& name, QVector<qreal> vec);
+	// visitor
 	void onSignals(std::function<void(const Signal&)> fun) const;
+	// utils
 	std::pair<qreal, size_t> domainLowerBound(qreal val) const;
 signals:
 	void DataAdded(const DataMap&);
-	void SignalChanged(const Signal&);
+	void SignalValuesChanged(const Signal&);
 	void SignalColorChanged(const Signal&);
 	void SignalVisibilityChanged(const Signal&);
 	void DataCleared();
 	void DomainChanged(const Signal&);
 private:
-	Signal& get(const QString& name);
 	Signal& getOrInsert(const QString& name);
 
 	DataMap m_data;

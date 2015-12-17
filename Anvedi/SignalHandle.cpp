@@ -9,7 +9,7 @@ SignalHandle::SignalHandle(QString name, SignalData& data)
 
 bool SignalHandle::isVisible() const
 {
-	return static_cast<const SignalData&>(data).get(signalName).visible;
+	return data.get(signalName).visible;
 }
 
 void SignalHandle::setVisible(bool visible)
@@ -19,7 +19,7 @@ void SignalHandle::setVisible(bool visible)
 
 QString SignalHandle::getColor() const
 {
-	return static_cast<const SignalData&>(data).get(signalName).color.name();
+	return data.get(signalName).color.name();
 }
 
 void SignalHandle::setColor(const QString& color)
@@ -42,9 +42,7 @@ void SignalHandle::setValues(const QVariant& values)
 	std::transform(varList.begin(), varList.end(), std::back_inserter(vals), [](const QVariant& v) {
 		return v.toReal();
 	});
-	data.set(signalName, [&](Signal& s){
-		s.y = std::move(vals);
-	});
+	data.setValues(signalName, std::move(vals));
 }
 
 void SignalHandle::SetThisAsDomain() 

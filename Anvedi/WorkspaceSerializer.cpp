@@ -33,9 +33,7 @@ void ReadGraph(const QJsonObject& obj, SignalData& data)
 		it = obj.find("values");
 		if (it != obj.end() && it->isArray())
 		{
-			data.set(sigName, [&](Signal& signal){
-				signal.y = ToVector(it->toArray());
-			});
+			data.setValues(sigName, ToVector(it->toArray()));
 		}
 	}
 }
