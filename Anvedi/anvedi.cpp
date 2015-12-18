@@ -2,6 +2,7 @@
 #include <QtScript\QScriptContext>
 #include "SignalHandle.h"
 #include "WorkspaceSerializer.h"
+#include "ScriptManager.h"
 
 using namespace std;
 
@@ -12,9 +13,10 @@ Anvedi::Anvedi(QWidget *parent)
 
 	cursor = make_unique<PlotCursor>(ui.plot, m_data, 0.01);
 	rectZoomer = make_unique<RectZoomer>(ui.plot);
-	scriptManager = make_unique<ScriptManager>(m_data, m_plotInfo, *ui.console);
 	signalListPresenter = make_unique<SignalListPresenter>(ui.signalList, ui.filterEdit, ui.signalCountLabel, ui.domainLabel, m_data);
 	graphPresenter = make_unique<GraphPresenter>(ui.plot, m_data);
+
+	ScriptManager::InitWorkspace(m_data, m_plotInfo, *ui.console);
 
 	// window -> zoomer
 	QObject::connect(ui.actionResetZoom, SIGNAL(triggered()), rectZoomer.get(), SLOT(OnResetZoom()));
@@ -78,6 +80,6 @@ void Anvedi::OnDataExport()
 void Anvedi::OnDataClear()
 {
 	m_data.clear();
-	scriptManager->InitWorkspace(m_data, m_plotInfo, *ui.console);
+	ScriptManager::InitWorkspace(m_data, m_plotInfo, *ui.console);
 	cursor->reset();
 }

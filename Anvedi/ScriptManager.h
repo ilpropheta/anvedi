@@ -1,15 +1,12 @@
 #pragma once
-#include <QObject>
 
 class SignalData;
 class QShell;
 class PlotInfo;
 
-class ScriptManager : public QObject
+class ScriptManager
 {
-	Q_OBJECT
 public:
-	ScriptManager(SignalData& data, PlotInfo& plot, QShell& shell);
-	void InitWorkspace(SignalData& data, PlotInfo& plot, QShell& shell);
+	static void InitWorkspace(SignalData& data, PlotInfo& plot, QShell& shell);
 };
 

@@ -8,11 +8,6 @@
 
 using namespace std;
 
-ScriptManager::ScriptManager(SignalData& data, PlotInfo& plot, QShell& shell)
-{
-	InitWorkspace(data, plot, shell);
-}
-
 QScriptValue GraphWrapperCtor(QScriptContext *context, QScriptEngine *engine)
 {
 	if (context->isCalledAsConstructor())

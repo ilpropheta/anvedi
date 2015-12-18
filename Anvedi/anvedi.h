@@ -9,7 +9,6 @@
 #include "GraphPresenter.h"
 #include <map>
 #include "SignalData.h"
-#include "ScriptManager.h"
 #include "RectZoomer.h"
 #include "PlotInfo.h"
 
@@ -30,8 +29,6 @@ private:
 	std::unique_ptr<RectZoomer> rectZoomer;
 	std::unique_ptr<SignalListPresenter> signalListPresenter;
 	std::unique_ptr<GraphPresenter> graphPresenter;
-
-	std::unique_ptr<ScriptManager> scriptManager;
 
 	SignalData m_data;
 	PlotInfo m_plotInfo;
