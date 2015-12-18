@@ -68,6 +68,15 @@
     <ClCompile Include="GeneratedFiles\qrc_anvedichetests.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="GraphPresenterTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_GraphPresenterTests.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_GraphPresenterTests.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="SignalDataTests.h">
@@ -81,6 +90,9 @@
     </CustomBuild>
     <CustomBuild Include="anvedichetests.qrc">
       <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GraphPresenterTests.h">
+      <Filter>Tests</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

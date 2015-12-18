@@ -100,7 +100,7 @@ int TestRunner::RunAllColorized(int argc, char** argv)
 		cout << ">>>>> TESTS FAILED!!!" << endl;
 	}
 	
-	if (!cnt)
+	if (!cnt && !exitCode)
 	{
 		ColorGuard guard;
 		SetConsoleColor(hgreen);
