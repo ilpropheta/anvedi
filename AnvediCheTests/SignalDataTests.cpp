@@ -18,22 +18,40 @@ void SignalDataTests::On_add_ShouldEmit_DataAdded()
 {
 	SignalData data;
 	QSignalSpy spy(&data, SIGNAL(DataAdded(const DataMap&)));
-	data.add({ { "signal", {} } });
+	data.add({ { "signal", { "signal", "red", true, { 1, 2, 3 } } } });
 
 	QCOMPARE(spy.count(), 1); 
+	auto receivedMap = spy.takeFirst().takeFirst().value<DataMap>();
+	DataMap expectedMap { { "signal", { "signal", "red", true, { 1, 2, 3 } } } };
+	QCOMPARE(receivedMap, expectedMap);
 }
 
 void SignalDataTests::On_add_Should_AllowOverwritingElements()
 {
 	SignalData data;
-	data.add({ { "signal", { "signal", {}, true } } });
+	QSignalSpy spy(&data, SIGNAL(DataAdded(const DataMap&)));
+	data.add({ 
+		{ "signal", { "signal", {}, true } }, 
+		{ "line", { "line", {}, false } }
+	});
 	QCOMPARE(data.get("signal").visible, true);
+	QCOMPARE(data.get("line").visible, false);
+	
 	data.add({ 
 		{ "signal", { "signal", {}, false } },
 		{ "other", { "other", {}, true } }
 	});
 	QCOMPARE(data.get("signal").visible, false);
 	QCOMPARE(data.get("other").visible, true);
+
+	QCOMPARE(spy.count(), 2);
+	auto finalMap = spy.takeAt(1).takeFirst().value<DataMap>();
+	DataMap expectedMap{
+		{ "signal", { "signal", {}, false } },
+		{ "other", { "other", {}, true } },
+		{ "line", { "line", {}, false } }
+	};
+	QCOMPARE(finalMap, expectedMap);
 }
 
 void SignalDataTests::On_clear_ShouldEmit_DataCleared()
@@ -48,11 +66,14 @@ void SignalDataTests::On_clear_ShouldEmit_DataCleared()
 void SignalDataTests::On_setValues_ShouldEmit_SignalValuesChanged()
 {
 	SignalData data;
-	data.add({ { "signal", {} } });
+	data.add({ { "signal", {"signal"} } });
 	QSignalSpy spy(&data, SIGNAL(SignalValuesChanged(const Signal&)));
-	data.setValues("signal", {});
+	data.setValues("signal", {1,2,3});
 
 	QCOMPARE(spy.count(), 1);
+	auto receivedSignal = spy.takeFirst().takeFirst().value<Signal>();
+	Signal actualSignal{ "signal", {}, {}, {1,2,3} };
+	QCOMPARE(receivedSignal, actualSignal);
 }
 
 void SignalDataTests::On_setAsDomain_ShouldEmit_DomainChanged()
