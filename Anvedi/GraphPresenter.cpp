@@ -26,9 +26,9 @@ void GraphPresenter::OnNewData(const DataMap& d)
 	{
 		if (signal.second.visible)
 		{
-			OnGraph(signal.second, [&](QCPGraph* graph){
-				SetGraphicInfoFrom(*graph, signal.second);
+			OnGraph(signal.second, [&](QCPGraph* graph){			
 				SetGraphDataFrom(*graph, signal.second);
+				SetGraphicInfoFrom(*graph, signal.second);
 			});
 		}
 	}
@@ -54,7 +54,8 @@ void GraphPresenter::OnGraph(const Signal& signal, std::function<void(QCPGraph*)
 		myY->setVisible(false);
 		auto graph = plot->addGraph(plot->xAxis, myY);
 		displayedGraphs.emplace_hint(it.first, signal.name, graph);
-		action(graph);
+		SetGraphicInfoFrom(*graph, signal);
+		SetGraphDataFrom(*graph, signal);
 	}
 }
 
