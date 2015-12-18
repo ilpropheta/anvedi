@@ -51,13 +51,6 @@ void WorkspaceSerializer::Read(const QString& fileName, SignalData& data, PlotIn
 	{
 		plotInfo.setBackgroundColor(backgroundIt->toString());
 	}
-	auto domainIt = json.find("domain");
-	if (domainIt != json.end())
-	{
-		const auto domainName = domainIt->toString();
-		data.addEmptyIfNotExists(domainName);
-		data.setAsDomain(domainName);
-	}
 	auto graphIt = json.find("signals");
 	if ((graphIt != json.end()) && graphIt->isArray())
 	{
@@ -70,6 +63,16 @@ void WorkspaceSerializer::Read(const QString& fileName, SignalData& data, PlotIn
 			}
 		}
 		data.add(std::move(newData));
+	}
+	auto domainIt = json.find("domain");
+	if (domainIt != json.end())
+	{
+		const auto domainName = domainIt->toString();
+		try
+		{
+			data.setAsDomain(domainName);
+		}
+		catch (const std::exception&){}
 	}
 }
 
