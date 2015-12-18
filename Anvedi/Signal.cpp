@@ -5,5 +5,5 @@
 bool Signal::operator==(const Signal& other) const
 {
 	return std::tie(name, color, visible, y) ==
-		std::tie(other.name, other.color, other.visible, y);
+		std::tie(other.name, other.color, other.visible, other.y);
 }

@@ -7,21 +7,48 @@
 #include <QDebug>
 #include <QDirIterator>
 
-void WorkspaceSerializerTests::ReadTest()
+void WorkspaceSerializerTests::VerifyActualDataAndPersistedFile(const QString& file, const DataMap& expectedDataMap, const QString& expectedDomain, const QColor& expectedBackground)
 {
-	SignalData data;
-	PlotInfo plotInfo;
-	QSignalSpy modelSpy(&data, SIGNAL(DataAdded(const DataMap&)));
-	QSignalSpy plotSpy(&plotInfo, SIGNAL(BackgroundColorChanged(const QColor&)));
-	
-	WorkspaceSerializer::Read(":/AnvediCheTests/test-data/cubic.json", data, plotInfo);	
+	SignalData actualSignalData;
+	PlotInfo actualPlotInfo;
+	QSignalSpy dataSpy(&actualSignalData, SIGNAL(DataAdded(const DataMap&)));
+	QSignalSpy plotSpy(&actualPlotInfo, SIGNAL(BackgroundColorChanged(const QColor&)));
 
-	QCOMPARE(1, modelSpy.count());
+	WorkspaceSerializer::Read(file, actualSignalData, actualPlotInfo);
+
+	QCOMPARE(1, dataSpy.count());
 	QCOMPARE(1, plotSpy.count());
 
-	auto actualdata = modelSpy.takeFirst().takeFirst().value<DataMap>();
-	
+	auto actualdata = dataSpy.takeFirst().takeFirst().value<DataMap>();
+	QCOMPARE(actualdata, expectedDataMap);
+	QCOMPARE(actualSignalData.getDomain()->name, expectedDomain);
+
+	auto actualColor = plotSpy.takeFirst().takeFirst().value<QColor>();
+	QCOMPARE(actualColor, expectedBackground);
+}
+
+
+void WorkspaceSerializerTests::ReadTest()
+{
 	DataMap expectedData = {
+		{ "cubic",
+			{
+				"cubic", "#008000", true, { 1, 8, 27, 64, 125, 216, 343, 512, 729, 1000 }
+			}
+		},
+		{ "line",
+			{
+				"line", "#ffff00", false, { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
+			}
+		}
+	};
+
+	VerifyActualDataAndPersistedFile(":/AnvediCheTests/test-data/cubic.json", expectedData, "line", "#000000");
+}
+
+void WorkspaceSerializerTests::WriteTest()
+{
+	DataMap dataMap = {
 		{ "cubic", 
 			{
 				"cubic", "#008000", true, {1,8,27,64,125,216,343,512,729,1000}
@@ -33,9 +60,28 @@ void WorkspaceSerializerTests::ReadTest()
 			}
 		}
 	};
-	QCOMPARE(actualdata, expectedData);
-	QCOMPARE(QString("line"), data.getDomain()->name);
+	PlotInfo plot;
+	plot.setBackgroundColor("red");
+	SignalData data;
+	data.add(dataMap);
+	data.setAsDomain("line");
 
-	auto actualColor = modelSpy.takeFirst().takeAt(1).value<QColor>();
-	QCOMPARE(actualColor, QColor("#000000"));
+	QString tmpFileName = std::tmpnam(nullptr);
+	struct guard
+	{
+		guard(const QString& fileName)
+			: fileName(fileName)
+		{
+		}
+		~guard()
+		{
+			QFile f(fileName);
+			f.remove();
+		}
+		const QString& fileName;
+	} fileDeleter(tmpFileName);
+
+	WorkspaceSerializer::Write(tmpFileName, data, plot);
+	
+	VerifyActualDataAndPersistedFile(tmpFileName, dataMap, "line", "red");
 }
