@@ -19,7 +19,7 @@ void WorkspaceSerializerTests::ReadTest()
 	QCOMPARE(1, modelSpy.count());
 	QCOMPARE(1, plotSpy.count());
 
-	auto actualAdata = modelSpy.takeFirst().takeFirst().value<DataMap>();
+	auto actualdata = modelSpy.takeFirst().takeFirst().value<DataMap>();
 	
 	DataMap expectedData = {
 		{ "cubic", 
@@ -33,6 +33,9 @@ void WorkspaceSerializerTests::ReadTest()
 			}
 		}
 	};
-	
-	QCOMPARE(actualAdata, expectedData);
+	QCOMPARE(actualdata, expectedData);
+	QCOMPARE(QString("line"), data.getDomain()->name);
+
+	auto actualColor = modelSpy.takeFirst().takeAt(1).value<QColor>();
+	QCOMPARE(actualColor, QColor("#000000"));
 }
