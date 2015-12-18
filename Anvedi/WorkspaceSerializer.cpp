@@ -43,7 +43,10 @@ void ReadGraph(const QJsonObject& obj, DataMap& data)
 void WorkspaceSerializer::Read(const QString& fileName, SignalData& data, PlotInfo& plotInfo)
 {
 	QFile in(fileName);
-	in.open(QIODevice::ReadOnly);
+	if (!in.open(QIODevice::ReadOnly | QFile::Text))
+	{
+		return; // should report error properly
+	}
 	const auto json = QJsonDocument::fromJson(in.readAll()).object();
 
 	auto backgroundIt = json.find("background");

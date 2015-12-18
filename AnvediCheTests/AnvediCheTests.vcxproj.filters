@@ -22,6 +22,9 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{851bc0b5-0a23-436a-b0dd-d3679e770cd8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestRunner.h">
@@ -53,6 +56,18 @@
     <ClCompile Include="GeneratedFiles\Release\moc_SignalListPresenterTests.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="WorkspaceSerializerTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_WorkspaceSerializerTests.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_WorkspaceSerializerTests.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\qrc_anvedichetests.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="SignalDataTests.h">
@@ -60,6 +75,12 @@
     </CustomBuild>
     <CustomBuild Include="SignalListPresenterTests.h">
       <Filter>Tests</Filter>
+    </CustomBuild>
+    <CustomBuild Include="WorkspaceSerializerTests.h">
+      <Filter>Tests</Filter>
+    </CustomBuild>
+    <CustomBuild Include="anvedichetests.qrc">
+      <Filter>Resource Files</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

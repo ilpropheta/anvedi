@@ -298,6 +298,7 @@
     <ClCompile Include="qml-lib\RegisterAll.cpp" />
     <ClCompile Include="RectZoomer.cpp" />
     <ClCompile Include="ScriptManager.cpp" />
+    <ClCompile Include="Signal.cpp" />
     <ClCompile Include="SignalData.cpp" />
     <ClCompile Include="SignalHandle.cpp" />
     <ClCompile Include="SignalListPresenter.cpp" />

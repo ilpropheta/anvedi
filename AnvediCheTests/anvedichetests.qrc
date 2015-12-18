@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/AnvediCheTests">
+        <file>test-data/cubic.json</file>
+    </qresource>
+</RCC>

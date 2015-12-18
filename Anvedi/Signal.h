@@ -11,6 +11,8 @@ struct Signal
 	QColor color;
 	bool visible;
 	QVector<qreal> y;
+	
+	bool operator==(const Signal& other) const;
 };
 
 Q_DECLARE_METATYPE(Signal)

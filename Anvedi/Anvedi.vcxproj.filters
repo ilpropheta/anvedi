@@ -203,6 +203,9 @@
     <ClCompile Include="WorkspaceSerializer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Signal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="anvedi.h">
