@@ -12,7 +12,7 @@ class GraphPresenter : public QObject
 {
 	Q_OBJECT
 public:
-	GraphPresenter(QCustomPlot* plot, SignalData& data);
+	GraphPresenter(QCustomPlot* plot, const SignalData& data);
 public slots:
 	void OnNewData(const DataMap& data);
 	void OnClearData();
@@ -21,12 +21,12 @@ public slots:
 	void OnDomainChanged(const Signal& domain);
 	void OnBackgroundChanged(const QColor& color);
 private:
-	void OnGraph(const Signal& signal, std::function<void(QCPGraph*)> action);
-	void OnGraphAndReplot(const Signal& signal, std::function<void(QCPGraph*)> action);
+	void MakeGraphOrUseExistent(const Signal& signal, std::function<void(QCPGraph*)> action);
+	void MakeGraphOrUseExistent_WithFinalReplot(const Signal& signal, std::function<void(QCPGraph*)> action);
 	void SetGraphDataFrom(QCPGraph& graph, const Signal& signal);
 	void SetGraphicInfoFrom(QCPGraph& graph, const Signal& signal);
 
 	QCustomPlot* plot;
 	std::map<QString, QCPGraph*> displayedGraphs;
-	SignalData& data;
+	const SignalData& data;
 };
