@@ -53,6 +53,7 @@ void GraphPresenter::MakeGraphOrUseExistent(const Signal& signal, std::function<
 		auto myY = plot->axisRect(0)->addAxis(QCPAxis::atLeft);
 		myY->setVisible(false);
 		auto graph = plot->addGraph(plot->xAxis, myY);
+		graph->setName(signal.name);
 		displayedGraphs.emplace_hint(it.first, signal.name, graph);
 		SetGraphicInfoFrom(*graph, signal);
 		SetGraphDataFrom(*graph, signal);
