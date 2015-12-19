@@ -164,10 +164,8 @@ void SignalListPresenter::OnCursorValueChanged(qreal xVal, size_t idx)
 	auto i = 0;
 	data.onSignals([&, this](const Signal& signal){
 		auto signValueItem = signalList->item(i, 1);
-		if (signal.y.size() > idx)
-		{
-			signValueItem->setText(QString("%1").arg(signal.y[idx]));
-		}
+		const auto signalValueAtDomain = signal.y.size() > idx ? signal.y[idx] : std::numeric_limits<qreal>::quiet_NaN();
+		signValueItem->setText(QString("%1").arg(signalValueAtDomain));
 		i++;
 	});
 }
