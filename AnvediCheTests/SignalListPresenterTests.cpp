@@ -4,6 +4,8 @@
 #include <QLabel>
 #include "..\SignalListPresenter.h"
 #include "..\SignalData.h"
+#include "..\PlotCursor.h"
+#include "..\qcustomplot.h"
 
 using namespace std;
 
@@ -100,4 +102,34 @@ void SignalListPresenterTests::PrepareTest()
 		signalCntLabel.get(),
 		domainLabel.get(),
 		data);
+}
+
+void SignalListPresenterTests::OnCursorChanged_Should_DisplaySignalValuesAtDomain()
+{
+	PrepareTest();
+	data.add({
+		{ "domain", { "domain", {}, {}, {1,2,3} } },
+		{ "signal", { "signal", {}, {}, {1,4,9} } },
+	});
+	data.setAsDomain("domain");
+
+	QCustomPlot plot;
+	PlotCursor cursor(&plot, data, {});
+	QObject::connect(&cursor, SIGNAL(CursorChanged(qreal, size_t)), presenter.get(), SLOT(OnCursorValueChanged(qreal, size_t)));
+
+	cursor.set(1.0);
+	QCOMPARE(signalList->item(0, 1)->text(), QString("1"));
+	QCOMPARE(signalList->item(1, 1)->text(), QString("1"));
+
+	cursor.set(2.0);
+	QCOMPARE(signalList->item(0, 1)->text(), QString("2"));
+	QCOMPARE(signalList->item(1, 1)->text(), QString("4"));
+
+	cursor.set(3.0);
+	QCOMPARE(signalList->item(0, 1)->text(), QString("3"));
+	QCOMPARE(signalList->item(1, 1)->text(), QString("9"));
+
+	cursor.set(5.0);
+	QCOMPARE(signalList->item(0, 1)->text(), QString("3"));
+	QCOMPARE(signalList->item(1, 1)->text(), QString("9"));
 }

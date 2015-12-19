@@ -19,6 +19,8 @@ private slots:
 	void OnDomainChanged_Should_BoldCorrespondingTableEntry();
 	// filter -> presenter
 	void OnSignalFilterEdited_Should_HideNonMatchingRows();
+	// cursor -> presenter
+	void OnCursorChanged_Should_DisplaySignalValuesAtDomain();
 private:
 	void PrepareTest();
 
