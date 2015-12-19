@@ -98,7 +98,7 @@ void GraphPresenter::SetGraphDataFrom(QCPGraph& graph, const Signal& signal)
 	if (data.getDomain())
 	{
 		graph.setData(data.getDomain()->y, signal.y);
-		graph.rescaleAxes(); // range is set to show the whole graph
+		graph.rescaleValueAxis(); // range is set to show the whole graph
 	}
 }
 
@@ -115,5 +115,6 @@ void GraphPresenter::OnDomainChanged(const Signal& domain)
 			SetGraphDataFrom(*graph, signal);
 		});
 	});
+	plot->xAxis->rescale();
 	plot->replot();
 }

@@ -29,7 +29,7 @@ void GraphPresenterTests::On_DataAdded_Should_CreateVisibleGraphs()
 	});
 }
 
-void GraphPresenterTests::On_DomainChanged_Should_SetDataToGraphs()
+void GraphPresenterTests::On_DomainChanged_Should_SetDataToGraphs_And_ScaleXAxisAccordingly()
 {
 	DoGraphPresenterTest([](GraphPresenter& p, QCustomPlot& plot, SignalData& data){
 		data.add({
@@ -57,6 +57,10 @@ void GraphPresenterTests::On_DomainChanged_Should_SetDataToGraphs()
 		QCOMPARE(cubicData[1].value, 8.0);
 		QCOMPARE(cubicData[2].key, 3.0);
 		QCOMPARE(cubicData[2].value, 27.0);
+
+		// x range [1.0 - 3.0]
+		QCOMPARE(plot.xAxis->range().lower, 1.0);
+		QCOMPARE(plot.xAxis->range().upper, 3.0);
 	});
 }
 
