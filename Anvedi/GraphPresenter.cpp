@@ -18,6 +18,8 @@ GraphPresenter::GraphPresenter(QCustomPlot* plot, const SignalData& data)
 	QObject::connect(&data, SIGNAL(SignalVisibilityChanged(const Signal&)), this, SLOT(OnGraphVisibilityChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalValuesChanged(const Signal&)), this, SLOT(OnGraphDataChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(DomainChanged(const Signal&)), this, SLOT(OnDomainChanged(const Signal&)));
+	// plot
+	QObject::connect(plot->xAxis, SIGNAL(rangeChanged(const QCPRange&)), this, SLOT(OnXRangeChanged(const QCPRange&)));
 }
 
 void GraphPresenter::OnNewData(const DataMap& d)
@@ -162,4 +164,9 @@ void GraphPresenter::OnCursorValueChanged(qreal value, size_t)
 			plot->xAxis->setRangeUpper(value);
 		}
 	}
+}
+
+void GraphPresenter::OnXRangeChanged(const QCPRange&)
+{
+	plot->replot();
 }

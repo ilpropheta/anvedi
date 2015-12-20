@@ -14,13 +14,16 @@ class GraphPresenter : public QObject
 public:
 	GraphPresenter(QCustomPlot* plot, const SignalData& data);
 public slots:
+	// data
 	void OnNewData(const DataMap& data);
 	void OnClearData();
 	void OnGraphDataChanged(const Signal& signal);
 	void OnGraphVisibilityChanged(const Signal& signal);
 	void OnDomainChanged(const Signal& domain);
 	void OnCursorValueChanged(qreal, size_t);
+	// plot info
 	void OnBackgroundChanged(const QColor& color);
+	void OnXRangeChanged(const QCPRange&);
 private:
 	void MakeGraphOrUseExistent(const Signal& signal, std::function<void(QCPGraph*)> action);
 	void MakeGraphOrUseExistent_WithFinalReplot(const Signal& signal, std::function<void(QCPGraph*)> action);

@@ -11,6 +11,7 @@ Anvedi::Anvedi(QWidget *parent)
 {
 	ui.setupUi(this);
 
+	m_plotInfo.setPlot(ui.plot);
 	cursor = make_unique<PlotCursor>(ui.plot, m_data);
 	rectZoomer = make_unique<RectZoomer>(ui.plot);
 	signalListPresenter = make_unique<SignalListPresenter>(ui.signalList, ui.filterEdit, ui.signalCountLabel, ui.domainLabel, m_data);
