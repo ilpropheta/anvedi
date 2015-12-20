@@ -69,6 +69,7 @@ void PlotInfo::autoScaleY(const QString& name)
 void PlotInfo::autoScaleX()
 {
 	plot->xAxis->rescale();
+	plot->replot();
 }
 
 void PlotInfo::autoScaleAllY()
@@ -76,6 +77,7 @@ void PlotInfo::autoScaleAllY()
 	OnAllGraphs(plot, [](QCPGraph* graph){
 		graph->valueAxis()->rescale();
 	});
+	plot->replot();
 }
 
 void PlotInfo::exportToPdf(const QString& fileName, qreal w, qreal h)
