@@ -118,3 +118,49 @@ void GraphPresenter::OnDomainChanged(const Signal& domain)
 	plot->xAxis->rescale();
 	plot->replot();
 }
+
+/*	When the plot is zoomed in, value can be within a non-visible area.
+	In this case the range is changed accordingly.
+
+	* -> non visible part of the plot
+	_ -> visible part of the plot
+	^ -> value position
+	
+	E.g.:
+
+	***______******
+		^
+	Nothing happens
+
+	***______******
+		     ^
+	Should become:
+
+	****______*****
+			 ^
+	   -     +
+
+	The upper part of the xAxis range is set to ^ and
+	the lower part is increased by '+' quantity. 
+	+ is simply obtained by subtracting ^ and the upper part of the current xRange.
+	
+	The opposite case is similar.
+*/
+void GraphPresenter::OnCursorValueChanged(qreal value, size_t idx)
+{
+	if (auto domain = data.getDomain())
+	{
+		const auto& domValues = domain->y;
+		const auto xAxisRange = plot->xAxis->range();
+		if (value < xAxisRange.lower) // value is more left than rangeX
+		{
+			plot->xAxis->setRangeLower(value);
+			plot->xAxis->setRangeUpper(xAxisRange.upper - (xAxisRange.lower - value));
+		}
+		else if (value > xAxisRange.upper) // value is more right than rangeX
+		{
+			plot->xAxis->setRangeLower(xAxisRange.lower + (value - xAxisRange.upper));
+			plot->xAxis->setRangeUpper(value);
+		}
+	}
+}

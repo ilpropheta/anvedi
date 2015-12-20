@@ -22,6 +22,8 @@ Anvedi::Anvedi(QWidget *parent)
 	QObject::connect(ui.actionResetZoom, SIGNAL(triggered()), rectZoomer.get(), SLOT(OnResetZoom()));
 	// cursor -> list
 	QObject::connect(cursor.get(), SIGNAL(CursorChanged(qreal, size_t)), signalListPresenter.get(), SLOT(OnCursorValueChanged(qreal, size_t)));
+	// cursor -> graph
+	QObject::connect(cursor.get(), SIGNAL(CursorChanged(qreal, size_t)), graphPresenter.get(), SLOT(OnCursorValueChanged(qreal, size_t)));
 	// plot info -> graph
 	QObject::connect(&m_plotInfo, SIGNAL(BackgroundColorChanged(const QColor&)), graphPresenter.get(), SLOT(OnBackgroundChanged(const QColor&)));
 	// plot info -> cursor
