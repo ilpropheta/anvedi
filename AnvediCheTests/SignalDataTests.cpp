@@ -105,3 +105,27 @@ void SignalDataTests::On_domainLowerBound()
 	QVERIFY(std::make_pair(5.0, 4ull) == data.domainLowerBound(6.0));
 	QVERIFY(std::make_pair(4.0, 3ull) == data.domainLowerBound(4.0));
 }
+
+void SignalDataTests::On_domainNextValue()
+{
+	SignalData data;
+	data.add({ { "domain", { "domain", {}, {}, { 1, 2, 3, 4, 5 } } } });
+	data.setAsDomain("domain");
+	QVERIFY(1.0 == data.domainNextValue(0.0)); // next non-existent left
+	QVERIFY(2.0 == data.domainNextValue(1.0));
+	QVERIFY(2.0 == data.domainNextValue(1.5));
+	QVERIFY(5.0 == data.domainNextValue(5.0));
+	QVERIFY(5.0 == data.domainNextValue(6.0)); // next non-existent right
+}
+
+void SignalDataTests::On_domainPrevValue()
+{
+	SignalData data;
+	data.add({ { "domain", { "domain", {}, {}, { 1, 2, 3, 4, 5 } } } });
+	data.setAsDomain("domain");
+	QVERIFY(1.0 == data.domainPrevValue(0.0)); // prev non-existent left
+	QVERIFY(1.0 == data.domainPrevValue(1.0));
+	QVERIFY(1.0 == data.domainPrevValue(2.0));
+	QVERIFY(1.0 == data.domainPrevValue(1.5));
+	QVERIFY(5.0 == data.domainPrevValue(6.0)); // prev non-existent right
+}

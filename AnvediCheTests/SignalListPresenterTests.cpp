@@ -114,7 +114,7 @@ void SignalListPresenterTests::OnCursorChanged_Should_DisplaySignalValuesAtDomai
 	data.setAsDomain("domain");
 
 	QCustomPlot plot;
-	PlotCursor cursor(&plot, data, {});
+	PlotCursor cursor(&plot, data);
 	QObject::connect(&cursor, SIGNAL(CursorChanged(qreal, size_t)), presenter.get(), SLOT(OnCursorValueChanged(qreal, size_t)));
 
 	cursor.set(1.0);

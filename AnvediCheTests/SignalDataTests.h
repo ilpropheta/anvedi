@@ -14,6 +14,8 @@ private slots:
 	void On_setAsDomain_ShouldEmit_DomainChanged();
 	void On_setAsDomainWithWrongSignal_ShouldThrowException();
 	void On_domainLowerBound();
+	void On_domainNextValue();
+	void On_domainPrevValue();
 };
 
 DECLARE_TEST(SignalDataTests)
