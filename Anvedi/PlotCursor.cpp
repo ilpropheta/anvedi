@@ -5,8 +5,8 @@
 #include <QEvent>
 #include "SignalData.h"
 
-PlotCursor::PlotCursor(QCustomPlot* parent, SignalData& data, qreal pStepSize)
-	: cursor(nullptr), plot(parent), data(data), cursorStepSize(pStepSize)
+PlotCursor::PlotCursor(QCustomPlot* parent, SignalData& data)
+	: cursor(nullptr), plot(parent), data(data)
 {
 	cursor = new QCPItemStraightLine(parent);
 	initLinePos();
@@ -46,36 +46,19 @@ void PlotCursor::set(qreal xVal)
 	}
 }
 
-void PlotCursor::move(qreal delta)
-{
-	auto xVal = cursor->point1->coords().x();
-	xVal += delta;
-	set(xVal);
-}
-
 void PlotCursor::moveForward()
 {
-	move(cursorStepSize);
+	set(data.domainNextValue(cursor->point1->coords().x()));
 }
 
 void PlotCursor::moveBackward()
 {
-	move(-cursorStepSize);
+	set(data.domainPrevValue(cursor->point1->coords().x()));
 }
 
 qreal PlotCursor::xPos() const
 {
 	return cursor->point1->coords().x();
-}
-
-qreal PlotCursor::step() const
-{
-	return cursorStepSize;
-}
-
-void PlotCursor::setStep(qreal newStepSize)
-{
-	cursorStepSize = newStepSize;
 }
 
 void PlotCursor::OnMouseEvent(QMouseEvent* e)
@@ -92,4 +75,17 @@ void PlotCursor::OnBackgroundChanged(const QColor& c)
 	const auto currPen = cursor->pen();
 	if (close(currPen.color(), c))
 		cursor->setPen(QPen(invert(c), currPen.width()));
+}
+
+void PlotCursor::OnKeyboardPressed(QKeyEvent* e)
+{
+	switch (e->key())
+	{
+	case Qt::Key_Left:
+		moveBackward();
+		break;
+	case Qt::Key_Right:
+		moveForward();
+		break;
+	}
 }

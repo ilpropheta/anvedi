@@ -105,3 +105,25 @@ void SignalData::setAsDomain(const QString& name)
 	domain = &m_data.at(name);
 	emit DomainChanged(*domain);
 }
+
+qreal SignalData::domainNextValue(qreal refValue) const
+{
+	if (domain && !domain->y.empty())
+	{
+		const auto& x = domain->y;
+		const auto upperBound = std::upper_bound(x.begin(), x.end(), refValue);
+		return upperBound != x.end() ? *upperBound : x.back();
+	}
+	return std::numeric_limits<qreal>::quiet_NaN();
+}
+
+qreal SignalData::domainPrevValue(qreal refValue) const
+{
+	if (domain && !domain->y.empty())
+	{
+		const auto& x = domain->y;
+		const auto lowerBound = std::lower_bound(x.begin(), x.end(), refValue);
+		return lowerBound != x.begin() ? *(lowerBound - 1) : x.front();
+	}
+	return std::numeric_limits<qreal>::quiet_NaN();
+}

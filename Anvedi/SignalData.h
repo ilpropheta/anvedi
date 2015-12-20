@@ -27,6 +27,8 @@ public:
 	void onSignals(std::function<void(const Signal&)> fun) const;
 	// utils
 	std::pair<qreal, size_t> domainLowerBound(qreal val) const;
+	qreal domainNextValue(qreal refValue) const;
+	qreal domainPrevValue(qreal refValue) const;
 signals:
 	void DataAdded(const DataMap&);
 	void SignalValuesChanged(const Signal&);

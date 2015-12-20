@@ -12,32 +12,28 @@ class PlotCursor : public QObject
 {
 	Q_OBJECT
 public:
-	PlotCursor(QCustomPlot* parent, SignalData& data, qreal pStepSize);
+	PlotCursor(QCustomPlot* parent, SignalData& data);
 
 	// movement
 	void reset();
 	void set(qreal xVal);
 	void moveForward();
 	void moveBackward();
-
 	// getters
 	qreal xPos() const;
-	qreal step() const;
-
 	// setters
 	void setStep(qreal newStep);
 public slots:
 	void OnMouseEvent(QMouseEvent*);
 	void OnBackgroundChanged(const QColor&);
+	void OnKeyboardPressed(QKeyEvent*);
 signals:
 	void CursorChanged(qreal, size_t);
 private:
-	void move(qreal delta);
 	void initLinePos();
 
 	QCPItemStraightLine *cursor;
 	QCustomPlot* plot;
-	qreal cursorStepSize;
 	SignalData& data;
 };
 

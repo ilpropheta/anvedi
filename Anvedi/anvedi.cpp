@@ -11,7 +11,7 @@ Anvedi::Anvedi(QWidget *parent)
 {
 	ui.setupUi(this);
 
-	cursor = make_unique<PlotCursor>(ui.plot, m_data, 0.01);
+	cursor = make_unique<PlotCursor>(ui.plot, m_data);
 	rectZoomer = make_unique<RectZoomer>(ui.plot);
 	signalListPresenter = make_unique<SignalListPresenter>(ui.signalList, ui.filterEdit, ui.signalCountLabel, ui.domainLabel, m_data);
 	graphPresenter = make_unique<GraphPresenter>(ui.plot, m_data);
@@ -84,4 +84,11 @@ void Anvedi::OnDataClear()
 	m_data.clear();
 	ScriptManager::InitWorkspace(m_data, m_plotInfo, *ui.console);
 	cursor->reset();
+}
+
+void Anvedi::keyPressEvent(QKeyEvent * e)
+{
+	if (e->key() == Qt::Key_Escape)
+		QApplication::exit();
+	cursor->OnKeyboardPressed(e);
 }

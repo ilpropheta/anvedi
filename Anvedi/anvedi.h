@@ -22,6 +22,8 @@ public slots:
 	void OnDataImport();
 	void OnDataExport();
 	void OnDataClear();
+protected:
+	void keyPressEvent(QKeyEvent * e);
 private:
 	Ui::AnvediClass ui;
 
