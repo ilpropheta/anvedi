@@ -18,3 +18,8 @@
 /AnvediCheExe/x64/Debug
 /AnvediCheTests/GeneratedFiles/Debug
 /AnvediCheTests/x64/Debug
+/AnvediCheExe/x64/Release/AnvediCheExe.tlog
+/AnvediCheTests/x64/Release/AnvediCheTests.tlog
+/AnvediCheTests/GeneratedFiles
+/AnvediCheTests/file
+/AnvediCheTests/tmpLog
