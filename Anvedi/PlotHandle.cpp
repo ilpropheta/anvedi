@@ -26,8 +26,43 @@ QVariant PlotHandle::getXRange() const
 	return vals;
 }
 
-void PlotHandle::setXRange(const QVariant& val) const
+inline std::pair<qreal, qreal> ToRange(const QVariant& val)
 {
 	const auto vList = val.toList();
-	plot.setXRange({ vList.front().toReal(), vList.back().toReal() });
+	return { vList.front().toReal(), vList.back().toReal() };
+}
+
+void PlotHandle::setXRange(const QVariant& val) const
+{
+	plot.setXRange(ToRange(val));
+}
+
+void PlotHandle::setYRange(const QString& signalName, const QVariant& val)
+{
+	plot.setYRange(signalName, ToRange(val));
+}
+
+void PlotHandle::autoRangeY(const QString& name)
+{
+	plot.autoScaleY(name);
+}
+
+void PlotHandle::autoRangeX()
+{
+	plot.autoScaleX();
+}
+
+void PlotHandle::autoRangeAllY()
+{
+	plot.autoScaleAllY();
+}
+
+void PlotHandle::savePdf(const QString& fileName)
+{
+	plot.exportToPdf(fileName);
+}
+
+void PlotHandle::savePdf(const QString& fileName, qreal w, qreal h)
+{
+	plot.exportToPdf(fileName, w, h);
 }

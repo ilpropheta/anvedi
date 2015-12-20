@@ -16,6 +16,13 @@ public:
 	void setBackground(const QString& color);
 	QVariant getXRange() const;
 	void setXRange(const QVariant& val) const;
+public slots:
+	void setYRange(const QString& signalName, const QVariant& val);
+	void autoRangeY(const QString& name);
+	void autoRangeX();
+	void autoRangeAllY();
+	void savePdf(const QString& fileName);
+	void savePdf(const QString& fileName, qreal w, qreal h);
 private:
 	PlotInfo& plot;
 };
