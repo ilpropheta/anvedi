@@ -146,11 +146,10 @@ void GraphPresenter::OnDomainChanged(const Signal& domain)
 	
 	The opposite case is similar.
 */
-void GraphPresenter::OnCursorValueChanged(qreal value, size_t idx)
+void GraphPresenter::OnCursorValueChanged(qreal value, size_t)
 {
 	if (auto domain = data.getDomain())
 	{
-		const auto& domValues = domain->y;
 		const auto xAxisRange = plot->xAxis->range();
 		if (value < xAxisRange.lower) // value is more left than rangeX
 		{

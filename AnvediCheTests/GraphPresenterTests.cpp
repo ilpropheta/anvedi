@@ -29,7 +29,7 @@ void GraphPresenterTests::On_DataAdded_Should_CreateVisibleGraphs()
 	});
 }
 
-void GraphPresenterTests::On_DomainChanged_Should_SetDataToGraphs_And_ScaleXAxisAccordingly()
+void GraphPresenterTests::On_DomainChanged_Should_SetDataToGraphs_And_ScaleXAxis()
 {
 	DoGraphPresenterTest([](GraphPresenter& p, QCustomPlot& plot, SignalData& data){
 		data.add({
@@ -111,5 +111,25 @@ void GraphPresenterTests::On_SignalColorChanged_Should_UpdateGraphColor()
 		data.setColor("line", "blue");
 
 		QCOMPARE(plot.graph(0)->pen().color(), QColor("blue"));
+	});
+}
+
+void GraphPresenterTests::On_CursorValueChanged_Should_UpdateXRange()
+{
+	DoGraphPresenterTest([](GraphPresenter& p, QCustomPlot& plot, SignalData& data){
+		data.add({
+			{ "line", { "line", "red", true, { 1, 2, 3, 4, 5 } } }
+		});
+		data.setAsDomain("line");
+		plot.xAxis->setRange(2, 4); 
+
+		p.OnCursorValueChanged(1.0, {}); // more left than current range
+		QCOMPARE(plot.xAxis->range(), QCPRange(1.0, 3.0));
+
+		p.OnCursorValueChanged(4.0, {}); // more right than current range
+		QCOMPARE(plot.xAxis->range(), QCPRange(2.0, 4.0));
+
+		p.OnCursorValueChanged(3.0, {}); // in current range
+		QCOMPARE(plot.xAxis->range(), QCPRange(2.0, 4.0));
 	});
 }
