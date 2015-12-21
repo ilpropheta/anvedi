@@ -19,6 +19,8 @@ public:
 	void set(qreal xVal);
 	void moveForward();
 	void moveBackward();
+	void moveBegin();
+	void moveEnd();
 	// getters
 	qreal xPos() const;
 	// setters

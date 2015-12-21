@@ -87,6 +87,12 @@ void PlotCursor::OnKeyboardPressed(QKeyEvent* e)
 	case Qt::Key_Right:
 		moveForward();
 		break;
+	case Qt::Key_Home:
+		moveBegin();
+		break;
+	case Qt::Key_End:
+		moveEnd();
+		break;
 	}
 }
 
@@ -103,6 +109,16 @@ void PlotCursor::followInRT(bool flag)
 }
 
 void PlotCursor::OnCursorInRT()
+{
+	moveEnd();
+}
+
+void PlotCursor::moveBegin()
+{
+	set(std::numeric_limits<qreal>::min());
+}
+
+void PlotCursor::moveEnd()
 {
 	set(std::numeric_limits<qreal>::max());
 }
