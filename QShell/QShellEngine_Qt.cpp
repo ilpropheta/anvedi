@@ -60,4 +60,9 @@ std::unique_ptr<QShellEngineResult> QShellEngine_Qt::LoadScript( const QString& 
 	return Evaluate("load('" + toEval + "')");
 }
 
+std::unique_ptr<QShellEngineResult> QShellEngine_Qt::MakeEmptyResult()
+{
+	return std::make_unique<QShellEngineResult_Qt>(m_engine.undefinedValue());
+}
+
 

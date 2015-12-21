@@ -13,6 +13,7 @@ public:
 	virtual ~QShellEngine() = default;
 	virtual void RegisterPrintFunction(QPlainTextEdit& console) = 0;
 	virtual std::unique_ptr<QShellEngineResult> Evaluate(const QString& toEval) = 0;
+	virtual std::unique_ptr<QShellEngineResult> MakeEmptyResult() = 0;
 	virtual QStringList Suggest(const QString& value) = 0;
 	virtual std::unique_ptr<QShellEngineResult> LoadScript(const QString& toEval) = 0;
 };

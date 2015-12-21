@@ -25,7 +25,7 @@ bool ScriptEvaluatorKeyHandler::onKeyPressed( QShell& shell, QKeyEvent* e )
 		auto result = engine->Evaluate(textToEval);
 		emit TextEvaluated(textToEval, *result);
 
-		InsertEvaluationResult(shell, *result);
+		InsertEvaluationResult(shell, textToEval.endsWith(";") ? *engine->MakeEmptyResult() : *result);
 		AcceptEvent(shell, e);
 		return true;
 	}
