@@ -94,8 +94,8 @@ void Anvedi::EnableMenuInRT(bool enable)
 
 void Anvedi::OnRTStart()
 {
-	static const int timerInterval_ms = 200;
-	static const size_t packetCount = 10;
+	static const int timerInterval_ms = 100;
+	static const size_t packetCount = 100;
 
 	if (isPaused)
 	{
