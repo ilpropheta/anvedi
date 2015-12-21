@@ -23,6 +23,7 @@ public:
 	void setColor(const QString& name, const QColor& col);
 	void setVisible(const QString& name, bool visible);
 	void setValues(const QString& name, QVector<qreal> vec);
+	void addValues(const std::map<QString, QVector<qreal>>& data);
 	// visitor
 	void onSignals(std::function<void(const Signal&)> fun) const;
 	// utils
@@ -32,6 +33,8 @@ public:
 signals:
 	void DataAdded(const DataMap&);
 	void SignalValuesChanged(const Signal&);
+	void SignalValuesAdded(const Signal&, const QVector<qreal>&, const QVector<qreal>&);
+	void SignalAdded(const QVector<qreal>&, const std::map<QString, QVector<qreal>>&);
 	void SignalColorChanged(const Signal&);
 	void SignalVisibilityChanged(const Signal&);
 	void DataCleared();

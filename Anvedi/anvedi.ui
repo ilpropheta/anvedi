@@ -62,8 +62,19 @@
     <addaction name="actionResetZoom"/>
     <addaction name="actionChangeBackground"/>
    </widget>
+   <widget class="QMenu" name="menuReal_Time">
+    <property name="title">
+     <string>Real Time</string>
+    </property>
+    <addaction name="actionStartRT"/>
+    <addaction name="actionPauseRT"/>
+    <addaction name="actionStopRT"/>
+    <addaction name="separator"/>
+    <addaction name="actionCursorRT"/>
+   </widget>
    <addaction name="menuData"/>
    <addaction name="menuViewer"/>
+   <addaction name="menuReal_Time"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="consoleDock">
@@ -316,6 +327,29 @@
     <string>Export</string>
    </property>
   </action>
+  <action name="actionStartRT">
+   <property name="text">
+    <string>Start</string>
+   </property>
+  </action>
+  <action name="actionPauseRT">
+   <property name="text">
+    <string>Pause</string>
+   </property>
+  </action>
+  <action name="actionStopRT">
+   <property name="text">
+    <string>Stop</string>
+   </property>
+  </action>
+  <action name="actionCursorRT">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Cursor following</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -396,6 +430,22 @@
     <hint type="destinationlabel">
      <x>367</x>
      <y>282</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCursorRT</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>actionCursorRT</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
     </hint>
    </hints>
   </connection>

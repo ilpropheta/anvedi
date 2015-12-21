@@ -10,13 +10,14 @@ GraphPresenter::GraphPresenter(QCustomPlot* plot, const SignalData& data)
 	//plot->xAxis->setAutoTickStep(false);
 	//plot->xAxis->setTickStep(10);
 	plot->xAxis->setTickLabels(false);
-
+	
 	// model
 	QObject::connect(&data, SIGNAL(DataAdded(const DataMap&)), this, SLOT(OnNewData(const DataMap&)));
 	QObject::connect(&data, SIGNAL(DataCleared()), this, SLOT(OnClearData()));
 	QObject::connect(&data, SIGNAL(SignalColorChanged(const Signal&)), this, SLOT(OnGraphVisibilityChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalVisibilityChanged(const Signal&)), this, SLOT(OnGraphVisibilityChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalValuesChanged(const Signal&)), this, SLOT(OnGraphDataChanged(const Signal&)));
+	QObject::connect(&data, SIGNAL(SignalAdded(const QVector<qreal>&, const std::map<QString, QVector<qreal>>&)), this, SLOT(OnGraphsDataAdded(const QVector<qreal>&, const std::map<QString, QVector<qreal>>&)));
 	QObject::connect(&data, SIGNAL(DomainChanged(const Signal&)), this, SLOT(OnDomainChanged(const Signal&)));
 	// plot
 	QObject::connect(plot->xAxis, SIGNAL(rangeChanged(const QCPRange&)), this, SLOT(OnXRangeChanged(const QCPRange&)));
@@ -26,13 +27,11 @@ void GraphPresenter::OnNewData(const DataMap& d)
 {
 	for (const auto& signal : d)
 	{
-		if (signal.second.visible)
-		{
-			MakeGraphOrUseExistent(signal.second, [&](QCPGraph* graph){			
-				SetGraphDataFrom(*graph, signal.second);
-				SetGraphicInfoFrom(*graph, signal.second);
-			});
-		}
+		// for now, consider also non-visible graphs
+		MakeGraphOrUseExistent(signal.second, [&](QCPGraph* graph){			
+			SetGraphDataFrom(*graph, signal.second);
+			SetGraphicInfoFrom(*graph, signal.second);
+		});
 	}
 	plot->replot();
 }
@@ -150,23 +149,32 @@ void GraphPresenter::OnDomainChanged(const Signal& domain)
 */
 void GraphPresenter::OnCursorValueChanged(qreal value, size_t)
 {
-	if (auto domain = data.getDomain())
+	const auto xAxisRange = plot->xAxis->range();
+	if (value < xAxisRange.lower) // value is more left than rangeX
 	{
-		const auto xAxisRange = plot->xAxis->range();
-		if (value < xAxisRange.lower) // value is more left than rangeX
-		{
-			plot->xAxis->setRangeLower(value);
-			plot->xAxis->setRangeUpper(xAxisRange.upper - (xAxisRange.lower - value));
-		}
-		else if (value > xAxisRange.upper) // value is more right than rangeX
-		{
-			plot->xAxis->setRangeLower(xAxisRange.lower + (value - xAxisRange.upper));
-			plot->xAxis->setRangeUpper(value);
-		}
+		plot->xAxis->setRangeLower(value);
+		plot->xAxis->setRangeUpper(xAxisRange.upper - (xAxisRange.lower - value));
+	}
+	else if (value > xAxisRange.upper) // value is more right than rangeX
+	{
+		plot->xAxis->setRangeLower(xAxisRange.lower + (value - xAxisRange.upper));
+		plot->xAxis->setRangeUpper(value);
 	}
 }
 
 void GraphPresenter::OnXRangeChanged(const QCPRange&)
 {
+	plot->replot();
+}
+
+void GraphPresenter::OnGraphsDataAdded(const QVector<qreal>& domainSlice, const std::map<QString, QVector<qreal>>& dataSlice)
+{
+	for (const auto& data : dataSlice)
+	{
+		auto graph = displayedGraphs.at(data.first);
+		graph->addData(domainSlice, data.second);
+		graph->rescaleValueAxis();
+	}
+	plot->xAxis->rescale();
 	plot->replot();
 }

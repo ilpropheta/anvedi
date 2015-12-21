@@ -18,6 +18,7 @@ public slots:
 	void OnNewData(const DataMap& data);
 	void OnClearData();
 	void OnGraphDataChanged(const Signal& signal);
+	void OnGraphsDataAdded(const QVector<qreal>&, const std::map<QString, QVector<qreal>>&);
 	void OnGraphVisibilityChanged(const Signal& signal);
 	void OnDomainChanged(const Signal& domain);
 	void OnCursorValueChanged(qreal, size_t);

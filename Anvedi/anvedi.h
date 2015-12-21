@@ -22,9 +22,16 @@ public slots:
 	void OnDataImport();
 	void OnDataExport();
 	void OnDataClear();
+	// RT
+	void OnRTStart();
+	void OnRTPause();
+	void OnRTStop();
+	void OnRTFollowingCursor(bool);
 protected:
 	void keyPressEvent(QKeyEvent * e);
 private:
+	void EnableMenuInRT(bool enable);
+
 	Ui::AnvediClass ui;
 
 	std::unique_ptr<PlotCursor> cursor;
@@ -34,6 +41,11 @@ private:
 
 	SignalData m_data;
 	PlotInfo m_plotInfo;
+
+	// to move
+	QTimer dataTimer;
+	bool isPaused = false;
+	double timeStep = 0.0;
 };
 
 #endif // ANVEDI_H

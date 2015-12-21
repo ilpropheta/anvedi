@@ -89,3 +89,20 @@ void PlotCursor::OnKeyboardPressed(QKeyEvent* e)
 		break;
 	}
 }
+
+void PlotCursor::followInRT(bool flag)
+{
+	if (!flag)
+	{
+		QObject::disconnect(&data, &SignalData::SignalAdded, this, 0);
+	}
+	else
+	{
+		QObject::connect(&data, &SignalData::SignalAdded, this, &PlotCursor::OnCursorInRT);
+	}
+}
+
+void PlotCursor::OnCursorInRT()
+{
+	set(std::numeric_limits<qreal>::max());
+}

@@ -13,7 +13,7 @@ void DoGraphPresenterTest(TestCode t)
 	t(presenter, plot, data);
 }
 
-void GraphPresenterTests::On_DataAdded_Should_CreateVisibleGraphs()
+void GraphPresenterTests::On_DataAdded_Should_CreateGraphs()
 {
 	DoGraphPresenterTest([](GraphPresenter& p, QCustomPlot& plot, SignalData& data){
 		data.add({
@@ -21,11 +21,11 @@ void GraphPresenterTests::On_DataAdded_Should_CreateVisibleGraphs()
 			{ "cubic", { "cubic", "blue", false, { 1, 8, 27 } } },
 		});
 
-		QCOMPARE(plot.graphCount(), 1);
-		QCOMPARE(plot.graph(0)->pen().color(), QColor("red"));
-		QCOMPARE(plot.graph(0)->name(), QString("line"));
-		QCOMPARE(plot.graph(0)->visible(), true);
-		QCOMPARE(plot.graph(0)->data()->size(), 0); // because domain is not set yet
+		QCOMPARE(plot.graphCount(), 2);
+		QCOMPARE(plot.graph(1)->pen().color(), QColor("red"));
+		QCOMPARE(plot.graph(1)->name(), QString("line"));
+		QCOMPARE(plot.graph(1)->visible(), true);
+		QCOMPARE(plot.graph(1)->data()->size(), 0); // because domain is not set yet
 	});
 }
 
@@ -88,14 +88,11 @@ void GraphPresenterTests::On_SignalVisibilityChanged_Should_UpdateGraphVisibilit
 			{ "line", { "line", "red", true, { 1, 2, 3 } } }
 		});
 
-		QCOMPARE(plot.graphCount(), 1);
-		QCOMPARE(plot.graph(0)->name(), QString("line"));
-
+		QCOMPARE(plot.graph(0)->visible(), false);
+		
 		data.setVisible("cubic", true);
-
-		QCOMPARE(plot.graphCount(), 2);
-		QCOMPARE(plot.graph(1)->name(), QString("cubic"));
-		QCOMPARE(plot.graph(1)->visible(), true);
+		QCOMPARE(plot.graph(0)->name(), QString("cubic"));
+		QCOMPARE(plot.graph(0)->visible(), true);
 	});
 }
 

@@ -41,6 +41,17 @@ void SignalData::setValues(const QString& name, QVector<qreal> vec)
 		emit DomainChanged(signal);
 }
 
+void SignalData::addValues(const std::map<QString, QVector<qreal>>& data)
+{
+	if (domain)
+	{
+		const auto& domainSlice = data.at(domain->name);
+		for (const auto& d : data)
+			m_data.at(d.first).y << d.second;
+		emit SignalAdded(domainSlice, data);
+	}
+}
+
 void SignalData::setColor(const QString& name, const QColor& col)
 {
 	auto& signal = m_data.at(name);

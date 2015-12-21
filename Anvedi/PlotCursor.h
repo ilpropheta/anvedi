@@ -23,10 +23,12 @@ public:
 	qreal xPos() const;
 	// setters
 	void setStep(qreal newStep);
+	void followInRT(bool flag);
 public slots:
 	void OnMouseEvent(QMouseEvent*);
 	void OnBackgroundChanged(const QColor&);
 	void OnKeyboardPressed(QKeyEvent*);
+	void OnCursorInRT();
 signals:
 	void CursorChanged(qreal, size_t);
 private:
