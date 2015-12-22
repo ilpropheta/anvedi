@@ -103,3 +103,46 @@ void PerformanceTests::Measure_PlotSingleCurve_500kPoints()
 	};
 }
 
+void PerformanceTests::Measure_MultipleGraphs_200kPoints()
+{
+	QCustomPlot plot;
+	auto x = IncreasingVector(200000);
+	auto y = RandomVector(200000);
+
+	for (auto i = 0u; i < 10u; ++i)
+	{
+		auto graph = plot.addGraph(plot.xAxis, new QCPAxis(plot.axisRect(), QCPAxis::atLeft));
+		graph->setData(x, y);
+		graph->rescaleValueAxis();
+	}
+	plot.xAxis->rescale();
+
+	QBENCHMARK{
+		plot.replot();
+	};
+}
+
+void PerformanceTests::Measure_MultipleGraphs_10kPoints_1_1_PenWidth()
+{
+	QSKIP("This test is just to demonstrate that increasing pen width negatively affects performance...");
+	
+	QCustomPlot plot;
+	auto x = IncreasingVector(10000);
+	auto y = RandomVector(10000);
+
+	for (auto i = 0u; i < 5; ++i)
+	{
+		auto graph = plot.addGraph(plot.xAxis, new QCPAxis(plot.axisRect(), QCPAxis::atLeft));
+		graph->setData(x, y);
+		auto p = graph->pen();
+		p.setWidthF(1.1);
+		graph->setPen(p);
+		graph->rescaleValueAxis();
+	}
+	plot.xAxis->rescale();
+
+	QBENCHMARK{
+		plot.replot();
+	};
+}
+
