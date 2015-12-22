@@ -76,6 +76,7 @@ int TestRunner::RunAllColorized(int argc, char** argv)
 		string line;
 		const regex fail("(FAIL.*)");
 		const regex pass("(PASS.*)");
+		const regex benchmark("(RESULT.*)");
 
 		while (getline(file, line))
 		{
@@ -87,6 +88,10 @@ int TestRunner::RunAllColorized(int argc, char** argv)
 			if (regex_match(line, pass))
 			{
 				SetConsoleColor(hgreen);
+			}
+			if (regex_match(line, benchmark))
+			{
+				SetConsoleColor(hcyan);
 			}
 			cout << line << endl;
 		}
