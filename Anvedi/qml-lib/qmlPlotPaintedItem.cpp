@@ -120,12 +120,6 @@ void qmlPlotPaintedItem::appendGraph(QQmlListProperty<qmlGraph> *list, qmlGraph 
 					ref->setTickVectorLabels(tickLab);
 				}
 			}
-
-			//xAxis->setTickLabelFont(QFont("serif", 12));
-			//xAxis->setAutoTicks(false);
-			//xAxis->setAutoTickLabels(false);
-			//xAxis->setTickVectorLabels({ "1", "2", "3", "4" });
-			//xAxis->setTickVector({ 1, 2, 3, 4 });
 		}
 		return ref;
 	};
