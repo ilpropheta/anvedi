@@ -27,6 +27,9 @@ Item {
 							text : "domain"
 						}
 					}
+					yAxis : Axis {
+						useDefault : false	
+					}
 				},
 				Graph {
 					name : "impulses"
@@ -39,7 +42,7 @@ Item {
 						pen : Pen {	color : "yellow"; width: 1.5	}					
 					}
 					yAxis : Axis {
-						useDefault : true
+						useDefault : false
 						label : Label {
 							text : "points"
 						}
@@ -70,15 +73,18 @@ Item {
 			Component.onCompleted: {		
 				var domain = [];
 				var y = [];
+				var y2 = [];
 				
 				for (var i=0; i<20; ++i)
 				{
 				  domain[i] = i/20.0*10.0;
 				  y[i] = Math.cos(domain[i]*0.8+Math.sin(domain[i]*0.16+1.0))*Math.sin(domain[i]*0.54)+1.4;
+				  y2[i] = domain[i]*domain[i];
 				}
 								
 				addData(0, domain, y);
-				addData(1, domain, y);
+				addData(1, domain, y2);
+				setYRange(1, {"lo":-10});
 			}
         }	
 }
