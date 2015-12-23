@@ -103,16 +103,35 @@ void PerformanceTests::Measure_PlotSingleCurve_500kPoints()
 	};
 }
 
-void PerformanceTests::Measure_MultipleGraphs_200kPoints()
+void PerformanceTests::Measure_Plot10Graphs_SameX_data()
+{
+	QTest::addColumn<QVector<qreal>>("x");
+
+	QTest::newRow("100k")
+		<< IncreasingVector(100000);
+
+	QTest::newRow("200k")
+		<< IncreasingVector(200000);
+
+	QTest::newRow("500k")
+		<< IncreasingVector(500000);
+
+	QTest::newRow("700k")
+		<< IncreasingVector(700000);
+
+	QTest::newRow("1M")
+		<< IncreasingVector(1000000);
+}
+
+void PerformanceTests::Measure_Plot10Graphs_SameX()
 {
 	QCustomPlot plot;
-	auto x = IncreasingVector(200000);
-	auto y = RandomVector(200000);
+	QFETCH(QVector<qreal>, x);
 
 	for (auto i = 0u; i < 10u; ++i)
 	{
 		auto graph = plot.addGraph(plot.xAxis, new QCPAxis(plot.axisRect(), QCPAxis::atLeft));
-		graph->setData(x, y);
+		graph->setData(x, RandomVector(x.size()));
 		graph->rescaleValueAxis();
 	}
 	plot.xAxis->rescale();

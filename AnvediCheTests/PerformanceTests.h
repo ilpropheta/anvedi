@@ -14,7 +14,8 @@ private slots:
 	void Measure_PlotSingleGraph_500kPoints();
 	void Measure_PlotSingleCurve_500kPoints();
 
-	void Measure_MultipleGraphs_200kPoints();
+	void Measure_Plot10Graphs_SameX_data();
+	void Measure_Plot10Graphs_SameX();
 	void Measure_MultipleGraphs_10kPoints_1_1_PenWidth();
 };
 
