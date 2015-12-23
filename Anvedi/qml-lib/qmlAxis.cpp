@@ -1,11 +1,12 @@
 #include "qmlAxis.h"
+#include "qmlLabel.h"
 
-const QString& qmlAxis::getLabel() const
+qmlLabel* qmlAxis::getLabel() const
 {
 	return label;
 }
 
-void qmlAxis::setLabel(const QString& l)
+void qmlAxis::setLabel(qmlLabel* l)
 {
 	label = l;
 }

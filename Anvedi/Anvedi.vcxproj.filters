@@ -167,9 +167,6 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_qmlAxis.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="qml-lib\qmlAxis.cpp">
-      <Filter>qml-lib</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_qmlGraph.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -199,6 +196,18 @@
     </ClCompile>
     <ClCompile Include="Signal.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qml-lib\qmlLabel.cpp">
+      <Filter>qml-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="qml-lib\qmlAxis.cpp">
+      <Filter>qml-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_qmlLabel.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_qmlLabel.cpp">
+      <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -260,6 +269,9 @@
       <Filter>qml-lib</Filter>
     </CustomBuild>
     <CustomBuild Include="qml-lib\qmlPlotPaintedItem.h">
+      <Filter>qml-lib</Filter>
+    </CustomBuild>
+    <CustomBuild Include="qml-lib\qmlLabel.h">
       <Filter>qml-lib</Filter>
     </CustomBuild>
   </ItemGroup>

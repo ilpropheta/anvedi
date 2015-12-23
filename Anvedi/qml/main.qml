@@ -23,7 +23,9 @@ Item {
 					}
 					xAxis : Axis {
 						useDefault : true
-						label : "domain"
+						label : Label {
+							text : "domain"
+						}
 					}
 				},
 				Graph {
@@ -38,7 +40,9 @@ Item {
 					}
 					yAxis : Axis {
 						useDefault : true
-						label : "points"
+						label : Label {
+							text : "points"
+						}
 					}
 				}
 			]

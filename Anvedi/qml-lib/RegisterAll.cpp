@@ -3,6 +3,7 @@
 #include "qmlPlotPaintedItem.h"
 #include "qmlGraph.h"
 #include "qcustomplot.h"
+#include "qmlLabel.h"
 
 void QmlModulesInstaller::Install()
 {
@@ -14,5 +15,6 @@ void QmlModulesInstaller::Install()
 	qmlRegisterType<qmlPen>("CustomPlot", 1, 0, "Pen");
 	qmlRegisterType<qmlLegend>("CustomPlot", 1, 0, "Legend");
 	qmlRegisterType<qmlAxis>("CustomPlot", 1, 0, "Axis");
+	qmlRegisterType<qmlLabel>("CustomPlot", 1, 0, "Label");
 }
 

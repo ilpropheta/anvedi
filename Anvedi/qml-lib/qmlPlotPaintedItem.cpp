@@ -1,5 +1,6 @@
 #include "qmlPlotPaintedItem.h"
 #include "qcustomplot.h"
+#include "qmlLabel.h"
 #include <QDebug>
 
 qmlPlotPaintedItem::qmlPlotPaintedItem(QQuickItem* parent) : QQuickPaintedItem(parent)
@@ -28,8 +29,7 @@ void qmlPlotPaintedItem::addData(int index, QVariantList x, QVariantList y)
 	}
 	g->addData(xx, yy);
 	g->rescaleAxes();
-	g->valueAxis()->scaleRange(1.1, g->valueAxis()->range().center());
-	g->keyAxis()->scaleRange(1.1, g->keyAxis()->range().center());
+	
 	m_CustomPlot.replot();
 }
 
@@ -86,26 +86,30 @@ void qmlPlotPaintedItem::appendGraph(QQmlListProperty<qmlGraph> *list, qmlGraph 
 	auto& m_CustomPlot = *info.plot;
 	info.m_graphs.append(pdt);
 
-	auto xAxis = m_CustomPlot.xAxis;
-	auto yAxis = m_CustomPlot.yAxis;
+	auto makeAxis = [&](QCPAxis* ref, QCPAxis::AxisType type, qmlAxis* qmlAx){
+		if (qmlAx)
+		{
+			if (!qmlAx->isDefault())
+				ref = m_CustomPlot.axisRect(0)->addAxis(type);
 
-	if (auto xAxisInfo = pdt->getXAxis())
-	{
-		if (!xAxisInfo->isDefault())
-			xAxis = m_CustomPlot.axisRect(0)->addAxis(QCPAxis::atBottom);
+			if (auto label = qmlAx->getLabel())
+			{
+				if (!label->getText().isEmpty())
+					ref->setLabel(label->getText());
+				if (label->getColor().isValid())
+					ref->setLabelColor(label->getColor());
+				if (!label->getFont().isEmpty())
+					ref->setLabelFont(label->getFont());
+			}
+		}
+		return ref;
+	};
 
-		xAxis->setLabel(xAxisInfo->getLabel());
-	}
-	if (auto yAxisInfo = pdt->getYAxis())
-	{
-		if (!yAxisInfo->isDefault())
-			yAxis = m_CustomPlot.axisRect(0)->addAxis(QCPAxis::atLeft);
+	auto graph = m_CustomPlot.addGraph(
+		makeAxis(m_CustomPlot.xAxis, QCPAxis::atBottom, pdt->getXAxis()),
+		makeAxis(m_CustomPlot.yAxis, QCPAxis::atLeft, pdt->getYAxis()));
 
-		yAxis->setLabel(yAxisInfo->getLabel());
-	}
-
-	auto graph = m_CustomPlot.addGraph(xAxis, yAxis);
-
+	graph->setName(pdt->getName());
 	graph->setPen(pdt->getPen()->getPen());
 	graph->setLineStyle(pdt->getLineStyle());
 
@@ -113,7 +117,6 @@ void qmlPlotPaintedItem::appendGraph(QQmlListProperty<qmlGraph> *list, qmlGraph 
 	{
 		graph->setScatterStyle(scatterInfo->getStyle());
 	}
-	graph->setName(pdt->getName());
 }
 
 void qmlPlotPaintedItem::clearGraphs(QQmlListProperty<qmlGraph> *p)
@@ -185,4 +188,7 @@ void qmlPlotPaintedItem::onCustomReplot()
 	update();
 }
 
-
+void qmlPlotPaintedItem::exportPDF(const QString& name, int w/*=0*/, int h/*=0*/)
+{
+	m_CustomPlot.savePdf(name, false, w, h);
+}
