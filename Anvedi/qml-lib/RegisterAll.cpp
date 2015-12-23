@@ -4,6 +4,7 @@
 #include "qmlGraph.h"
 #include "qcustomplot.h"
 #include "qmlLabel.h"
+#include "qmlTick.h"
 
 void QmlModulesInstaller::Install()
 {
@@ -16,5 +17,6 @@ void QmlModulesInstaller::Install()
 	qmlRegisterType<qmlLegend>("CustomPlot", 1, 0, "Legend");
 	qmlRegisterType<qmlAxis>("CustomPlot", 1, 0, "Axis");
 	qmlRegisterType<qmlLabel>("CustomPlot", 1, 0, "Label");
+	qmlRegisterType<qmlTick>("CustomPlot", 1, 0, "Tick");
 }
 

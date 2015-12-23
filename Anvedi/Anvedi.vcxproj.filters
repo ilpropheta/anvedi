@@ -209,6 +209,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_qmlLabel.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_qmlTick.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_qmlTick.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="qml-lib\qmlTick.cpp">
+      <Filter>qml-lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="anvedi.h">
@@ -272,6 +281,9 @@
       <Filter>qml-lib</Filter>
     </CustomBuild>
     <CustomBuild Include="qml-lib\qmlLabel.h">
+      <Filter>qml-lib</Filter>
+    </CustomBuild>
+    <CustomBuild Include="qml-lib\qmlTick.h">
       <Filter>qml-lib</Filter>
     </CustomBuild>
   </ItemGroup>

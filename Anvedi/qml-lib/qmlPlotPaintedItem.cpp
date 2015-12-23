@@ -1,6 +1,7 @@
 #include "qmlPlotPaintedItem.h"
 #include "qcustomplot.h"
 #include "qmlLabel.h"
+#include "qmlTick.h"
 #include <QDebug>
 
 qmlPlotPaintedItem::qmlPlotPaintedItem(QQuickItem* parent) : QQuickPaintedItem(parent)
@@ -101,6 +102,30 @@ void qmlPlotPaintedItem::appendGraph(QQmlListProperty<qmlGraph> *list, qmlGraph 
 				if (!label->getFont().isEmpty())
 					ref->setLabelFont(label->getFont());
 			}
+			
+			if (auto tick = qmlAx->getTick())
+			{
+				if (!tick->getFont().isEmpty())
+					ref->setTickLabelFont(tick->getFont());
+				const auto& tickVec = tick->getTickVector();
+				if (!tickVec.empty())
+				{
+					ref->setAutoTicks(false);
+					ref->setTickVector(tickVec);
+				}
+				const auto& tickLab = tick->getTickLabels();
+				if (!tickLab.empty())
+				{
+					ref->setAutoTickLabels(false);
+					ref->setTickVectorLabels(tickLab);
+				}
+			}
+
+			//xAxis->setTickLabelFont(QFont("serif", 12));
+			//xAxis->setAutoTicks(false);
+			//xAxis->setAutoTickLabels(false);
+			//xAxis->setTickVectorLabels({ "1", "2", "3", "4" });
+			//xAxis->setTickVector({ 1, 2, 3, 4 });
 		}
 		return ref;
 	};
