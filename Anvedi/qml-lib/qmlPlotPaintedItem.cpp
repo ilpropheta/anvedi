@@ -30,8 +30,50 @@ void qmlPlotPaintedItem::addData(int index, QVariantList x, QVariantList y)
 	}
 	g->addData(xx, yy);
 	g->rescaleAxes();
-	
 	m_CustomPlot.replot();
+}
+
+void SetRange(QCustomPlot& plot, int index, QVariantMap range, QCPAxis::AxisType type)
+{
+	auto g = plot.graph(index);
+	
+	auto it = range.find("lo");
+	if (it != range.end())
+	{
+		switch (type)
+		{
+		case QCPAxis::atLeft:
+			g->valueAxis()->setRangeLower(it->toReal());
+			break;
+		case QCPAxis::atBottom:
+			g->keyAxis()->setRangeLower(it->toReal());
+			break;
+		}
+	}
+	it = range.find("up");
+	if (it != range.end())
+	{
+		switch (type)
+		{
+		case QCPAxis::atLeft:
+			g->valueAxis()->setRangeUpper(it->toReal());
+			break;
+		case QCPAxis::atBottom:
+			g->keyAxis()->setRangeUpper(it->toReal());
+			break;
+		}
+	}
+}
+
+void qmlPlotPaintedItem::setXRange(int index, QVariantMap range)
+{
+	SetRange(m_CustomPlot, index, range, QCPAxis::atBottom);
+}
+
+void qmlPlotPaintedItem::setYRange(int index, QVariantMap range)
+{
+	SetRange(m_CustomPlot, index, range, QCPAxis::atLeft);
+	
 }
 
 void qmlPlotPaintedItem::paint(QPainter* painter)
@@ -211,3 +253,4 @@ void qmlPlotPaintedItem::exportPDF(const QString& name, int w/*=0*/, int h/*=0*/
 {
 	m_CustomPlot.savePdf(name, false, w, h);
 }
+

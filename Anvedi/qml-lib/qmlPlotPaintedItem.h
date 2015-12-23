@@ -38,6 +38,8 @@ public:
 
 public slots:
 	void addData(int index, QVariantList x, QVariantList  y);
+	void setXRange(int index, QVariantMap range);
+	void setYRange(int index, QVariantMap range);
 	void exportPDF(const QString& name, int w=0, int h=0);
 private slots:
 	void onGraphClicked(QCPAbstractPlottable* plottable);
