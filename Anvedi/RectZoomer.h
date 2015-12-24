@@ -20,5 +20,6 @@ private:
 	QRubberBand rubberBand;
 	QPoint origin;
 	QCustomPlot* plot;
+	class IZoomAction* zoomAction;
 };
 

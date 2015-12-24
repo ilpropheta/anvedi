@@ -2,9 +2,52 @@
 #include "qcustomplot.h"
 #include <QMouseEvent>
 
+class IZoomAction
+{
+public:
+	virtual QPoint OnMousePress(const QCustomPlot& plot, const QPoint& clickPos) = 0;
+	virtual QPoint OnMouseMove(const QCustomPlot& plot, const QPoint& clickPos) = 0;
+};
+
+struct RectZoomAction : IZoomAction
+{
+	QPoint OnMousePress(const QCustomPlot& plot, const QPoint& clickPos) override { return clickPos; }
+	QPoint OnMouseMove(const QCustomPlot& plot, const QPoint& clickPos) override	{ return clickPos; }
+};
+
+struct HorizontalZoomAction : IZoomAction
+{
+	static std::pair<int, int> GetYAxisRect(const QCustomPlot& plot)
+	{
+		int xp1, yp1, xp2, yp2;
+		plot.axisRect()->rect().getCoords(&xp1, &yp1, &xp2, &yp2);
+		return{ yp1, yp2 };
+	}
+	
+	virtual QPoint OnMousePress(const QCustomPlot& plot, const QPoint& clickPos) override
+	{
+		return{ clickPos.x(), GetYAxisRect(plot).first };
+	}
+
+	virtual QPoint OnMouseMove(const QCustomPlot& plot, const QPoint& clickPos) override
+	{
+		return{ clickPos.x(), GetYAxisRect(plot).second };
+	}
+};
+
+IZoomAction* GetZoomAction(QMouseEvent* mevent)
+{
+	static RectZoomAction rectZoomAction;
+	static HorizontalZoomAction horizontalZoomAction;
+
+	if (mevent && (mevent->modifiers().testFlag(Qt::ControlModifier)))
+		return &rectZoomAction;
+	return &horizontalZoomAction;
+}
+
 RectZoomer::RectZoomer(QCustomPlot* plot)
 	  // note: QCustomPlot as parent is ok because RectZoomer is destroyed before QCustomPlot in Anvedi
-	: rubberBand(QRubberBand::Rectangle, plot), plot(plot)
+	  : rubberBand(QRubberBand::Rectangle, plot), plot(plot), zoomAction(GetZoomAction(nullptr))
 {
 	// connect to QCustomPlot events
 	QObject::connect(plot, SIGNAL(mousePress(QMouseEvent*)), this, SLOT(OnMousePress(QMouseEvent*)));
@@ -16,10 +59,12 @@ void RectZoomer::OnMousePress(QMouseEvent* mevent)
 {
 	if (!plot->graphCount())
 		return;
+
 	switch (mevent->button())
 	{
 	case Qt::RightButton:
-		origin = mevent->pos();
+		zoomAction = GetZoomAction(mevent);
+		origin = zoomAction->OnMousePress(*plot, mevent->pos());
 		rubberBand.setGeometry(QRect(origin, QSize()));
 		rubberBand.show();
 		break;
@@ -58,7 +103,7 @@ void RectZoomer::OnMouseRelease(QMouseEvent*)
 
 void RectZoomer::OnMouseMove(QMouseEvent* mevent)
 {
-	rubberBand.setGeometry(QRect(origin, mevent->pos()).normalized());
+	rubberBand.setGeometry(QRect(origin, zoomAction->OnMouseMove(*plot, mevent->pos())).normalized());
 }
 
 void RectZoomer::OnResetZoom()
