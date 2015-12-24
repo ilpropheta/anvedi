@@ -21,7 +21,7 @@ struct HorizontalZoomAction : IZoomAction
 	{
 		int xp1, yp1, xp2, yp2;
 		plot.axisRect()->rect().getCoords(&xp1, &yp1, &xp2, &yp2);
-		return{ yp1, yp2 };
+		return{ 0, yp2 };
 	}
 	
 	virtual QPoint OnMousePress(const QCustomPlot& plot, const QPoint& clickPos) override
@@ -85,7 +85,7 @@ void RectZoomer::OnMouseRelease(QMouseEvent*)
 		{
 			const auto x1 = plot->xAxis->pixelToCoord(xp1);
 			const auto x2 = plot->xAxis->pixelToCoord(xp2);
-			// scale of x 
+			// scale x 
 			plot->xAxis->setRange(x1, x2);
 
 			const auto axisRect0 = plot->axisRect(0);
@@ -103,7 +103,8 @@ void RectZoomer::OnMouseRelease(QMouseEvent*)
 
 void RectZoomer::OnMouseMove(QMouseEvent* mevent)
 {
-	rubberBand.setGeometry(QRect(origin, zoomAction->OnMouseMove(*plot, mevent->pos())).normalized());
+	if (rubberBand.isVisible())
+		rubberBand.setGeometry(QRect(origin, zoomAction->OnMouseMove(*plot, mevent->pos())).normalized());
 }
 
 void RectZoomer::OnResetZoom()

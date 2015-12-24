@@ -38,8 +38,8 @@ void PlotCursor::set(qreal xVal)
 	if (!std::isnan(domainValInfo.first))
 	{
 		const auto domainVal = domainValInfo.first;
-		cursor->point1->setCoords(domainVal, cursor->point1->coords().y());
-		cursor->point2->setCoords(domainVal, cursor->point2->coords().y());
+		cursor->point1->setCoords(domainVal, cursor->point1->value());
+		cursor->point2->setCoords(domainVal, cursor->point2->value());
 		plot->replot(QCustomPlot::rpHint);
 
 		emit CursorChanged(domainVal, domainValInfo.second);
@@ -58,7 +58,7 @@ void PlotCursor::moveBackward()
 
 qreal PlotCursor::xPos() const
 {
-	return cursor->point1->coords().x();
+	return cursor->point1->key();
 }
 
 void PlotCursor::OnMouseEvent(QMouseEvent* e)
