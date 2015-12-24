@@ -19,7 +19,6 @@ SignalListPresenter::SignalListPresenter(QTableWidget* signalList, QLineEdit* fi
 		if (item->column() == 0)
 		{
 			const auto isChecked = item->checkState() == Qt::Checked;
-			this->signalList->cellWidget(item->row(), 2)->setEnabled(isChecked);
 			this->data.setVisible(item->text(), isChecked);
 		}
 	});
@@ -75,7 +74,6 @@ void SignalListPresenter::OnNewData(const DataMap& dataMap)
 			const auto color = QColorDialog::getColor(currColor, this->signalList, QString("Change color of %1").arg(name));
 			if (color.isValid())
 			{
-				colorButton->setStyleSheet(MakeBackgroundStylesheet(color));
 				this->data.setColor(name, color);
 			}
 		});
