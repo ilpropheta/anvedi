@@ -73,7 +73,6 @@ void qmlPlotPaintedItem::setXRange(int index, QVariantMap range)
 void qmlPlotPaintedItem::setYRange(int index, QVariantMap range)
 {
 	SetRange(m_CustomPlot, index, range, QCPAxis::atLeft);
-	
 }
 
 void qmlPlotPaintedItem::paint(QPainter* painter)
