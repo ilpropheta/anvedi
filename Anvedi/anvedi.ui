@@ -59,7 +59,7 @@
     <property name="title">
      <string>Viewer</string>
     </property>
-    <addaction name="actionResetZoom"/>
+    <addaction name="actionResetAxes"/>
     <addaction name="actionChangeBackground"/>
    </widget>
    <widget class="QMenu" name="menuReal_Time">
@@ -312,9 +312,9 @@
     <string>Clear</string>
    </property>
   </action>
-  <action name="actionResetZoom">
+  <action name="actionResetAxes">
    <property name="text">
-    <string>Reset Zoom</string>
+    <string>Auto Axes</string>
    </property>
   </action>
   <action name="actionChangeBackground">
