@@ -29,7 +29,7 @@ void SignalHandle::setColor(const QString& color)
 
 QVariant SignalHandle::getValues() const
 {
-	const auto& signal = static_cast<const SignalData&>(data).get(signalName);
+	const auto& signal = data.get(signalName);
 	QVariantList vals; vals.reserve(signal.y.size());
 	std::copy(signal.y.begin(), signal.y.end(), std::back_inserter(vals));
 	return vals;
