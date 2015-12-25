@@ -19,4 +19,4 @@ private slots:
 	void Measure_MultipleGraphs_10kPoints_1_1_PenWidth();
 };
 
-DECLARE_TEST(PerformanceTests)
+//DECLARE_TEST(PerformanceTests) // not running PerfTests
