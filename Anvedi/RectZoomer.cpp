@@ -21,7 +21,7 @@ struct HorizontalZoomAction : IZoomAction
 	{
 		int xp1, yp1, xp2, yp2;
 		plot.axisRect()->rect().getCoords(&xp1, &yp1, &xp2, &yp2);
-		return{ 0, yp2 };
+		return{ yp1-1, yp2 };
 	}
 	
 	virtual QPoint OnMousePress(const QCustomPlot& plot, const QPoint& clickPos) override
@@ -83,28 +83,33 @@ void RectZoomer::OnMouseRelease(QMouseEvent*)
 		zoomRect.getCoords(&xp1, &yp1, &xp2, &yp2);
 		if (xp1 < (xp2 + 1)) // skip just click
 		{
-			const auto x1 = plot->xAxis->pixelToCoord(xp1);
-			const auto x2 = plot->xAxis->pixelToCoord(xp2);
-			// scale x 
-			plot->xAxis->setRange(x1, x2);
-
-			const auto axisRect0 = plot->axisRect(0);
-			auto numbOfY = axisRect0->axisCount(QCPAxis::atLeft);
-			for (auto i = 0; i < numbOfY; ++i)
-			{
-				auto currentY = axisRect0->axis(QCPAxis::atLeft, i);
-				currentY->setRange(currentY->pixelToCoord(yp1), currentY->pixelToCoord(yp2));
-			}
+			ZoomInPixelCoordinates(xp1, xp2, yp1, yp2);
 			plot->replot();
 		}
 		rubberBand.hide();
 	}
 }
 
+QPoint SaturateInXRange(QMouseEvent* mevent, const QCPAxis& xAxis)
+{
+	auto movePos = mevent->pos();
+	const auto rangeX = xAxis.range();
+	const auto rubberXToCoord = xAxis.pixelToCoord(movePos.x());
+	if (rubberXToCoord > rangeX.upper)
+		movePos.setX(xAxis.coordToPixel(rangeX.upper));
+	else if (rubberXToCoord < rangeX.lower)
+		movePos.setX(xAxis.coordToPixel(rangeX.lower));
+	return movePos;
+}
+
 void RectZoomer::OnMouseMove(QMouseEvent* mevent)
 {
 	if (rubberBand.isVisible())
-		rubberBand.setGeometry(QRect(origin, zoomAction->OnMouseMove(*plot, mevent->pos())).normalized());
+	{
+		rubberBand.setGeometry(QRect(
+			origin, 
+			zoomAction->OnMouseMove(*plot, SaturateInXRange(mevent, *plot->xAxis))).normalized());
+	}
 }
 
 void RectZoomer::OnResetZoom()
@@ -114,4 +119,20 @@ void RectZoomer::OnResetZoom()
 		plot->graph(i)->rescaleAxes();
 	}
 	plot->replot();
+}
+
+void RectZoomer::ZoomInPixelCoordinates(double loX, double upX, double loY, double upY)
+{
+	plot->xAxis->setRange(
+		plot->xAxis->pixelToCoord(loX), 
+		plot->xAxis->pixelToCoord(upX)
+	);
+
+	const auto axisRect0 = plot->axisRect(0);
+	auto numbOfY = axisRect0->axisCount(QCPAxis::atLeft);
+	for (auto i = 0; i < numbOfY; ++i)
+	{
+		auto currentY = axisRect0->axis(QCPAxis::atLeft, i);
+		currentY->setRange(currentY->pixelToCoord(loY), currentY->pixelToCoord(upY));
+	}
 }

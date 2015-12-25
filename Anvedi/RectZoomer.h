@@ -17,6 +17,8 @@ public slots:
 	void OnMouseMove(QMouseEvent*);
 	void OnResetZoom();
 private:
+	void ZoomInPixelCoordinates(double loX, double upX, double loY, double upY);
+
 	QRubberBand rubberBand;
 	QPoint origin;
 	QCustomPlot* plot;
