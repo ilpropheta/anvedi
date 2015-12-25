@@ -45,7 +45,7 @@ private:
 	// to move
 	QTimer dataTimer;
 	bool isPaused = false;
-	double timeStep = 0.0;
+	size_t timeStep = 0u;
 };
 
 #endif // ANVEDI_H

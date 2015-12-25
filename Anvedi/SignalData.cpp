@@ -43,6 +43,11 @@ void SignalData::setValues(const QString& name, QVector<qreal> vec)
 
 void SignalData::addValues(const std::map<QString, QVector<qreal>>& data)
 {
+	/* Note: this version does not support recovering (e.g. resending data from
+	   the past, or sending new data of the past). I have a version of this function
+	   properly supporting recovering. On the QCustomPlot side no problem because it
+	   uses a map (actually it was using .insertMulti and then I replace it with .insert).
+	*/
 	if (domain)
 	{
 		const auto& domainSlice = data.at(domain->name);

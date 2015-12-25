@@ -104,39 +104,36 @@ void Anvedi::OnRTStart()
 		return;
 	}
 
-	EnableMenuInRT(false);
-	m_data.clear();
-	m_data.add({
-		{ "domain", { "domain", "red", true, {} } },
-		{ "sin", { "sin", "blue", false, {} } },
-		{ "cos", { "cos", "green", true, {} } },
+	SignalData data; PlotInfo info;
+	WorkspaceSerializer::Read(R"(..\anvedi\json\physx.json)", data, info);
+	timeStep = 0u;
+	auto domain = data.getDomain()->y;
+	DataMap toSet;
+	vector < pair<QString, QVector<qreal>>> toSend;
+	data.onSignals([&](const Signal& signal){
+		toSet.emplace(signal.name, Signal{ signal.name, signal.color, signal.visible });
+		toSend.emplace_back(make_pair(signal.name, std::move(signal.y)));
 	});
-	m_data.setAsDomain("domain");
+	m_data.clear();
+	m_data.add(std::move(toSet));
+	m_data.setAsDomain(data.getDomain()->name);
 
-	connect(&dataTimer, &QTimer::timeout, [this]{
-		double key = QDateTime::currentDateTime().toMSecsSinceEpoch() / 1000.0;
-		static double lastPointKey = 0;
+	EnableMenuInRT(false);
 
-		QVector<qreal> domain(packetCount);
-		QVector<qreal> sinx(packetCount, std::numeric_limits<qreal>::quiet_NaN());
-		QVector<qreal> cosx(packetCount, std::numeric_limits<qreal>::quiet_NaN());
-
-		std::generate(domain.begin(), domain.end(), [&]{
-			auto tmp = timeStep;
-			timeStep += 0.0001;
-			return tmp;
-		});
-
-		for (auto i = 0; i < packetCount; ++i)
+	connect(&dataTimer, &QTimer::timeout, [toSend, this]{
+		map<QString, QVector<qreal>> sliceToSend;
+		for (const auto& elem : toSend)
 		{
-			sinx[i] = sin(domain[i] * 2 * 3.14);
-			cosx[i] = cos(domain[i] * 2 * 3.14);
+			QVector<qreal> data; data.reserve(20);
+			for (auto i = 0; i < 20 && (timeStep + i < elem.second.size()); ++i)
+			{
+				data.push_back(elem.second.at(timeStep+i));
+			}
+			sliceToSend.emplace(elem.first, data);
 		}
-
-		m_data.addValues({
-			{"domain", domain}, { "sin", sinx}, { "cos", cosx }
-		});
-
+		timeStep += 20;
+		if (!sliceToSend.begin()->second.empty())
+			m_data.addValues(sliceToSend);
 	});
 	dataTimer.start(timerInterval_ms);
 }
