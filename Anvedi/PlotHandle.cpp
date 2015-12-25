@@ -34,22 +34,18 @@ inline std::pair<qreal, qreal> ToRange(const QVariant& val)
 
 void PlotHandle::setXRange(const QVariant& val) const
 {
-	plot.setXRange(ToRange(val));
+	if ((val.type() == QVariant::String) && val.toString() == "auto")
+		plot.autoScaleX();
+	else
+		plot.setXRange(ToRange(val));
 }
 
 void PlotHandle::setYRange(const QString& signalName, const QVariant& val)
 {
-	plot.setYRange(signalName, ToRange(val));
-}
-
-void PlotHandle::autoRangeY(const QString& name)
-{
-	plot.autoScaleY(name);
-}
-
-void PlotHandle::autoRangeX()
-{
-	plot.autoScaleX();
+	if ((val.type() == QVariant::String) && val.toString() == "auto")
+		plot.autoScaleY(signalName);
+	else
+		plot.setYRange(signalName, ToRange(val));
 }
 
 void PlotHandle::autoRangeAllY()
