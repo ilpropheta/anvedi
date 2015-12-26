@@ -84,3 +84,13 @@ void PlotInfo::exportToPdf(const QString& fileName, qreal w, qreal h)
 {
 	plot->savePdf(fileName, false, w, h);
 }
+
+int PlotInfo::getRealTimePageSize() const
+{
+	return realTimePageSize;
+}
+
+void PlotInfo::setRealTimePageSize(int ps)
+{
+	realTimePageSize = ps;
+}

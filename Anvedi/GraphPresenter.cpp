@@ -2,9 +2,10 @@
 #include <QColorDialog>
 #include "Utils.h"
 #include "SignalData.h"
+#include "PlotInfo.h"
 
-GraphPresenter::GraphPresenter(QCustomPlot* plot, const SignalData& data)
-	: plot(plot), data(data)
+GraphPresenter::GraphPresenter(QCustomPlot* plot, const SignalData& data, PlotInfo& plotInfo)
+	: plot(plot), data(data), plotInfo(plotInfo)
 {
 	plot->yAxis->setVisible(false);
 	//plot->xAxis->setAutoTickStep(false);
@@ -21,6 +22,8 @@ GraphPresenter::GraphPresenter(QCustomPlot* plot, const SignalData& data)
 	QObject::connect(&data, SIGNAL(DomainChanged(const Signal&)), this, SLOT(OnDomainChanged(const Signal&)));
 	// plot
 	QObject::connect(plot->xAxis, SIGNAL(rangeChanged(const QCPRange&)), this, SLOT(OnXRangeChanged(const QCPRange&)));
+	// plot-info
+	QObject::connect(&plotInfo, SIGNAL(BackgroundColorChanged(const QColor&)), this, SLOT(OnBackgroundChanged(const QColor&)));
 }
 
 void GraphPresenter::OnNewData(const DataMap& d)
@@ -169,12 +172,31 @@ void GraphPresenter::OnXRangeChanged(const QCPRange&)
 
 void GraphPresenter::OnGraphsDataAdded(const QVector<qreal>& domainSlice, const std::map<QString, QVector<qreal>>& dataSlice)
 {
+	if (domainSlice.empty())
+		return;
+
+	// logic here should be moved out to kind of "PlotBrowser"
+	const auto rtPageSize = plotInfo.getRealTimePageSize();
+	if (rtPageSize && displayedGraphs.begin()->second->data()->empty())
+	{
+		plot->xAxis->setRangeLower(domainSlice.front());
+		plot->xAxis->setRangeUpper(rtPageSize);
+	}
+
 	for (const auto& data : dataSlice)
 	{
 		auto graph = displayedGraphs.at(data.first);
 		graph->addData(domainSlice, data.second);
 		graph->rescaleValueAxis();
 	}
-	plot->xAxis->rescale();
+
+	auto xRange = plot->xAxis->range();
+	if (rtPageSize && (xRange.upper < domainSlice.back()))
+	{
+		xRange.lower = xRange.upper;
+		xRange.upper += rtPageSize;
+		plot->xAxis->setRange(xRange);
+	}
+
 	plot->replot();
 }

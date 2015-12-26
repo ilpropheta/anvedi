@@ -1,6 +1,5 @@
 #include "RealTimePresenter.h"
 
-
 RealTimePresenter::RealTimePresenter(SignalData& data, RTMenuInfo rtMenuActions)
 	: player(data), rtMenuInfo(rtMenuActions)
 {

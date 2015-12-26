@@ -18,7 +18,7 @@ Anvedi::Anvedi(QWidget *parent)
 	cursor = make_unique<PlotCursor>(ui.plot, m_data);
 	rectZoomer = make_unique<RectZoomer>(ui.plot);
 	signalListPresenter = make_unique<SignalListPresenter>(ui.signalList, ui.filterEdit, ui.signalCountLabel, ui.domainLabel, m_data);
-	graphPresenter = make_unique<GraphPresenter>(ui.plot, m_data);
+	graphPresenter = make_unique<GraphPresenter>(ui.plot, m_data, m_plotInfo);
 	rtPresenter = make_unique<RealTimePresenter>(m_data, RTMenuInfo{ui.actionStartRT, ui.actionStopRT, ui.actionConfig, ui.actionImport, ui.actionExport, ui.actionClear});
 
 	ScriptManager::InitWorkspace(m_data, m_plotInfo, *ui.console);
@@ -30,9 +30,7 @@ Anvedi::Anvedi(QWidget *parent)
 	// cursor -> graph
 	QObject::connect(cursor.get(), SIGNAL(CursorChanged(qreal, size_t)), graphPresenter.get(), SLOT(OnCursorValueChanged(qreal, size_t)));
 	// RT cursor -> cursor
-	QObject::connect(ui.actionCursorRT, SIGNAL(triggered(bool)), cursor.get(), SLOT(OnSetCursorFollowingInRealTime(bool)));
-	// plot info -> graph
-	QObject::connect(&m_plotInfo, SIGNAL(BackgroundColorChanged(const QColor&)), graphPresenter.get(), SLOT(OnBackgroundChanged(const QColor&)));
+	QObject::connect(ui.actionCursorRT, SIGNAL(triggered(bool)), cursor.get(), SLOT(OnSetCursorFollowingInRealTime(bool)));	
 	// plot info -> cursor
 	QObject::connect(&m_plotInfo, SIGNAL(BackgroundColorChanged(const QColor&)), cursor.get(), SLOT(OnBackgroundChanged(const QColor&)));
 	// window -> plot info

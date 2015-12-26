@@ -6,9 +6,6 @@
 
 class QCustomPlot;
 
-/*	This object - at some point - should be smarter and store a cache of
-	plotted graphs (moved from GraphPresenter) and additional infos...
-*/
 class PlotInfo : public QObject
 {
 	Q_OBJECT
@@ -16,6 +13,8 @@ public:
 	void setPlot(QCustomPlot* p);
 	const QColor& getBackgroundColor() const;
 	void setBackgroundColor(const QColor& color);
+	int getRealTimePageSize() const;
+	void setRealTimePageSize(int ps);
 	// axis ranges
 	const std::pair<qreal, qreal> getXRange() const;
 	void setXRange(const std::pair<qreal, qreal>& range);
@@ -29,5 +28,6 @@ signals:
 	void BackgroundColorChanged(const QColor&);
 private:
 	QColor backgroundColor;
+	int realTimePageSize = 1000;
 	QCustomPlot* plot;
 };

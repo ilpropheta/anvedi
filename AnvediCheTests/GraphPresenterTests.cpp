@@ -3,13 +3,15 @@
 #include "..\SignalData.h"
 #include "..\GraphPresenter.h"
 #include <QTest>
+#include "..\PlotInfo.h"
 
 template<typename TestCode>
 void DoGraphPresenterTest(TestCode t)
 {
 	QCustomPlot plot;
 	SignalData data;
-	GraphPresenter presenter(&plot, data);
+	PlotInfo info;
+	GraphPresenter presenter(&plot, data, info);
 	t(presenter, plot, data);
 }
 

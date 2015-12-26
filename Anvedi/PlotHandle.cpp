@@ -62,3 +62,13 @@ void PlotHandle::savePdf(const QString& fileName, qreal w, qreal h)
 {
 	plot.exportToPdf(fileName, w, h);
 }
+
+int PlotHandle::getRTPageSize() const
+{
+	return plot.getRealTimePageSize();
+}
+
+void PlotHandle::setRTPageSize(int ps)
+{
+	plot.setRealTimePageSize(ps);
+}

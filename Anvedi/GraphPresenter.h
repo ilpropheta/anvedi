@@ -7,12 +7,13 @@
 
 class QCustomPlot;
 class SignalData;
+class PlotInfo;
 
 class GraphPresenter : public QObject
 {
 	Q_OBJECT
 public:
-	GraphPresenter(QCustomPlot* plot, const SignalData& data);
+	GraphPresenter(QCustomPlot* plot, const SignalData& data, PlotInfo& plotInfo);
 public slots:
 	// data
 	void OnNewData(const DataMap& data);
@@ -34,4 +35,5 @@ private:
 	QCustomPlot* plot;
 	std::map<QString, QCPGraph*> displayedGraphs;
 	const SignalData& data;
+	PlotInfo& plotInfo;
 };
