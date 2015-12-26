@@ -4,13 +4,13 @@
 
 class SignalData;
 
-class RTInteractiveSender : public QObject
+class RTInteractiveFileSender : public QObject
 {
 	Q_OBJECT
 	Q_PROPERTY(RTSender* sender READ getSender)
 	Q_PROPERTY(QString fileToReplay READ getFileToReplay WRITE setFileToReplay)
 public:
-	RTInteractiveSender(SignalData& data);
+	RTInteractiveFileSender(SignalData& data);
 
 	RTSender* getSender();
 	const QString& getFileToReplay() const;

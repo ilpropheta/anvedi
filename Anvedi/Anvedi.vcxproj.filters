@@ -245,17 +245,17 @@
     <ClCompile Include="GeneratedFiles\Release\moc_RTSender.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="RTInteractiveSender.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_RTInteractiveSender.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_RTInteractiveSender.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="RTUtils.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RTInteractiveFileSender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_RTInteractiveFileSender.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_RTInteractiveFileSender.cpp">
+      <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -337,7 +337,7 @@
     <CustomBuild Include="RTSender.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="RTInteractiveSender.h">
+    <CustomBuild Include="RTInteractiveFileSender.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
