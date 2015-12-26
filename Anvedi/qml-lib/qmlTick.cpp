@@ -1,4 +1,5 @@
 #include "qmlTick.h"
+#include "Utils.h"
 
 const QString& qmlTick::getFont() const
 {
@@ -12,17 +13,12 @@ void qmlTick::setFont(const QString& f)
 
 QVariantList qmlTick::getVector() const
 {
-	QVariantList vals; vals.reserve(vector.size());
-	std::copy(vector.begin(), vector.end(), std::back_inserter(vals));
-	return vals;
+	return ToVariant(vector).toList();
 }
 
 void qmlTick::setVector(const QVariantList& varList)
 {
-	vector.clear(); vector.reserve(varList.size());
-	std::transform(varList.begin(), varList.end(), std::back_inserter(vector), [](const QVariant& v) {
-		return v.toReal();
-	});
+	vector = ToVector(varList);
 }
 
 QVariantList qmlTick::getLabels() const

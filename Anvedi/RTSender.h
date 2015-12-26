@@ -3,6 +3,7 @@
 #include <vector>
 #include <utility>
 #include <QVector>
+#include "RTUtils.h"
 
 class SignalData;
 
@@ -13,7 +14,7 @@ class RTSender : public QObject
 public:
 	RTSender(SignalData& receiver);
 
-	void SetDataToSend(std::vector < std::pair<QString, QVector<qreal>>> toSend);
+	void SetDataToSend(DataToReplay toSend);
 	int getPacketCount() const;
 	void setPacketCount(int pc);
 public slots:
@@ -22,7 +23,7 @@ public slots:
 signals:
 	void DataSent();
 private:
-	std::vector<std::pair<QString, QVector<qreal>>> dataToSend;
+	DataToReplay dataToSend;
 	SignalData& receiver;
 	size_t currentSampleIdx = 0u;
 	int packetCount = 20;

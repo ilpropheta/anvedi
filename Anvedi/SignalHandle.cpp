@@ -1,5 +1,6 @@
 #include "SignalHandle.h"
 #include "SignalData.h"
+#include "Utils.h"
 
 SignalHandle::SignalHandle(QString name, SignalData& data)
 	: signalName(std::move(name)), data(data)
@@ -29,20 +30,12 @@ void SignalHandle::setColor(const QString& color)
 
 QVariant SignalHandle::getValues() const
 {
-	const auto& signal = data.get(signalName);
-	QVariantList vals; vals.reserve(signal.y.size());
-	std::copy(signal.y.begin(), signal.y.end(), std::back_inserter(vals));
-	return vals;
+	return ToVariant(data.get(signalName).y);
 }
 
 void SignalHandle::setValues(const QVariant& values)
 {
-	const auto varList = values.toList();
-	QVector<qreal> vals; vals.reserve(varList.size());
-	std::transform(varList.begin(), varList.end(), std::back_inserter(vals), [](const QVariant& v) {
-		return v.toReal();
-	});
-	data.setValues(signalName, std::move(vals));
+	data.setValues(signalName, ToVector(values));
 }
 
 void SignalHandle::SetThisAsDomain() 
