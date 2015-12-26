@@ -2,6 +2,8 @@
 
 #include <QObject>
 #include <QTimer>
+#include "RTSender.h"
+#include <memory>
 
 class SignalData;
 
@@ -27,18 +29,18 @@ public slots:
 	void Stop();
 signals:
 	void RTStarted();
-	void RTDataSent();
 	void RTPaused();
 	void RTResumed();
 	void RTStopped();
 private:
+	void PrepareSender();
+
 	SignalData& m_data;
 	bool isPaused = false;
 	QTimer dataTimer;
-	size_t currentSampleIdx = 0u;
 	// props
 	QString fileToReplay = R"(..\anvedi\json\physx.json)";
 	int timerInterval = 200;
-	int packetCount = 20;
+	RTSender sender;
 };
 

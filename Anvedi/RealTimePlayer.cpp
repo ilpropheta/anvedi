@@ -2,13 +2,20 @@
 #include "SignalData.h"
 #include "PlotInfo.h"
 #include "WorkspaceSerializer.h"
+#include "RTUtils.h"
 
 using namespace std;
 
 RealTimePlayer::RealTimePlayer(SignalData& data)
-	: m_data(data)
+	: m_data(data), sender(m_data)
 {
+	connect(&dataTimer, SIGNAL(timeout()), &sender, SLOT(SendData()));
+}
 
+void RealTimePlayer::PrepareSender()
+{
+	auto toSend = PrepareReplay(fileToReplay, m_data);
+	sender.SetDataToSend(move(toSend));
 }
 
 void RealTimePlayer::Start()
@@ -19,39 +26,8 @@ void RealTimePlayer::Start()
 		emit RTResumed();
 		return;
 	}
-
-	SignalData data; PlotInfo info;
-	WorkspaceSerializer::Read(fileToReplay, data, info);
-	currentSampleIdx = 0u;
 	
-	auto domain = data.getDomain()->y;
-	DataMap toSet;
-	vector < pair<QString, QVector<qreal>>> toSend;
-	data.onSignals([&](const Signal& signal){
-		toSet.emplace(signal.name, Signal{ signal.name, signal.color, signal.visible });
-		toSend.emplace_back(make_pair(signal.name, std::move(signal.y)));
-	});
-	m_data.clear();
-	m_data.add(std::move(toSet));
-	m_data.setAsDomain(data.getDomain()->name);
-
-	connect(&dataTimer, &QTimer::timeout, [toSend, this]{
-		map<QString, QVector<qreal>> sliceToSend;
-		for (const auto& elem : toSend)
-		{
-			QVector<qreal> data; data.reserve(packetCount);
-			for (auto i = 0; i < packetCount && (currentSampleIdx + i < elem.second.size()); ++i)
-			{
-				data.push_back(elem.second.at(currentSampleIdx + i));
-			}
-			sliceToSend.emplace(elem.first, data);
-		}
-		currentSampleIdx += packetCount;
-		if (!sliceToSend.begin()->second.empty())
-			m_data.addValues(sliceToSend);
-		
-		emit RTDataSent();
-	});
+	PrepareSender();
 	emit RTStarted();
 	dataTimer.start(timerInterval);	
 }
@@ -65,10 +41,8 @@ void RealTimePlayer::Pause()
 
 void RealTimePlayer::Stop()
 {
-	dataTimer.stop();
-	this->disconnect(&dataTimer);
+	dataTimer.stop(); 
 	isPaused = false;
-	currentSampleIdx = 0.0;
 	emit RTStopped();
 }
 
@@ -94,10 +68,10 @@ int RealTimePlayer::getTimerInterval() const
 
 void RealTimePlayer::setPacketCount(int pc)
 {
-	packetCount = pc;
+	sender.setPacketCount(pc);
 }
 
 int RealTimePlayer::getPacketCount() const
 {
-	return packetCount;
+	return sender.getPacketCount();
 }

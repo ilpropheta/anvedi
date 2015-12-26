@@ -6,6 +6,7 @@
 #include "PlotInfo.h"
 #include "PlotHandle.h"
 #include "RealTimePlayer.h"
+#include "RTInteractiveSender.h"
 
 using namespace std;
 
@@ -66,7 +67,7 @@ struct AnvediScriptEngine : QShellEngine_Qt
 	{	
 		// global properties		
 		m_engine.globalObject().setProperty("plot", m_engine.newQObject(new PlotHandle(plot), QScriptEngine::ScriptOwnership));
-		m_engine.globalObject().setProperty("rtPlayer", m_engine.newQObject(new RealTimePlayer(data), QScriptEngine::ScriptOwnership));
+		m_engine.globalObject().setProperty("rtPlayer", m_engine.newQObject(new RTInteractiveSender(data), QScriptEngine::ScriptOwnership));
 		// global functions
 		m_engine.globalObject().setProperty("graph", MakeSignalDataFunction(data, GraphWrapperCtor));
 		m_engine.globalObject().setProperty("SetDomain", MakeSignalDataFunction(data, SetDomain));

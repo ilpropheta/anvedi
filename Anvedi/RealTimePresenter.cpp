@@ -42,6 +42,7 @@ void RealTimePresenter::OnPause()
 	SetRunning(false);
 	QObject::disconnect(rtMenuInfo.actionStartRT, SIGNAL(triggered()), &player, SLOT(Pause()));
 	QObject::connect(rtMenuInfo.actionStartRT, SIGNAL(triggered()), &player, SLOT(Start()));
+	rtMenuInfo.actionStopRT->setEnabled(true);
 }
 
 void RealTimePresenter::OnStop()

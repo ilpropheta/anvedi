@@ -1,0 +1,30 @@
+#pragma once
+#include <QObject>
+#include <vector>
+#include <utility>
+#include <QVector>
+
+class SignalData;
+
+class RTSender : public QObject
+{
+	Q_OBJECT
+	Q_PROPERTY(int packetCount READ getPacketCount WRITE setPacketCount)
+public:
+	RTSender(SignalData& receiver);
+
+	void SetDataToSend(std::vector < std::pair<QString, QVector<qreal>>> toSend);
+	int getPacketCount() const;
+	void setPacketCount(int pc);
+public slots:
+	void SendData();
+	void SendData(int count);
+signals:
+	void DataSent();
+private:
+	std::vector<std::pair<QString, QVector<qreal>>> dataToSend;
+	SignalData& receiver;
+	size_t currentSampleIdx = 0u;
+	int packetCount = 20;
+};
+
