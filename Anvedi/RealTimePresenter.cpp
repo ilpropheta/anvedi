@@ -6,16 +6,18 @@ RealTimePresenter::RealTimePresenter(SignalData& data, RTMenuInfo rtMenuActions)
 {
 	ui.setupUi(&rtDialog);
 	
-	// RT menu
-	QObject::connect(rtMenuInfo.actionStartRT, SIGNAL(triggered()), this, SLOT(OnStartOrPause()));
-	QObject::connect(rtMenuInfo.actionStopRT, SIGNAL(triggered()), this, SLOT(OnStop()));
+	// RT menu -> player
+	QObject::connect(rtMenuInfo.actionStartRT, SIGNAL(triggered()), &player, SLOT(Start()));
+	QObject::connect(rtMenuInfo.actionStopRT, SIGNAL(triggered()), &player, SLOT(Stop()));
+	// RT config -> this
 	QObject::connect(rtMenuInfo.actionConfig, SIGNAL(triggered()), this, SLOT(OnConfigure()));
-	
-	rtMenuInfo.actionStopRT->setEnabled(false);
+	// player -> this
+	QObject::connect(&player, SIGNAL(RTStarted()), this, SLOT(OnStart()));
+	QObject::connect(&player, SIGNAL(RTPaused()), this, SLOT(OnPause()));
+	QObject::connect(&player, SIGNAL(RTResumed()), this, SLOT(OnStart()));
+	QObject::connect(&player, SIGNAL(RTStopped()), this, SLOT(OnStop()));
 
-	player.setFileToReplay(R"(..\anvedi\json\physx.json)");
-	player.setPacketCount(20);
-	player.setTimerInterval(200);
+	rtMenuInfo.actionStopRT->setEnabled(false);
 }
 
 void RealTimePresenter::OnConfigure()
@@ -28,24 +30,25 @@ void RealTimePresenter::OnConfigure()
 	}
 }
 
-void RealTimePresenter::OnStartOrPause()
+void RealTimePresenter::OnStart()
 {
-	if (isRunning)
-	{
-		SetRunning(false);
-		player.Pause();
-	}
-	else
-	{
-		SetRunning(true);
-		player.Start();
-	}
+	SetRunning(true);
+	QObject::disconnect(rtMenuInfo.actionStartRT, SIGNAL(triggered()), &player, SLOT(Start()));
+	QObject::connect(rtMenuInfo.actionStartRT, SIGNAL(triggered()), &player, SLOT(Pause()));
+}
+
+void RealTimePresenter::OnPause()
+{
+	SetRunning(false);
+	QObject::disconnect(rtMenuInfo.actionStartRT, SIGNAL(triggered()), &player, SLOT(Pause()));
+	QObject::connect(rtMenuInfo.actionStartRT, SIGNAL(triggered()), &player, SLOT(Start()));
 }
 
 void RealTimePresenter::OnStop()
 {
 	SetRunning(false);
-	player.Stop();
+	QObject::disconnect(rtMenuInfo.actionStartRT, SIGNAL(triggered()), &player, SLOT(Pause()));
+	QObject::connect(rtMenuInfo.actionStartRT, SIGNAL(triggered()), &player, SLOT(Start()));
 }
 
 void RealTimePresenter::SetupRTDialog()
@@ -57,7 +60,6 @@ void RealTimePresenter::SetupRTDialog()
 
 void RealTimePresenter::SetRunning(bool running)
 {
-	isRunning = running;
 	rtMenuInfo.actionImport->setEnabled(!running);
 	rtMenuInfo.actionExport->setEnabled(!running);
 	rtMenuInfo.actionClear->setEnabled(!running);

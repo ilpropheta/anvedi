@@ -16,12 +16,13 @@ void RealTimePlayer::Start()
 	if (isPaused)
 	{
 		dataTimer.start(timerInterval);
+		emit RTResumed();
 		return;
 	}
 
 	SignalData data; PlotInfo info;
 	WorkspaceSerializer::Read(fileToReplay, data, info);
-	timeStep = 0u;
+	currentSampleIdx = 0u;
 	
 	auto domain = data.getDomain()->y;
 	DataMap toSet;
@@ -39,23 +40,27 @@ void RealTimePlayer::Start()
 		for (const auto& elem : toSend)
 		{
 			QVector<qreal> data; data.reserve(packetCount);
-			for (auto i = 0; i < packetCount && (timeStep + i < elem.second.size()); ++i)
+			for (auto i = 0; i < packetCount && (currentSampleIdx + i < elem.second.size()); ++i)
 			{
-				data.push_back(elem.second.at(timeStep + i));
+				data.push_back(elem.second.at(currentSampleIdx + i));
 			}
 			sliceToSend.emplace(elem.first, data);
 		}
-		timeStep += packetCount;
+		currentSampleIdx += packetCount;
 		if (!sliceToSend.begin()->second.empty())
 			m_data.addValues(sliceToSend);
+		
+		emit RTDataSent();
 	});
-	dataTimer.start(timerInterval);
+	emit RTStarted();
+	dataTimer.start(timerInterval);	
 }
 
 void RealTimePlayer::Pause()
 {
 	dataTimer.stop();
 	isPaused = true;
+	emit RTPaused();
 }
 
 void RealTimePlayer::Stop()
@@ -63,7 +68,8 @@ void RealTimePlayer::Stop()
 	dataTimer.stop();
 	this->disconnect(&dataTimer);
 	isPaused = false;
-	timeStep = 0.0;
+	currentSampleIdx = 0.0;
+	emit RTStopped();
 }
 
 void RealTimePlayer::setFileToReplay(QString f)

@@ -22,7 +22,8 @@ public:
 	RealTimePresenter(SignalData& data, RTMenuInfo rtMenuActions);
 public slots:
 	void OnConfigure();
-	void OnStartOrPause();
+	void OnStart();
+	void OnPause();
 	void OnStop();
 private:
 	void SetupRTDialog();
@@ -32,6 +33,5 @@ private:
 	QDialog rtDialog;
 	RTMenuInfo rtMenuInfo;
 	RealTimePlayer player;
-	bool isRunning = false;
 };
 
