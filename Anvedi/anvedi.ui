@@ -67,10 +67,10 @@
      <string>Real Time</string>
     </property>
     <addaction name="actionStartRT"/>
-    <addaction name="actionPauseRT"/>
     <addaction name="actionStopRT"/>
     <addaction name="separator"/>
     <addaction name="actionCursorRT"/>
+    <addaction name="actionConfig"/>
    </widget>
    <addaction name="menuData"/>
    <addaction name="menuViewer"/>
@@ -348,6 +348,11 @@
    </property>
    <property name="text">
     <string>Cursor following</string>
+   </property>
+  </action>
+  <action name="actionConfig">
+   <property name="text">
+    <string>Advanced options</string>
    </property>
   </action>
  </widget>

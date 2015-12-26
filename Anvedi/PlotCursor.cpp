@@ -96,18 +96,6 @@ void PlotCursor::OnKeyboardPressed(QKeyEvent* e)
 	}
 }
 
-void PlotCursor::followInRT(bool flag)
-{
-	if (!flag)
-	{
-		QObject::disconnect(&data, &SignalData::SignalAdded, this, 0);
-	}
-	else
-	{
-		QObject::connect(&data, &SignalData::SignalAdded, this, &PlotCursor::OnCursorInRT);
-	}
-}
-
 void PlotCursor::OnCursorInRT()
 {
 	moveEnd();
@@ -121,4 +109,16 @@ void PlotCursor::moveBegin()
 void PlotCursor::moveEnd()
 {
 	set(std::numeric_limits<qreal>::max());
+}
+
+void PlotCursor::OnSetCursorFollowingInRealTime(bool flag)
+{
+	if (!flag)
+	{
+		QObject::disconnect(&data, &SignalData::SignalAdded, this, 0);
+	}
+	else
+	{
+		QObject::connect(&data, &SignalData::SignalAdded, this, &PlotCursor::OnCursorInRT);
+	}
 }

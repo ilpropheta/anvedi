@@ -11,6 +11,8 @@
 #include "SignalData.h"
 #include "RectZoomer.h"
 #include "PlotInfo.h"
+#include "RealTimePlayer.h"
+#include "RealTimePresenter.h"
 
 class Anvedi : public QMainWindow
 {
@@ -22,30 +24,19 @@ public slots:
 	void OnDataImport();
 	void OnDataExport();
 	void OnDataClear();
-	// RT
-	void OnRTStart();
-	void OnRTPause();
-	void OnRTStop();
-	void OnRTFollowingCursor(bool);
 protected:
 	void keyPressEvent(QKeyEvent * e);
 private:
-	void EnableMenuInRT(bool enable);
-
 	Ui::AnvediClass ui;
 
 	std::unique_ptr<PlotCursor> cursor;
 	std::unique_ptr<RectZoomer> rectZoomer;
 	std::unique_ptr<SignalListPresenter> signalListPresenter;
 	std::unique_ptr<GraphPresenter> graphPresenter;
+	std::unique_ptr<RealTimePresenter> rtPresenter;
 
 	SignalData m_data;
 	PlotInfo m_plotInfo;
-
-	// to move
-	QTimer dataTimer;
-	bool isPaused = false;
-	size_t timeStep = 0u;
 };
 
 #endif // ANVEDI_H
