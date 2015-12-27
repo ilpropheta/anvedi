@@ -8,8 +8,6 @@ GraphPresenter::GraphPresenter(QCustomPlot* plot, const SignalData& data, PlotIn
 	: plot(plot), data(data), plotInfo(plotInfo)
 {
 	plot->yAxis->setVisible(false);
-	plot->yAxis2->setVisible(false);
-	plot->xAxis2->setVisible(false);
 	plot->xAxis->setAutoSubTicks(false);
 	plot->xAxis->setSubTickCount(0);
 	plot->xAxis->setTickLabels(false);
