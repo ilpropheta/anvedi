@@ -22,7 +22,7 @@ void SignalDataTests::On_add_ShouldEmit_DataAdded()
 
 	QCOMPARE(spy.count(), 1); 
 	auto receivedMap = spy.takeFirst().takeFirst().value<DataMap>();
-	DataMap expectedMap { { "signal", { "signal", { 1, 2, 3 } } } };
+	DataMap expectedMap{ { "signal", { "signal", { 1, 2, 3 }, { {}, {}, 1, 3 } } } };
 	QCOMPARE(receivedMap, expectedMap);
 }
 
@@ -72,7 +72,7 @@ void SignalDataTests::On_setValues_ShouldEmit_SignalValuesChanged()
 
 	QCOMPARE(spy.count(), 1);
 	auto receivedSignal = spy.takeFirst().takeFirst().value<Signal>();
-	Signal actualSignal{ "signal", {1,2,3} };
+	Signal actualSignal{ "signal", { 1, 2, 3 }, { {}, {}, 1, 3 } };
 	QCOMPARE(receivedSignal, actualSignal);
 }
 

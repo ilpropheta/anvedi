@@ -33,12 +33,12 @@ void WorkspaceSerializerTests::ReadTest()
 	DataMap expectedData = {
 		{ "cubic",
 			{
-				"cubic", { 1, 8, 27, 64, 125, 216, 343, 512, 729, 1000 }, { "#008000", true }
+				"cubic", { 1, 8, 27, 64, 125, 216, 343, 512, 729, 1000 }, { "#008000", true, 1, 1000 }
 			}
 		},
 		{ "line",
 			{
-				"line", { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, { "#ffff00", false }
+				"line", { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, { "#ffff00", false, 1, 10 }
 			}
 		}
 	};
@@ -51,12 +51,12 @@ void WorkspaceSerializerTests::WriteTest()
 	DataMap dataMap = {
 		{ "cubic", 
 			{
-				"cubic", { 1, 8, 27, 64, 125, 216, 343, 512, 729, 1000 }, { "#008000", true }
+				"cubic", { 1, 8, 27, 64, 125, 216, 343, 512, 729, 1000 }, { "#008000", true, 1, 1000 }
 			} 
 		},
 		{ "line",
 			{
-				"line", { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, { "#ffff00", false }
+				"line", { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, { "#ffff00", false, 1, 10 }
 			}
 		}
 	};
