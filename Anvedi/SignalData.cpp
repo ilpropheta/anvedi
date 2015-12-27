@@ -9,6 +9,21 @@ void SignalData::clear()
 	emit DataCleared();
 }
 
+void AutoRange(Signal& signal)
+{
+	const auto minMax = std::minmax_element(std::begin(signal.y), std::end(signal.y));
+	signal.graphic.rangeLower = *minMax.first;
+	signal.graphic.rangeUpper = *minMax.second;
+}
+
+void AutoRangeIfInvalid(Signal& signal)
+{
+	if (signal.graphic.rangeLower == signal.graphic.rangeUpper)
+	{
+		AutoRange(signal);
+	}
+}
+
 void SignalData::add(DataMap data)
 {
 	if (!data.empty())
@@ -17,10 +32,14 @@ void SignalData::add(DataMap data)
 		{
 			auto it = m_data.equal_range(elem.first);
 			if (it.first != it.second)
+			{
 				it.first->second = std::move(elem.second);
+				AutoRangeIfInvalid(it.first->second);
+			}
 			else
 			{
-				m_data.insert(it.first, std::move(elem));
+				auto inserted = m_data.insert(it.first, std::move(elem));
+				AutoRangeIfInvalid(inserted->second);
 			}
 		}
 		emit DataAdded(m_data);
@@ -36,9 +55,39 @@ void SignalData::setValues(const QString& name, QVector<qreal> vec)
 {
 	auto& signal = m_data.at(name);
 	signal.y = std::move(vec);
+	AutoRange(signal);
 	emit SignalValuesChanged(signal);
 	if (&signal == domain)
 		emit DomainChanged(signal);
+}
+
+void SignalData::setRange(const QString& name, double lo, double up)
+{
+	auto& signal = m_data.at(name);
+	signal.graphic.rangeLower = lo;
+	signal.graphic.rangeUpper = up;
+	emit SignalRangeChanged(signal);
+}
+
+void SignalData::setRangeMin(const QString& name, double lo)
+{
+	auto& signal = m_data.at(name);
+	signal.graphic.rangeLower = lo;
+	emit SignalRangeChanged(signal);
+}
+
+void SignalData::setRangeMax(const QString& name, double up)
+{
+	auto& signal = m_data.at(name);
+	signal.graphic.rangeUpper = up;
+	emit SignalRangeChanged(signal);
+}
+
+void SignalData::setAutoRange(const QString& name)
+{
+	auto& signal = m_data.at(name);
+	AutoRange(signal);
+	SignalRangeChanged(signal);
 }
 
 void SignalData::addValues(const std::map<QString, QVector<qreal>>& data)
@@ -52,7 +101,11 @@ void SignalData::addValues(const std::map<QString, QVector<qreal>>& data)
 	{
 		const auto& domainSlice = data.at(domain->name);
 		for (const auto& d : data)
-			m_data.at(d.first).y << d.second;
+		{
+			auto& signal = m_data.at(d.first);
+			signal.y << d.second;
+			AutoRange(signal);
+		}
 		emit SignalAdded(domainSlice, data);
 	}
 }

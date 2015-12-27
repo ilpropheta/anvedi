@@ -40,19 +40,6 @@ void PlotHandle::setXRange(const QVariant& val) const
 		plot.setXRange(ToRange(val));
 }
 
-void PlotHandle::setYRange(const QString& signalName, const QVariant& val)
-{
-	if ((val.type() == QVariant::String) && val.toString() == "auto")
-		plot.autoScaleY(signalName);
-	else
-		plot.setYRange(signalName, ToRange(val));
-}
-
-void PlotHandle::autoRangeAllY()
-{
-	plot.autoScaleAllY();
-}
-
 void PlotHandle::savePdf(const QString& fileName)
 {
 	plot.exportToPdf(fileName);

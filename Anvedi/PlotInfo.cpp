@@ -50,33 +50,9 @@ void OnAllGraphs(QCustomPlot* plot, Action action)
 	}
 }
 
-void PlotInfo::setYRange(const QString& name, const std::pair<qreal, qreal>& range)
-{
-	OnGraph(plot, name, [&range, this](QCPGraph* graph){
-		graph->valueAxis()->setRange(range.first, range.second);
-		plot->replot();
-	});
-}
-
-void PlotInfo::autoScaleY(const QString& name)
-{
-	OnGraph(plot, name, [this](QCPGraph* graph){
-		graph->valueAxis()->rescale();
-		plot->replot();
-	});
-}
-
 void PlotInfo::autoScaleX()
 {
 	plot->xAxis->rescale();
-	plot->replot();
-}
-
-void PlotInfo::autoScaleAllY()
-{
-	OnAllGraphs(plot, [](QCPGraph* graph){
-		graph->valueAxis()->rescale();
-	});
 	plot->replot();
 }
 

@@ -5,6 +5,10 @@
 #include <QColorDialog>
 #include <QLineEdit>
 
+static const int SignalNameIdx = 0;
+static const int SignalValueAtDomainIdx = 1;
+static const int SignalColorIdx = 2;
+
 SignalListPresenter::SignalListPresenter(QTableWidget* signalList, QLineEdit* filterEdit, QLabel* signalCntLabel, QLabel* domainLabel, SignalData& data)
 	: signalList(signalList), filterEdit(filterEdit), signalCntLabel(signalCntLabel), domainLabel(domainLabel), domain(nullptr), data(data)
 {
@@ -16,15 +20,16 @@ SignalListPresenter::SignalListPresenter(QTableWidget* signalList, QLineEdit* fi
 
 	// table
 	QObject::connect(signalList, &QTableWidget::itemClicked, [this](QTableWidgetItem* item){
-		if (item->column() == 0)
+		switch (item->column())
 		{
-			const auto isChecked = item->checkState() == Qt::Checked;
-			this->data.setVisible(item->text(), isChecked);
+		case SignalNameIdx:
+			this->data.setVisible(item->text(), item->checkState() == Qt::Checked);
+			break;
 		}
 	});
 
 	QObject::connect(signalList, &QTableWidget::itemDoubleClicked, [this](QTableWidgetItem* item){
-		if (item->column() == 0)
+		if (item->column() == SignalNameIdx)
 		{
 			this->data.setAsDomain(item->text());
 		}
@@ -46,6 +51,16 @@ inline QString MakeBackgroundStylesheet(const QColor& color)
 	return "background-color: " + color.name();
 }
 
+inline QString FormatRangeMin(const Signal& signal)
+{
+	return QString("%1").arg(signal.graphic.rangeLower);
+}
+
+inline QString FormatRangeMax(const Signal& signal)
+{
+	return QString("%1").arg(signal.graphic.rangeUpper);
+}
+
 void SignalListPresenter::OnNewData(const DataMap& dataMap)
 {
 	OnClearData();
@@ -56,18 +71,16 @@ void SignalListPresenter::OnNewData(const DataMap& dataMap)
 	{
 		const auto& name = sign.first;
 		const auto& currentSignal = sign.second;
+		// name item
 		auto chanNameItem = new QTableWidgetItem(name);
+		chanNameItem->setCheckState(currentSignal.graphic.visible ? Qt::Checked : Qt::Unchecked);
+		// domain value item
 		auto chanValueItem = new QTableWidgetItem();
+		chanValueItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+		// color item
 		auto colorButton = new QPushButton(signalList);
 		colorButton->setEnabled(currentSignal.graphic.visible);
 		colorButton->setStyleSheet(MakeBackgroundStylesheet(currentSignal.graphic.color));
-		signalList->setItem(currentCount, 0, chanNameItem);
-		signalList->setItem(currentCount, 1, chanValueItem);
-		signalList->setCellWidget(currentCount, 2, colorButton);
-
-		chanNameItem->setCheckState(currentSignal.graphic.visible ? Qt::Checked : Qt::Unchecked);
-		chanValueItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-
 		colorButton->setAutoFillBackground(true);
 		const auto& currColor = currentSignal.graphic.color;
 		QObject::connect(colorButton, &QPushButton::clicked, [&currColor, name, colorButton, this]{
@@ -77,6 +90,12 @@ void SignalListPresenter::OnNewData(const DataMap& dataMap)
 				this->data.setColor(name, color);
 			}
 		});
+		
+		// adding them all
+		signalList->setItem(currentCount, SignalNameIdx, chanNameItem);
+		signalList->setItem(currentCount, SignalValueAtDomainIdx, chanValueItem);
+		signalList->setCellWidget(currentCount, SignalColorIdx, colorButton);
+
 		currentCount++;
 	}
 
@@ -138,14 +157,14 @@ void SignalListPresenter::OnSignalVisibilityChanged(const Signal& signal)
 {
 	auto items = signalList->findItems(signal.name, Qt::MatchExactly);
 	items.at(0)->setCheckState(signal.graphic.visible ? Qt::Checked : Qt::Unchecked);
-	signalList->cellWidget(items.at(0)->row(), 2)->setEnabled(signal.graphic.visible);
+	signalList->cellWidget(items.at(0)->row(), SignalColorIdx)->setEnabled(signal.graphic.visible);
 	OnSignalFilterEdited(filterEdit->text());
 }
 
 void SignalListPresenter::OnSignalColorChanged(const Signal& signal)
 {
 	auto items = signalList->findItems(signal.name, Qt::MatchExactly);
-	signalList->cellWidget(items.at(0)->row(), 2)->setStyleSheet(MakeBackgroundStylesheet(signal.graphic.color));
+	signalList->cellWidget(items.at(0)->row(), SignalColorIdx)->setStyleSheet(MakeBackgroundStylesheet(signal.graphic.color));
 
 	/*QAbstractItemModel *model = signalList->model();
 	QModelIndexList matches = model->match(model->index(0, 0), Qt::UserRole, signal.name);

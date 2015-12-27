@@ -18,6 +18,7 @@ GraphPresenter::GraphPresenter(QCustomPlot* plot, const SignalData& data, PlotIn
 	QObject::connect(&data, SIGNAL(SignalColorChanged(const Signal&)), this, SLOT(OnGraphVisibilityChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalVisibilityChanged(const Signal&)), this, SLOT(OnGraphVisibilityChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalValuesChanged(const Signal&)), this, SLOT(OnGraphDataChanged(const Signal&)));
+	QObject::connect(&data, SIGNAL(SignalRangeChanged(const Signal&)), this, SLOT(OnGraphRangeChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalAdded(const QVector<qreal>&, const std::map<QString, QVector<qreal>>&)), this, SLOT(OnGraphsDataAdded(const QVector<qreal>&, const std::map<QString, QVector<qreal>>&)));
 	QObject::connect(&data, SIGNAL(DomainChanged(const Signal&)), this, SLOT(OnDomainChanged(const Signal&)));
 	// plot
@@ -67,7 +68,7 @@ void GraphPresenter::MakeGraphOrUseExistent(const Signal& signal, std::function<
 void GraphPresenter::OnGraphVisibilityChanged(const Signal& signal)
 {
 	MakeGraphOrUseExistent_WithFinalReplot(signal, [&](QCPGraph* graph){
-		SetGraphicInfoFrom(*graph, signal);
+		SetGraphicInfoFrom(*graph, signal); 
 	});
 }
 
@@ -75,6 +76,13 @@ void GraphPresenter::OnGraphDataChanged(const Signal& signal)
 {
 	MakeGraphOrUseExistent_WithFinalReplot(signal, [&](QCPGraph* graph){
 		SetGraphDataFrom(*graph, signal);
+	});
+}
+
+void GraphPresenter::OnGraphRangeChanged(const Signal& signal)
+{
+	MakeGraphOrUseExistent_WithFinalReplot(signal, [&](QCPGraph* graph){
+		graph->valueAxis()->setRange(signal.graphic.rangeLower, signal.graphic.rangeUpper);
 	});
 }
 
@@ -98,7 +106,7 @@ void GraphPresenter::OnBackgroundChanged(const QColor& color)
 		tickPen.setColor(invert(color));
 		plot->xAxis->setBasePen(tickPen);
 	}
-	plot->replot(QCustomPlot::rpQueued);
+	plot->replot();
 }
 
 void GraphPresenter::SetGraphDataFrom(QCPGraph& graph, const Signal& signal)
@@ -106,7 +114,7 @@ void GraphPresenter::SetGraphDataFrom(QCPGraph& graph, const Signal& signal)
 	if (data.getDomain())
 	{
 		graph.setData(data.getDomain()->y, signal.y);
-		graph.rescaleValueAxis(); // range is set to show the whole graph
+		graph.valueAxis()->setRange(signal.graphic.rangeLower, signal.graphic.rangeUpper);
 	}
 }
 

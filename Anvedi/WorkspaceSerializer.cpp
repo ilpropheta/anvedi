@@ -31,6 +31,13 @@ void ReadGraph(const QJsonObject& obj, DataMap& data)
 		it = obj.find("visible");
 		if (it != obj.end())
 			signal.graphic.visible = it->toBool();
+		it = obj.find("range");
+		if (it != obj.end())
+		{
+			auto vec = ToVector(it->toArray());
+			signal.graphic.rangeLower = vec.front();
+			signal.graphic.rangeUpper = vec.back();
+		}
 		it = obj.find("values");
 		if (it != obj.end() && it->isArray())
 		{
@@ -99,6 +106,7 @@ void WorkspaceSerializer::Write(const QString& fileName, const SignalData& data,
 		signObj["name"] = signal.name;
 		signObj["color"] = signal.graphic.color.name();
 		signObj["visible"] = signal.graphic.visible;
+		signObj["range"] = ToJsonArray(QVector < qreal > {signal.graphic.rangeLower, signal.graphic.rangeUpper});
 		signObj["values"] = ToJsonArray(signal.y);
 		signArray.push_back(std::move(signObj));
 	});

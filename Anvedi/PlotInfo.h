@@ -18,10 +18,7 @@ public:
 	// axis ranges
 	const std::pair<qreal, qreal> getXRange() const;
 	void setXRange(const std::pair<qreal, qreal>& range);
-	void setYRange(const QString& name, const std::pair<qreal, qreal>& range);
-	void autoScaleY(const QString& name);
 	void autoScaleX();
-	void autoScaleAllY();
 	// export
 	void exportToPdf(const QString& fileName, qreal w = 0, qreal h = 0);
 signals:

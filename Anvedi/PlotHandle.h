@@ -20,8 +20,6 @@ public:
 	int getRTPageSize() const;
 	void setRTPageSize(int ps);
 public slots:
-	void setYRange(const QString& signalName, const QVariant& val);
-	void autoRangeAllY();
 	void savePdf(const QString& fileName);
 	void savePdf(const QString& fileName, qreal w, qreal h);
 private:

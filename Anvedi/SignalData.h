@@ -24,6 +24,10 @@ public:
 	void setVisible(const QString& name, bool visible);
 	void setValues(const QString& name, QVector<qreal> vec);
 	void addValues(const std::map<QString, QVector<qreal>>& data);
+	void setRange(const QString& name, double lo, double up);
+	void setRangeMin(const QString& name, double lo);
+	void setRangeMax(const QString& name, double up);
+	void setAutoRange(const QString& name);
 	// visitor
 	void onSignals(std::function<void(const Signal&)> fun) const;
 	// utils
@@ -37,6 +41,7 @@ signals:
 	void SignalAdded(const QVector<qreal>&, const std::map<QString, QVector<qreal>>&);
 	void SignalColorChanged(const Signal&);
 	void SignalVisibilityChanged(const Signal&);
+	void SignalRangeChanged(const Signal&);
 	void DataCleared();
 	void DomainChanged(const Signal&);
 private:

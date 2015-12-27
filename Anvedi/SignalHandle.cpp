@@ -47,3 +47,25 @@ QString SignalHandle::toString() const
 {
 	return QString("Handle to signal '%1'").arg(signalName);
 }
+
+QVariant SignalHandle::getRange() const
+{
+	const auto& signal = data.get(signalName);
+	return QVariantList{ signal.graphic.rangeLower, signal.graphic.rangeUpper };
+}
+
+void SignalHandle::setRange(const QVariant& values)
+{
+	if ((values.type() == QVariant::String) && (values.toString() == "auto"))
+	{
+		data.setAutoRange(signalName);
+	}
+	else
+	{
+		const auto rangeToVec = ToVector(values);
+		if (rangeToVec.size() == 2)
+		{
+			data.setRange(signalName, rangeToVec.front(), rangeToVec.back());
+		}
+	}
+}
