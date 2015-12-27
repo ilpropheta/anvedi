@@ -13,6 +13,7 @@ class SignalHandle : public QObject
 	Q_PROPERTY(QString color READ getColor WRITE setColor)
 	Q_PROPERTY(QVariant values READ getValues WRITE setValues)
 	Q_PROPERTY(QVariant range READ getRange WRITE setRange)
+	Q_PROPERTY(QVariant ticks READ getTicks WRITE setTicks)
 public:
 	SignalHandle(QString name, SignalData& data);
 
@@ -25,7 +26,9 @@ public:
 	void setValues(const QVariant& values);
 	QVariant getRange() const;
 	void setRange(const QVariant& values);
-	
+	QVariant getTicks() const;
+	void setTicks(const QVariant& values);
+
 	void SetThisAsDomain();
 public slots:	
 	QString toString() const;

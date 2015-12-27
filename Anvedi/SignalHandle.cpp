@@ -69,3 +69,13 @@ void SignalHandle::setRange(const QVariant& values)
 		}
 	}
 }
+
+QVariant SignalHandle::getTicks() const
+{
+	return ToVariant(data.get(signalName).graphic.ticks);
+}
+
+void SignalHandle::setTicks(const QVariant& values)
+{
+	data.setTicks(signalName, ToVector(values));
+}
