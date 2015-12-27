@@ -18,11 +18,11 @@ void SignalDataTests::On_add_ShouldEmit_DataAdded()
 {
 	SignalData data;
 	QSignalSpy spy(&data, SIGNAL(DataAdded(const DataMap&)));
-	data.add({ { "signal", { "signal", "red", true, { 1, 2, 3 } } } });
+	data.add({ { "signal", { "signal", { 1, 2, 3 } } } });
 
 	QCOMPARE(spy.count(), 1); 
 	auto receivedMap = spy.takeFirst().takeFirst().value<DataMap>();
-	DataMap expectedMap { { "signal", { "signal", "red", true, { 1, 2, 3 } } } };
+	DataMap expectedMap { { "signal", { "signal", { 1, 2, 3 } } } };
 	QCOMPARE(receivedMap, expectedMap);
 }
 
@@ -31,25 +31,25 @@ void SignalDataTests::On_add_Should_AllowOverwritingElements()
 	SignalData data;
 	QSignalSpy spy(&data, SIGNAL(DataAdded(const DataMap&)));
 	data.add({ 
-		{ "signal", { "signal", {}, true } }, 
-		{ "line", { "line", {}, false } }
+		{ "signal", { "signal", {}, { {}, true } } },
+		{ "line", { "line", {}, { {}, false } } }
 	});
-	QCOMPARE(data.get("signal").visible, true);
-	QCOMPARE(data.get("line").visible, false);
+	QCOMPARE(data.get("signal").graphic.visible, true);
+	QCOMPARE(data.get("line").graphic.visible, false);
 	
 	data.add({ 
-		{ "signal", { "signal", {}, false } },
-		{ "other", { "other", {}, true } }
+		{ "signal", { "signal", {}, { {}, false } } },
+		{ "other", { "other", {}, { {}, true } } }
 	});
-	QCOMPARE(data.get("signal").visible, false);
-	QCOMPARE(data.get("other").visible, true);
+	QCOMPARE(data.get("signal").graphic.visible, false);
+	QCOMPARE(data.get("other").graphic.visible, true);
 
 	QCOMPARE(spy.count(), 2);
 	auto finalMap = spy.takeAt(1).takeFirst().value<DataMap>();
 	DataMap expectedMap{
-		{ "signal", { "signal", {}, false } },
-		{ "other", { "other", {}, true } },
-		{ "line", { "line", {}, false } }
+		{ "signal", { "signal", {}, { {}, false } } },
+		{ "other", { "other", {}, { {}, true } } },
+		{ "line", { "line", {}, { {}, false } } }
 	};
 	QCOMPARE(finalMap, expectedMap);
 }
@@ -72,7 +72,7 @@ void SignalDataTests::On_setValues_ShouldEmit_SignalValuesChanged()
 
 	QCOMPARE(spy.count(), 1);
 	auto receivedSignal = spy.takeFirst().takeFirst().value<Signal>();
-	Signal actualSignal{ "signal", {}, {}, {1,2,3} };
+	Signal actualSignal{ "signal", {1,2,3} };
 	QCOMPARE(receivedSignal, actualSignal);
 }
 
@@ -98,7 +98,7 @@ void SignalDataTests::On_setAsDomainWithWrongSignal_ShouldThrowException()
 void SignalDataTests::On_domainLowerBound()
 {
 	SignalData data;
-	data.add({ { "domain", { "domain", {}, {}, { 1, 2, 3, 4, 5 } } } });
+	data.add({ { "domain", { "domain", { 1, 2, 3, 4, 5 } } } });
 	data.setAsDomain("domain");
 	QVERIFY(std::make_pair(2.0, 1ull) == data.domainLowerBound(1.5));
 	QVERIFY(std::make_pair(1.0, 0ull) == data.domainLowerBound(0.5));
@@ -109,7 +109,7 @@ void SignalDataTests::On_domainLowerBound()
 void SignalDataTests::On_domainNextValue()
 {
 	SignalData data;
-	data.add({ { "domain", { "domain", {}, {}, { 1, 2, 3, 4, 5 } } } });
+	data.add({ { "domain", { "domain", { 1, 2, 3, 4, 5 } } } });
 	data.setAsDomain("domain");
 	QVERIFY(1.0 == data.domainNextValue(0.0)); // next non-existent left
 	QVERIFY(2.0 == data.domainNextValue(1.0));
@@ -121,7 +121,7 @@ void SignalDataTests::On_domainNextValue()
 void SignalDataTests::On_domainPrevValue()
 {
 	SignalData data;
-	data.add({ { "domain", { "domain", {}, {}, { 1, 2, 3, 4, 5 } } } });
+	data.add({ { "domain", { "domain", { 1, 2, 3, 4, 5 } } } });
 	data.setAsDomain("domain");
 	QVERIFY(1.0 == data.domainPrevValue(0.0)); // prev non-existent left
 	QVERIFY(1.0 == data.domainPrevValue(1.0));

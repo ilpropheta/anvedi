@@ -59,17 +59,17 @@ void SignalListPresenter::OnNewData(const DataMap& dataMap)
 		auto chanNameItem = new QTableWidgetItem(name);
 		auto chanValueItem = new QTableWidgetItem();
 		auto colorButton = new QPushButton(signalList);
-		colorButton->setEnabled(currentSignal.visible);
-		colorButton->setStyleSheet(MakeBackgroundStylesheet(currentSignal.color));
+		colorButton->setEnabled(currentSignal.graphic.visible);
+		colorButton->setStyleSheet(MakeBackgroundStylesheet(currentSignal.graphic.color));
 		signalList->setItem(currentCount, 0, chanNameItem);
 		signalList->setItem(currentCount, 1, chanValueItem);
 		signalList->setCellWidget(currentCount, 2, colorButton);
 
-		chanNameItem->setCheckState(currentSignal.visible ? Qt::Checked : Qt::Unchecked);
+		chanNameItem->setCheckState(currentSignal.graphic.visible ? Qt::Checked : Qt::Unchecked);
 		chanValueItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
 		colorButton->setAutoFillBackground(true);
-		const auto& currColor = currentSignal.color;
+		const auto& currColor = currentSignal.graphic.color;
 		QObject::connect(colorButton, &QPushButton::clicked, [&currColor, name, colorButton, this]{
 			const auto color = QColorDialog::getColor(currColor, this->signalList, QString("Change color of %1").arg(name));
 			if (color.isValid())
@@ -137,15 +137,15 @@ void SignalListPresenter::OnSignalFilterEdited(const QString& filter)
 void SignalListPresenter::OnSignalVisibilityChanged(const Signal& signal)
 {
 	auto items = signalList->findItems(signal.name, Qt::MatchExactly);
-	items.at(0)->setCheckState(signal.visible ? Qt::Checked : Qt::Unchecked);
-	signalList->cellWidget(items.at(0)->row(), 2)->setEnabled(signal.visible);
+	items.at(0)->setCheckState(signal.graphic.visible ? Qt::Checked : Qt::Unchecked);
+	signalList->cellWidget(items.at(0)->row(), 2)->setEnabled(signal.graphic.visible);
 	OnSignalFilterEdited(filterEdit->text());
 }
 
 void SignalListPresenter::OnSignalColorChanged(const Signal& signal)
 {
 	auto items = signalList->findItems(signal.name, Qt::MatchExactly);
-	signalList->cellWidget(items.at(0)->row(), 2)->setStyleSheet(MakeBackgroundStylesheet(signal.color));
+	signalList->cellWidget(items.at(0)->row(), 2)->setStyleSheet(MakeBackgroundStylesheet(signal.graphic.color));
 
 	/*QAbstractItemModel *model = signalList->model();
 	QModelIndexList matches = model->match(model->index(0, 0), Qt::UserRole, signal.name);

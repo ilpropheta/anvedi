@@ -60,14 +60,14 @@ void SignalData::addValues(const std::map<QString, QVector<qreal>>& data)
 void SignalData::setColor(const QString& name, const QColor& col)
 {
 	auto& signal = m_data.at(name);
-	signal.color = col;
+	signal.graphic.color = col;
 	emit SignalColorChanged(signal);
 }
 
 void SignalData::setVisible(const QString& name, bool visible)
 {
 	auto& signal = m_data.at(name);
-	signal.visible = visible;
+	signal.graphic.visible = visible;
 	emit SignalVisibilityChanged(signal);
 }
 

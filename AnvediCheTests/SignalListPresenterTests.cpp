@@ -53,7 +53,7 @@ void SignalListPresenterTests::OnSignalVisibilityChanged_Should_ChangeCorrespond
 {
 	PrepareTest();
 	data.add({
-		{ "domain", { "domain", {}, false } },
+		{ "domain", { "domain"} },
 	});
 	
 	QCOMPARE(signalList->item(0, 0)->checkState(), Qt::Unchecked);
@@ -108,8 +108,8 @@ void SignalListPresenterTests::OnCursorChanged_Should_DisplaySignalValuesAtDomai
 {
 	PrepareTest();
 	data.add({
-		{ "domain", { "domain", {}, {}, {1,2,3} } },
-		{ "signal", { "signal", {}, {}, {1,4,9} } },
+		{ "domain", { "domain", {1,2,3} } },
+		{ "signal", { "signal", {1,4,9} } },
 	});
 	data.setAsDomain("domain");
 

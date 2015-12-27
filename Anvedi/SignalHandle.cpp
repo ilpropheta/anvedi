@@ -10,7 +10,7 @@ SignalHandle::SignalHandle(QString name, SignalData& data)
 
 bool SignalHandle::isVisible() const
 {
-	return data.get(signalName).visible;
+	return data.get(signalName).graphic.visible;
 }
 
 void SignalHandle::setVisible(bool visible)
@@ -20,7 +20,7 @@ void SignalHandle::setVisible(bool visible)
 
 QString SignalHandle::getColor() const
 {
-	return data.get(signalName).color.name();
+	return data.get(signalName).graphic.color.name();
 }
 
 void SignalHandle::setColor(const QString& color)

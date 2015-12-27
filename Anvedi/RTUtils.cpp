@@ -13,7 +13,7 @@ DataToReplay PrepareReplay(const QString& file, SignalData& signalData)
 	DataMap toSet;
 	vector < pair<QString, QVector<qreal>>> toSend;
 	data.onSignals([&](const Signal& signal){
-		toSet.emplace(signal.name, Signal{ signal.name, signal.color, signal.visible });
+		toSet.emplace(signal.name, Signal{ signal.name, {}, signal.graphic });
 		toSend.emplace_back(make_pair(signal.name, std::move(signal.y)));
 	});
 

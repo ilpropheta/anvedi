@@ -19,8 +19,8 @@ void GraphPresenterTests::On_DataAdded_Should_CreateGraphs()
 {
 	DoGraphPresenterTest([](GraphPresenter& p, QCustomPlot& plot, SignalData& data){
 		data.add({
-			{ "line", { "line", "red", true, { 1, 2, 3 } } },
-			{ "cubic", { "cubic", "blue", false, { 1, 8, 27 } } },
+			{ "line", { "line", { 1, 2, 3 }, { "red", true } } },
+			{ "cubic", { "cubic", { 1, 8, 27 }, { "blue", false } } },
 		});
 
 		QCOMPARE(plot.graphCount(), 2);
@@ -35,8 +35,8 @@ void GraphPresenterTests::On_DomainChanged_Should_SetDataToGraphs_And_ScaleXAxis
 {
 	DoGraphPresenterTest([](GraphPresenter& p, QCustomPlot& plot, SignalData& data){
 		data.add({
-			{ "cubic", { "cubic", "blue", true, { 1, 8, 27 } } },
-			{ "line", { "line", "red", true, { 1, 2, 3 } } }	
+			{ "cubic", { "cubic", { 1, 8, 27 }, { "blue", true }, } },
+			{ "line", { "line", { 1, 2, 3 }, { "red", true } } }
 		});
 		data.setAsDomain("line");
 
@@ -70,8 +70,8 @@ void GraphPresenterTests::On_DataCleared_Should_RemoveGraphs()
 {
 	DoGraphPresenterTest([](GraphPresenter& p, QCustomPlot& plot, SignalData& data){
 		data.add({
-			{ "cubic", { "cubic", "blue", true, { 1, 8, 27 } } },
-			{ "line", { "line", "red", true, { 1, 2, 3 } } }
+			{ "cubic", { "cubic", { 1, 8, 27 }, { "blue", true } } },
+			{ "line", { "line", { 1, 2, 3 }, {"red", true } } }
 		});
 		data.setAsDomain("line");
 
@@ -86,8 +86,8 @@ void GraphPresenterTests::On_SignalVisibilityChanged_Should_UpdateGraphVisibilit
 {
 	DoGraphPresenterTest([](GraphPresenter& p, QCustomPlot& plot, SignalData& data){
 		data.add({
-			{ "cubic", { "cubic", "blue", false, { 1, 8, 27 } } },
-			{ "line", { "line", "red", true, { 1, 2, 3 } } }
+			{ "cubic", { "cubic", { 1, 8, 27 }, { "blue", false} } },
+			{ "line", { "line", { 1, 2, 3 }, { "red", true } } }
 		});
 
 		QCOMPARE(plot.graph(0)->visible(), false);
@@ -102,7 +102,7 @@ void GraphPresenterTests::On_SignalColorChanged_Should_UpdateGraphColor()
 {
 	DoGraphPresenterTest([](GraphPresenter& p, QCustomPlot& plot, SignalData& data){
 		data.add({
-			{ "line", { "line", "red", true, { 1, 2, 3 } } }
+			{ "line", { "line", { 1, 2, 3 }, { "red", true } } }
 		});
 
 		QCOMPARE(plot.graph(0)->pen().color(), QColor("red"));
@@ -117,7 +117,7 @@ void GraphPresenterTests::On_CursorValueChanged_Should_UpdateXRange()
 {
 	DoGraphPresenterTest([](GraphPresenter& p, QCustomPlot& plot, SignalData& data){
 		data.add({
-			{ "line", { "line", "red", true, { 1, 2, 3, 4, 5 } } }
+			{ "line", { "line", { 1, 2, 3, 4, 5 }, { "red", true } } }
 		});
 		data.setAsDomain("line");
 		plot.xAxis->setRange(2, 4); 

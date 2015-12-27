@@ -112,8 +112,8 @@ void GraphPresenter::SetGraphDataFrom(QCPGraph& graph, const Signal& signal)
 
 void GraphPresenter::SetGraphicInfoFrom(QCPGraph& graph, const Signal& signal)
 {
-	graph.setPen(QPen(signal.color));
-	graph.setVisible(signal.visible);
+	graph.setPen(QPen(signal.graphic.color));
+	graph.setVisible(signal.graphic.visible);
 }
 
 void GraphPresenter::OnDomainChanged(const Signal& domain)
