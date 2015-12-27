@@ -5,12 +5,13 @@
 
 class QCustomPlot;
 class QMouseEvent;
+class SignalData;
 
 class RectZoomer : public QObject
 {
 	Q_OBJECT
 public:
-	RectZoomer(QCustomPlot* plot);
+	RectZoomer(QCustomPlot* plot, const SignalData& data);
 public slots:
 	void OnMousePress(QMouseEvent*);
 	void OnMouseRelease(QMouseEvent*);
@@ -22,6 +23,7 @@ private:
 	QRubberBand rubberBand;
 	QPoint origin;
 	QCustomPlot* plot;
+	const SignalData& data;
 	class IZoomAction* zoomAction;
 };
 

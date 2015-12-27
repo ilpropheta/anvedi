@@ -1,6 +1,7 @@
 #include "RectZoomer.h"
 #include "qcustomplot.h"
 #include <QMouseEvent>
+#include "SignalData.h"
 
 class IZoomAction
 {
@@ -45,9 +46,10 @@ IZoomAction* GetZoomAction(QMouseEvent* mevent)
 	return &horizontalZoomAction;
 }
 
-RectZoomer::RectZoomer(QCustomPlot* plot)
+
+RectZoomer::RectZoomer(QCustomPlot* plot, const SignalData& data)
 	  // note: QCustomPlot as parent is ok because RectZoomer is destroyed before QCustomPlot in Anvedi
-	  : rubberBand(QRubberBand::Rectangle, plot), plot(plot), zoomAction(GetZoomAction(nullptr))
+	  : rubberBand(QRubberBand::Rectangle, plot), plot(plot), data(data), zoomAction(GetZoomAction(nullptr))
 {
 	// connect to QCustomPlot events
 	QObject::connect(plot, SIGNAL(mousePress(QMouseEvent*)), this, SLOT(OnMousePress(QMouseEvent*)));
@@ -116,7 +118,9 @@ void RectZoomer::OnResetZoom()
 {
 	for (auto i = 0; i < plot->graphCount(); ++i)
 	{
-		plot->graph(i)->rescaleValueAxis();
+		auto graph = plot->graph(i);
+		const auto& signal = data.get(graph->name());
+		graph->valueAxis()->setRange(signal.graphic.rangeLower, signal.graphic.rangeUpper);
 	}
 	plot->xAxis->rescale();
 	plot->replot();

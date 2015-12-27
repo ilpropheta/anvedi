@@ -16,7 +16,7 @@ Anvedi::Anvedi(QWidget *parent)
 	m_plotInfo.setBackgroundColor(Qt::white);
 
 	cursor = make_unique<PlotCursor>(ui.plot, m_data);
-	rectZoomer = make_unique<RectZoomer>(ui.plot);
+	rectZoomer = make_unique<RectZoomer>(ui.plot, m_data);
 	signalListPresenter = make_unique<SignalListPresenter>(ui.signalList, ui.filterEdit, ui.signalCountLabel, ui.domainLabel, m_data);
 	graphPresenter = make_unique<GraphPresenter>(ui.plot, m_data, m_plotInfo);
 	rtPresenter = make_unique<RealTimePresenter>(m_data, RTMenuInfo{ui.actionStartRT, ui.actionStopRT, ui.actionConfig, ui.actionImport, ui.actionExport, ui.actionClear});
