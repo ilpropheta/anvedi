@@ -3,7 +3,6 @@
 #include "SignalHandle.h"
 #include "WorkspaceSerializer.h"
 #include "ScriptManager.h"
-#include <algorithm>
 
 using namespace std;
 
