@@ -8,10 +8,12 @@ GraphPresenter::GraphPresenter(QCustomPlot* plot, const SignalData& data, PlotIn
 	: plot(plot), data(data), plotInfo(plotInfo)
 {
 	plot->yAxis->setVisible(false);
-	//plot->xAxis->setAutoTickStep(false);
-	//plot->xAxis->setTickStep(10);
+	plot->yAxis2->setVisible(false);
+	plot->xAxis2->setVisible(false);
+	plot->xAxis->setAutoSubTicks(false);
+	plot->xAxis->setSubTickCount(0);
 	plot->xAxis->setTickLabels(false);
-	
+
 	// model
 	QObject::connect(&data, SIGNAL(DataAdded(const DataMap&)), this, SLOT(OnNewData(const DataMap&)));
 	QObject::connect(&data, SIGNAL(DataCleared()), this, SLOT(OnClearData()));
@@ -80,7 +82,11 @@ void GraphPresenter::OnGraphDataChanged(const Signal& signal)
 
 void GraphPresenter::OnClearData()
 {
-	displayedGraphs.clear();
+	// each axes is hold by the rect. When the graphs are removed
+	// we don't need their Y axis anymore...
+	for (auto i = 0; i < plot->graphCount(); ++i)
+		plot->axisRect(0)->removeAxis(plot->graph(i)->valueAxis());
+	displayedGraphs.clear();	
 	plot->clearGraphs();
 	plot->replot();
 }
