@@ -8,21 +8,22 @@
 PlotCursor::PlotCursor(QCustomPlot* parent, SignalData& data)
 	: cursor(nullptr), plot(parent), data(data)
 {
+	// a straight line that spans infinitely in both directions
 	cursor = new QCPItemStraightLine(parent);
 	initLinePos();
 
 	// todo: switch to complementary color if background color is close to cursor color
-	cursor->setPen(QPen(QBrush(Qt::black), 1.5));
+	cursor->setPen({ QBrush(Qt::black), 1.5 });
 
 	// connect to QCustomPlot events
-	QObject::connect(plot, SIGNAL(mousePress(QMouseEvent*)), this, SLOT(OnMouseEvent(QMouseEvent*)));
-	QObject::connect(plot, SIGNAL(mouseMove(QMouseEvent*)), this, SLOT(OnMouseEvent(QMouseEvent*)));
+	QObject::connect(plot, &QCustomPlot::mousePress, this, &PlotCursor::OnMouseEvent);
+	QObject::connect(plot, &QCustomPlot::mouseMove, this, &PlotCursor::OnMouseEvent);
 }
 
 void PlotCursor::initLinePos()
 {
-	cursor->point1->setCoords(plot->xAxis->pixelToCoord(0.0), 0.0);
-	cursor->point2->setCoords(plot->xAxis->pixelToCoord(0.0), 1.0);
+	cursor->point1->setCoords(0.0, 0.0);
+	cursor->point2->setCoords(0.0, 1.0);
 }
 
 void PlotCursor::reset()
