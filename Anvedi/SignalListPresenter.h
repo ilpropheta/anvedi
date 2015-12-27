@@ -1,6 +1,7 @@
 #pragma once
 #include <QObject>
 #include "GraphPresenter.h"
+#include "SignalInfoPresenter.h"
 
 class QTableWidget;
 class QLabel;
@@ -22,6 +23,7 @@ public slots:
 	void OnCursorValueChanged(qreal xVal, size_t idx);
 	void OnDomainChanged(const Signal& newDomain);
 private:
+	SignalInfoPresenter infoPresenter;
 	QTableWidget* signalList;
 	QLineEdit* filterEdit;
 	QLabel* signalCntLabel;

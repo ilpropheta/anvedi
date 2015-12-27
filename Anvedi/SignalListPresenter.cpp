@@ -10,7 +10,7 @@ static const int SignalValueAtDomainIdx = 1;
 static const int SignalColorIdx = 2;
 
 SignalListPresenter::SignalListPresenter(QTableWidget* signalList, QLineEdit* filterEdit, QLabel* signalCntLabel, QLabel* domainLabel, SignalData& data)
-	: signalList(signalList), filterEdit(filterEdit), signalCntLabel(signalCntLabel), domainLabel(domainLabel), domain(nullptr), data(data)
+	: infoPresenter(data), signalList(signalList), filterEdit(filterEdit), signalCntLabel(signalCntLabel), domainLabel(domainLabel), domain(nullptr), data(data)
 {
 	const auto& tableHFont = signalList->horizontalHeader()->font();
 	QFontMetrics fm(tableHFont);
@@ -31,7 +31,7 @@ SignalListPresenter::SignalListPresenter(QTableWidget* signalList, QLineEdit* fi
 	QObject::connect(signalList, &QTableWidget::itemDoubleClicked, [this](QTableWidgetItem* item){
 		if (item->column() == SignalNameIdx)
 		{
-			this->data.setAsDomain(item->text());
+			this->infoPresenter.Config(item->text());
 		}
 	});
 	
