@@ -22,6 +22,7 @@ public slots:
 	void OnGraphsDataAdded(const QVector<qreal>&, const std::map<QString, QVector<qreal>>&);
 	void OnGraphVisibilityChanged(const Signal& signal);
 	void OnGraphRangeChanged(const Signal& signal);
+	void OnGraphTicksChanged(const Signal& signal);
 	void OnDomainChanged(const Signal& domain);
 	void OnCursorValueChanged(qreal, size_t);
 	// plot info
@@ -32,6 +33,8 @@ private:
 	void MakeGraphOrUseExistent_WithFinalReplot(const Signal& signal, std::function<void(QCPGraph*)> action);
 	void SetGraphDataFrom(QCPGraph& graph, const Signal& signal);
 	void SetGraphicInfoFrom(QCPGraph& graph, const Signal& signal);
+	void SetAxisInfo(QCPGraph& graph, const Signal& signal);
+	void SetAxisColor(QCPAxis * yAxis);
 
 	QCustomPlot* plot;
 	std::map<QString, QCPGraph*> displayedGraphs;

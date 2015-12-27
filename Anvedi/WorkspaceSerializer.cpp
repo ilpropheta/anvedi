@@ -43,6 +43,11 @@ void ReadGraph(const QJsonObject& obj, DataMap& data)
 		{
 			signal.y = ToVector(it->toArray());
 		}
+		it = obj.find("ticks");
+		if (it != obj.end() && it->isArray())
+		{
+			signal.graphic.ticks = ToVector(it->toArray());
+		}
 		data.emplace(std::move(sigName), std::move(signal));
 	}
 }
@@ -108,6 +113,7 @@ void WorkspaceSerializer::Write(const QString& fileName, const SignalData& data,
 		signObj["visible"] = signal.graphic.visible;
 		signObj["range"] = ToJsonArray(QVector < qreal > {signal.graphic.rangeLower, signal.graphic.rangeUpper});
 		signObj["values"] = ToJsonArray(signal.y);
+		signObj["ticks"] = ToJsonArray(signal.graphic.ticks);
 		signArray.push_back(std::move(signObj));
 	});
 	json["signals"] = signArray;

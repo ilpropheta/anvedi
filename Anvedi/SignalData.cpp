@@ -124,6 +124,13 @@ void SignalData::setVisible(const QString& name, bool visible)
 	emit SignalVisibilityChanged(signal);
 }
 
+void SignalData::setTicks(const QString& name, QVector<qreal> ticks)
+{
+	auto& signal = m_data.at(name);
+	signal.graphic.ticks = std::move(ticks);
+	emit SignalTicksChanged(signal);
+}
+
 const Signal& SignalData::get(const QString& name) const
 {
 	return m_data.at(name);

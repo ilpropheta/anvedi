@@ -1,5 +1,6 @@
 #include "Utils.h"
 #include <complex>
+#include <QPen>
 
 bool close(const QColor& c1, const QColor& c2)
 {
@@ -29,4 +30,14 @@ QVariant ToVariant(const QVector<qreal>& vec)
 	QVariantList vals; vals.reserve(vec.size());
 	std::copy(vec.begin(), vec.end(), std::back_inserter(vals));
 	return vals;
+}
+
+bool InvertPenColorIfNearTo(QPen& pen, const QColor& color)
+{
+	auto areClose = close(color, pen.color());
+	if (areClose)
+	{
+		pen.setColor(invert(color));
+	}
+	return areClose;
 }

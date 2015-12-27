@@ -19,6 +19,7 @@ GraphPresenter::GraphPresenter(QCustomPlot* plot, const SignalData& data, PlotIn
 	QObject::connect(&data, SIGNAL(SignalVisibilityChanged(const Signal&)), this, SLOT(OnGraphVisibilityChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalValuesChanged(const Signal&)), this, SLOT(OnGraphDataChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalRangeChanged(const Signal&)), this, SLOT(OnGraphRangeChanged(const Signal&)));
+	QObject::connect(&data, SIGNAL(SignalTicksChanged(const Signal&)), this, SLOT(OnGraphTicksChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalAdded(const QVector<qreal>&, const std::map<QString, QVector<qreal>>&)), this, SLOT(OnGraphsDataAdded(const QVector<qreal>&, const std::map<QString, QVector<qreal>>&)));
 	QObject::connect(&data, SIGNAL(DomainChanged(const Signal&)), this, SLOT(OnDomainChanged(const Signal&)));
 	// plot
@@ -57,11 +58,14 @@ void GraphPresenter::MakeGraphOrUseExistent(const Signal& signal, std::function<
 	{
 		auto myY = plot->axisRect(0)->addAxis(QCPAxis::atLeft);
 		myY->setVisible(false);
+		myY->setSubTickCount(0);
+		myY->setAutoSubTicks(false);
 		auto graph = plot->addGraph(plot->xAxis, myY);
 		graph->setName(signal.name);
 		displayedGraphs.emplace_hint(it.first, signal.name, graph);
 		SetGraphicInfoFrom(*graph, signal);
 		SetGraphDataFrom(*graph, signal);
+		SetAxisInfo(*graph, signal);
 	}
 }
 
@@ -86,6 +90,13 @@ void GraphPresenter::OnGraphRangeChanged(const Signal& signal)
 	});
 }
 
+void GraphPresenter::OnGraphTicksChanged(const Signal& signal)
+{
+	MakeGraphOrUseExistent_WithFinalReplot(signal, [&](QCPGraph* graph){
+		SetAxisInfo(*graph, signal);
+	});
+}
+
 void GraphPresenter::OnClearData()
 {
 	// each axes is hold by the rect. When the graphs are removed
@@ -101,10 +112,13 @@ void GraphPresenter::OnBackgroundChanged(const QColor& color)
 {
 	plot->setBackground(color);
 	auto tickPen = plot->xAxis->basePen();
-	if (close(color, tickPen.color()))
+	if (InvertPenColorIfNearTo(tickPen, color))
 	{
-		tickPen.setColor(invert(color));
 		plot->xAxis->setBasePen(tickPen);
+	}
+	for (const auto& displayedGraph : displayedGraphs)
+	{
+		SetAxisColor(displayedGraph.second->valueAxis());
 	}
 	plot->replot();
 }
@@ -122,6 +136,24 @@ void GraphPresenter::SetGraphicInfoFrom(QCPGraph& graph, const Signal& signal)
 {
 	graph.setPen(QPen(signal.graphic.color));
 	graph.setVisible(signal.graphic.visible);
+}
+
+void GraphPresenter::SetAxisInfo(QCPGraph& graph, const Signal& signal)
+{
+	if (!signal.graphic.ticks.empty())
+	{
+		auto yAxis = graph.valueAxis();
+		yAxis->setAutoTicks(false);
+		yAxis->grid()->setVisible(true);
+		yAxis->setTickVector(signal.graphic.ticks);
+		yAxis->setLabel(signal.name);
+		SetAxisColor(yAxis);
+		yAxis->setVisible(true);
+	}
+	else
+	{
+		graph.valueAxis()->setVisible(false);
+	}
 }
 
 void GraphPresenter::OnDomainChanged(const Signal& domain)
@@ -211,4 +243,36 @@ void GraphPresenter::OnGraphsDataAdded(const QVector<qreal>& domainSlice, const 
 	}
 
 	plot->replot();
+}
+
+void GraphPresenter::SetAxisColor(QCPAxis * yAxis)
+{
+	const auto bkg = plotInfo.getBackgroundColor();
+	auto tickPen = yAxis->tickPen();
+	if (InvertPenColorIfNearTo(tickPen, bkg))
+	{
+		yAxis->setTickPen(tickPen);
+	}
+	
+	auto axisPen = yAxis->basePen();
+	if (InvertPenColorIfNearTo(axisPen, bkg))
+	{
+		yAxis->setBasePen(axisPen);
+	}
+
+	if (close(yAxis->labelColor(), bkg))
+		yAxis->setLabelColor(invert(bkg));
+
+	if (close(yAxis->tickLabelColor(), bkg))
+		yAxis->setTickLabelColor(invert(bkg));
+
+	if (InvertPenColorIfNearTo(tickPen, bkg))
+	{
+		yAxis->setTickPen(tickPen);
+	}
+	auto gridPen = yAxis->grid()->pen();
+	if (InvertPenColorIfNearTo(gridPen, bkg))
+	{
+		yAxis->grid()->setPen(gridPen);
+	}
 }
