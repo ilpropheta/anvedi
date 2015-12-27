@@ -116,8 +116,9 @@ void RectZoomer::OnResetZoom()
 {
 	for (auto i = 0; i < plot->graphCount(); ++i)
 	{
-		plot->graph(i)->rescaleAxes();
+		plot->graph(i)->rescaleValueAxis();
 	}
+	plot->xAxis->rescale();
 	plot->replot();
 }
 
@@ -128,11 +129,9 @@ void RectZoomer::ZoomInPixelCoordinates(double loX, double upX, double loY, doub
 		plot->xAxis->pixelToCoord(upX)
 	);
 
-	const auto axisRect0 = plot->axisRect(0);
-	auto numbOfY = axisRect0->axisCount(QCPAxis::atLeft);
-	for (auto i = 0; i < numbOfY; ++i)
+	for (auto i = 0; i < plot->graphCount(); ++i)
 	{
-		auto currentY = axisRect0->axis(QCPAxis::atLeft, i);
-		currentY->setRange(currentY->pixelToCoord(loY), currentY->pixelToCoord(upY));
+		auto yAxis = plot->graph(i)->valueAxis();
+		yAxis->setRange(yAxis->pixelToCoord(loY), yAxis->pixelToCoord(upY));
 	}
 }
