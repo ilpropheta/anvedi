@@ -124,7 +124,7 @@ QJsonArray ToJsonArray(const QVector<qreal>& vec)
 	return arr;
 }
 
-void WorkspaceSerializer::Write(const QString& fileName, const SignalData& data, const PlotInfo& plotInfo)
+void WorkspaceSerializer::Write(const QString& fileName, const SignalData& data, const PlotInfo& plotInfo, bool writeValues /*= true*/)
 {
 	QJsonObject json;
 	json["background"] = plotInfo.getBackgroundColor().name();
@@ -138,7 +138,8 @@ void WorkspaceSerializer::Write(const QString& fileName, const SignalData& data,
 		signObj["color"] = signal.graphic.color.name();
 		signObj["visible"] = signal.graphic.visible;
 		signObj["range"] = ToJsonArray(QVector < qreal > {signal.graphic.rangeLower, signal.graphic.rangeUpper});
-		signObj["values"] = ToJsonArray(signal.y);
+		if (writeValues)
+			signObj["values"] = ToJsonArray(signal.y);
 		signObj["ticks"] = ToJsonArray(signal.graphic.ticks);
 		signArray.push_back(std::move(signObj));
 	});
