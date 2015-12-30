@@ -7,6 +7,7 @@
 #include <QJsonArray>
 #include <algorithm>
 #include <iterator>
+#include <QMessageBox>
 
 QVector<qreal> ToVector(const QJsonArray& arr)
 {
@@ -17,20 +18,24 @@ QVector<qreal> ToVector(const QJsonArray& arr)
 	return vec;
 }
 
-void ReadGraph(const QJsonObject& obj, DataMap& data)
+Signal ReadGraph(const QJsonObject& obj)
 {
+	Signal signal{};
+
 	auto it = obj.find("name");
 	if (it != obj.end())
 	{
 		const auto sigName = it->toString();
-		Signal signal{sigName};
+		signal.name = std::move(sigName);
 
 		it = obj.find("color");
 		if (it != obj.end())
 			signal.graphic.color = it->toString();
+		
 		it = obj.find("visible");
 		if (it != obj.end())
 			signal.graphic.visible = it->toBool();
+		
 		it = obj.find("range");
 		if (it != obj.end())
 		{
@@ -38,26 +43,30 @@ void ReadGraph(const QJsonObject& obj, DataMap& data)
 			signal.graphic.rangeLower = vec.front();
 			signal.graphic.rangeUpper = vec.back();
 		}
+		
 		it = obj.find("values");
 		if (it != obj.end() && it->isArray())
 		{
 			signal.y = ToVector(it->toArray());
 		}
+		
 		it = obj.find("ticks");
 		if (it != obj.end() && it->isArray())
 		{
 			signal.graphic.ticks = ToVector(it->toArray());
 		}
-		data.emplace(std::move(sigName), std::move(signal));
 	}
+
+	return signal;
 }
 
-void WorkspaceSerializer::Read(const QString& fileName, SignalData& data, PlotInfo& plotInfo)
+void Read(const QString& fileName, SignalData& data, PlotInfo& plotInfo, std::function<void(Signal&&)> onSignal, std::function<void()> onAfterSignalRead)
 {
 	QFile in(fileName);
 	if (!in.open(QIODevice::ReadOnly | QFile::Text))
 	{
-		return; // should report error properly
+		QMessageBox::critical(nullptr, "Anvedi", QString("Cannot open specified file -> %1").arg(fileName));
+		return;
 	}
 	const auto json = QJsonDocument::fromJson(in.readAll()).object();
 
@@ -69,16 +78,17 @@ void WorkspaceSerializer::Read(const QString& fileName, SignalData& data, PlotIn
 	auto graphIt = json.find("signals");
 	if ((graphIt != json.end()) && graphIt->isArray())
 	{
-		DataMap newData;
 		for (const auto& elem : graphIt->toArray())
 		{
 			if (elem.isObject())
 			{
-				ReadGraph(elem.toObject(), newData);
+				onSignal(ReadGraph(elem.toObject()));
 			}
 		}
-		data.add(std::move(newData));
 	}
+	
+	onAfterSignalRead();
+
 	auto domainIt = json.find("domain");
 	if (domainIt != json.end())
 	{
@@ -89,6 +99,22 @@ void WorkspaceSerializer::Read(const QString& fileName, SignalData& data, PlotIn
 		}
 		catch (const std::exception&){}
 	}
+}
+
+void WorkspaceSerializer::Read(const QString& fileName, SignalData& data, PlotInfo& plotInfo)
+{
+	DataMap newData;
+	::Read(fileName, data, plotInfo, [&](Signal&& signal){
+		auto signalName = signal.name;
+		newData.emplace(std::move(signalName), std::move(signal));
+	}, [&]{
+		data.add(std::move(newData));
+	});
+}
+
+void WorkspaceSerializer::Read(const QString& fileName, SignalData& data, PlotInfo& plotInfo, std::function<void(Signal&&)> onSignal)
+{
+	::Read(fileName, data, plotInfo, onSignal, []{});
 }
 
 QJsonArray ToJsonArray(const QVector<qreal>& vec)
