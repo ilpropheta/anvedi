@@ -77,3 +77,20 @@ void Anvedi::keyPressEvent(QKeyEvent * e)
 	cursor->OnKeyboardPressed(e);
 }
 
+void Anvedi::OnChartImport()
+{
+	const auto file = QFileDialog::getOpenFileName(this, "Import plot", ".", "*.plt");
+	WorkspaceSerializer::Read(file, m_data, m_plotInfo, [this](Signal&& signal){
+		m_data.addEmptyIfNotExists(signal.name);
+		m_data.setSignalGraphic(signal.name, std::move(signal.graphic));
+	});
+}
+
+void Anvedi::OnChartExport()
+{
+	auto file = QFileDialog::getSaveFileName(this, "Export plot", ".", "*.plt");
+	if (!file.endsWith(".plt"))
+		file.append(".plt");
+	WorkspaceSerializer::Write(file, m_data, m_plotInfo, false);
+}
+

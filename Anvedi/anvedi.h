@@ -24,6 +24,8 @@ public slots:
 	void OnDataImport();
 	void OnDataExport();
 	void OnDataClear();
+	void OnChartImport();
+	void OnChartExport();
 protected:
 	void keyPressEvent(QKeyEvent * e);
 private:
