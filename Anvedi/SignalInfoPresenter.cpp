@@ -27,6 +27,11 @@ QVector<qreal> GetTicks(const QString& vec)
 	return ticks;
 }
 
+QVector<QString> GetTickLabels(const QString& vec)
+{
+	return vec.split(',', QString::SkipEmptyParts).toVector();
+}
+
 void SignalInfoPresenter::Config(const QString& signalName)
 {
 	const auto& signal = data.get(signalName);
@@ -42,5 +47,6 @@ void SignalInfoPresenter::Config(const QString& signalName)
 		else
 			data.setRange(signal.name, ui.spinRangeMin->value(), ui.spinRangeMax->value());
 		data.setTicks(signalName, GetTicks(ui.editTicks->text()));
+		data.setTickLabels(signalName, GetTickLabels(ui.editTickLabels->text()));
 	}
 }

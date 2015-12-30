@@ -29,6 +29,7 @@ public:
 	void setAutoRange(const QString& name);
 	void setAutoRangeAll();
 	void setTicks(const QString& name, QVector<qreal> ticks);
+	void setTickLabels(const QString& name, QVector<QString> ticks);
 	// visitor
 	void onSignals(std::function<void(const Signal&)> fun) const;
 	// utils

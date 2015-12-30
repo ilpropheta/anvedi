@@ -11,7 +11,7 @@ GraphPresenter::GraphPresenter(QCustomPlot* plot, const SignalData& data, PlotIn
 	plot->xAxis->setAutoSubTicks(false);
 	plot->xAxis->setSubTickCount(0);
 	plot->xAxis->setTickLabels(false);
-
+	
 	// model
 	QObject::connect(&data, SIGNAL(DataAdded(const DataMap&)), this, SLOT(OnNewData(const DataMap&)));
 	QObject::connect(&data, SIGNAL(DataCleared()), this, SLOT(OnClearData()));
@@ -157,6 +157,15 @@ void GraphPresenter::SetAxisInfo(QCPGraph& graph, const Signal& signal)
 		yAxis->setAutoTicks(false);
 		yAxis->grid()->setVisible(true);
 		yAxis->setTickVector(signal.graphic.ticks);
+		if (!signal.graphic.tickLabels.empty())
+		{
+			yAxis->setAutoTickLabels(false);
+			yAxis->setTickVectorLabels(signal.graphic.tickLabels);
+		}
+		else
+		{
+			yAxis->setAutoTickLabels(true);
+		}
 		SetAxisColor(yAxis);
 		yAxis->setVisible(true);
 	}
