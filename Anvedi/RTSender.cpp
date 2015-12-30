@@ -30,7 +30,7 @@ void RTSender::SendData(int count)
 		{
 			data.push_back(elem.second.at(currentSampleIdx + i));
 		}
-		sliceToSend.emplace(elem.first, data);
+		sliceToSend.emplace(elem.first, std::move(data));
 	}
 	currentSampleIdx += count;
 	if (!sliceToSend.begin()->second.empty())

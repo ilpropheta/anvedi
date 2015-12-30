@@ -41,6 +41,7 @@ SignalListPresenter::SignalListPresenter(QTableWidget* signalList, QLineEdit* fi
 	// model
 	QObject::connect(&data, SIGNAL(DataAdded(const DataMap&)), this, SLOT(OnNewData(const DataMap&)));
 	QObject::connect(&data, SIGNAL(DataCleared()), this, SLOT(OnClearData()));
+	QObject::connect(&data, SIGNAL(SignalGraphicChanged(const Signal&)), this, SLOT(OnSignalGraphicChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalColorChanged(const Signal&)), this, SLOT(OnSignalColorChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalVisibilityChanged(const Signal&)), this, SLOT(OnSignalVisibilityChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(DomainChanged(const Signal&)), this, SLOT(OnDomainChanged(const Signal&)));
@@ -199,4 +200,10 @@ void SignalListPresenter::OnDomainChanged(const Signal& newDomain)
 	oldFont.setItalic(true);
 	items.at(0)->setFont(oldFont);
 	domain = items.at(0);
+}
+
+void SignalListPresenter::OnSignalGraphicChanged(const Signal& signal)
+{
+	OnSignalVisibilityChanged(signal);
+	OnSignalColorChanged(signal);
 }

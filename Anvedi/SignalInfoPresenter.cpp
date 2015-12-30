@@ -34,6 +34,7 @@ void SignalInfoPresenter::Config(const QString& signalName)
 	ui.spinRangeMin->setValue(signal.graphic.rangeLower);
 	ui.spinRangeMax->setValue(signal.graphic.rangeUpper);
 	ui.editTicks->setText(ToString(signal.graphic.ticks));
+
 	if (configDialog.exec() == QDialog::Accepted)
 	{
 		if (ui.spinRangeMin->value() == ui.spinRangeMax->value() && ui.spinRangeMax->value() == 0.0)

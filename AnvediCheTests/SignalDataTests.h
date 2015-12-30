@@ -13,6 +13,7 @@ private slots:
 	void On_setValues_ShouldEmit_SignalValuesChanged();
 	void On_setAsDomain_ShouldEmit_DomainChanged();
 	void On_setAsDomainWithWrongSignal_ShouldThrowException();
+	void On_setGraphic_ShouldEmit_SignalGraphicChanged();
 	void On_domainLowerBound();
 	void On_domainNextValue();
 	void On_domainPrevValue();

@@ -110,6 +110,13 @@ void SignalData::addValues(const std::map<QString, QVector<qreal>>& data)
 	}
 }
 
+void SignalData::setSignalGraphic(const QString& name, SignalGraphic info)
+{
+	auto& signal = m_data.at(name);
+	signal.graphic = std::move(info);
+	emit SignalGraphicChanged(signal);
+}
+
 void SignalData::setColor(const QString& name, const QColor& col)
 {
 	auto& signal = m_data.at(name);

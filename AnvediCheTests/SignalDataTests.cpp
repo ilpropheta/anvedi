@@ -76,6 +76,19 @@ void SignalDataTests::On_setValues_ShouldEmit_SignalValuesChanged()
 	QCOMPARE(receivedSignal, actualSignal);
 }
 
+void SignalDataTests::On_setGraphic_ShouldEmit_SignalGraphicChanged()
+{
+	SignalData data;
+	data.add({ { "signal", { "signal" } } });
+	QSignalSpy spy(&data, SIGNAL(SignalGraphicChanged(const Signal&)));
+	data.setSignalGraphic("signal", {"red", true});
+
+	QCOMPARE(spy.count(), 1);
+	auto receivedSignal = spy.takeFirst().takeFirst().value<Signal>();
+	Signal actualSignal{ "signal", {}, { "red", true } };
+	QCOMPARE(receivedSignal, actualSignal);
+}
+
 void SignalDataTests::On_setAsDomain_ShouldEmit_DomainChanged()
 {
 	SignalData data;

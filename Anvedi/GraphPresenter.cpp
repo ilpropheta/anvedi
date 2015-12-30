@@ -15,6 +15,7 @@ GraphPresenter::GraphPresenter(QCustomPlot* plot, const SignalData& data, PlotIn
 	// model
 	QObject::connect(&data, SIGNAL(DataAdded(const DataMap&)), this, SLOT(OnNewData(const DataMap&)));
 	QObject::connect(&data, SIGNAL(DataCleared()), this, SLOT(OnClearData()));
+	QObject::connect(&data, SIGNAL(SignalGraphicChanged(const Signal&)), this, SLOT(OnGraphStyleInfoChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalColorChanged(const Signal&)), this, SLOT(OnGraphVisibilityChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalVisibilityChanged(const Signal&)), this, SLOT(OnGraphVisibilityChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalValuesChanged(const Signal&)), this, SLOT(OnGraphDataChanged(const Signal&)));
@@ -57,6 +58,7 @@ void GraphPresenter::MakeGraphOrUseExistent(const Signal& signal, std::function<
 	else
 	{
 		auto myY = plot->axisRect(0)->addAxis(QCPAxis::atLeft);
+		myY->setLabel(signal.name);
 		myY->setVisible(false);
 		myY->setSubTickCount(0);
 		myY->setAutoSubTicks(false);
@@ -67,6 +69,15 @@ void GraphPresenter::MakeGraphOrUseExistent(const Signal& signal, std::function<
 		SetGraphDataFrom(*graph, signal);
 		SetAxisInfo(*graph, signal);
 	}
+}
+
+void GraphPresenter::OnGraphStyleInfoChanged(const Signal& signal)
+{
+	MakeGraphOrUseExistent_WithFinalReplot(signal, [&](QCPGraph* graph){
+		SetGraphicInfoFrom(*graph, signal);
+		SetAxisInfo(*graph, signal);
+		SetRangeInfo(*graph, signal);
+	});
 }
 
 void GraphPresenter::OnGraphVisibilityChanged(const Signal& signal)
@@ -86,7 +97,7 @@ void GraphPresenter::OnGraphDataChanged(const Signal& signal)
 void GraphPresenter::OnGraphRangeChanged(const Signal& signal)
 {
 	MakeGraphOrUseExistent_WithFinalReplot(signal, [&](QCPGraph* graph){
-		graph->valueAxis()->setRange(signal.graphic.rangeLower, signal.graphic.rangeUpper);
+		SetRangeInfo(*graph, signal);
 	});
 }
 
@@ -128,7 +139,7 @@ void GraphPresenter::SetGraphDataFrom(QCPGraph& graph, const Signal& signal)
 	if (data.getDomain())
 	{
 		graph.setData(data.getDomain()->y, signal.y);
-		graph.valueAxis()->setRange(signal.graphic.rangeLower, signal.graphic.rangeUpper);
+		SetRangeInfo(graph, signal);
 	}
 }
 
@@ -146,7 +157,6 @@ void GraphPresenter::SetAxisInfo(QCPGraph& graph, const Signal& signal)
 		yAxis->setAutoTicks(false);
 		yAxis->grid()->setVisible(true);
 		yAxis->setTickVector(signal.graphic.ticks);
-		yAxis->setLabel(signal.name);
 		SetAxisColor(yAxis);
 		yAxis->setVisible(true);
 	}
@@ -154,6 +164,11 @@ void GraphPresenter::SetAxisInfo(QCPGraph& graph, const Signal& signal)
 	{
 		graph.valueAxis()->setVisible(false);
 	}
+}
+
+void GraphPresenter::SetRangeInfo(QCPGraph& graph, const Signal& signal)
+{
+	graph.valueAxis()->setRange(signal.graphic.rangeLower, signal.graphic.rangeUpper);
 }
 
 void GraphPresenter::OnDomainChanged(const Signal& domain)

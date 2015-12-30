@@ -18,6 +18,7 @@ public slots:
 	void OnNewData(const DataMap& data);
 	void OnClearData();
 	void OnSignalFilterEdited(const QString& filter);
+	void OnSignalGraphicChanged(const Signal& signal);
 	void OnSignalVisibilityChanged(const Signal& signal);
 	void OnSignalColorChanged(const Signal& signal);
 	void OnCursorValueChanged(qreal xVal, size_t idx);
