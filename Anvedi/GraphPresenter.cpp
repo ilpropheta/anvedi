@@ -67,7 +67,6 @@ void GraphPresenter::MakeGraphOrUseExistent(const Signal& signal, std::function<
 		displayedGraphs.emplace_hint(it.first, signal.name, graph);
 		SetGraphicInfoFrom(*graph, signal);
 		SetGraphDataFrom(*graph, signal);
-		SetAxisInfo(*graph, signal);
 	}
 }
 
@@ -75,7 +74,6 @@ void GraphPresenter::OnGraphStyleInfoChanged(const Signal& signal)
 {
 	MakeGraphOrUseExistent_WithFinalReplot(signal, [&](QCPGraph* graph){
 		SetGraphicInfoFrom(*graph, signal);
-		SetAxisInfo(*graph, signal);
 		SetRangeInfo(*graph, signal);
 	});
 }
@@ -147,14 +145,14 @@ void GraphPresenter::SetGraphicInfoFrom(QCPGraph& graph, const Signal& signal)
 {
 	graph.setPen(QPen(signal.graphic.color));
 	graph.setVisible(signal.graphic.visible);
-	graph.valueAxis()->setVisible(signal.graphic.visible);
+	SetAxisInfo(graph, signal);
 }
 
 void GraphPresenter::SetAxisInfo(QCPGraph& graph, const Signal& signal)
 {
+	auto yAxis = graph.valueAxis();
 	if (!signal.graphic.ticks.empty())
 	{
-		auto yAxis = graph.valueAxis();
 		yAxis->setAutoTicks(false);
 		yAxis->grid()->setVisible(true);
 		yAxis->setTickVector(signal.graphic.ticks);
@@ -168,11 +166,11 @@ void GraphPresenter::SetAxisInfo(QCPGraph& graph, const Signal& signal)
 			yAxis->setAutoTickLabels(true);
 		}
 		SetAxisColor(yAxis);
-		yAxis->setVisible(true);
+		yAxis->setVisible(signal.graphic.visible);
 	}
 	else
 	{
-		graph.valueAxis()->setVisible(false);
+		yAxis->setVisible(false);
 	}
 }
 
