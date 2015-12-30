@@ -69,20 +69,6 @@ void SignalData::setRange(const QString& name, double lo, double up)
 	emit SignalRangeChanged(signal);
 }
 
-void SignalData::setRangeMin(const QString& name, double lo)
-{
-	auto& signal = m_data.at(name);
-	signal.graphic.rangeLower = lo;
-	emit SignalRangeChanged(signal);
-}
-
-void SignalData::setRangeMax(const QString& name, double up)
-{
-	auto& signal = m_data.at(name);
-	signal.graphic.rangeUpper = up;
-	emit SignalRangeChanged(signal);
-}
-
 void SignalData::setAutoRange(const QString& name)
 {
 	auto& signal = m_data.at(name);

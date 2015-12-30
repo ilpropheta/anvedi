@@ -26,8 +26,6 @@ public:
 	void setColor(const QString& name, const QColor& col);
 	void setVisible(const QString& name, bool visible);
 	void setRange(const QString& name, double lo, double up);
-	void setRangeMin(const QString& name, double lo);
-	void setRangeMax(const QString& name, double up);
 	void setAutoRange(const QString& name);
 	void setAutoRangeAll();
 	void setTicks(const QString& name, QVector<qreal> ticks);
