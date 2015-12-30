@@ -18,6 +18,15 @@ QVector<qreal> ToVector(const QJsonArray& arr)
 	return vec;
 }
 
+QVector<QString> ToStrVector(const QJsonArray& arr)
+{
+	QVector<QString> vec; vec.reserve(arr.size());
+	std::transform(arr.begin(), arr.end(), std::back_inserter(vec), [](const QJsonValue& value) {
+		return value.toString();
+	});
+	return vec;
+}
+
 Signal ReadGraph(const QJsonObject& obj)
 {
 	Signal signal{};
@@ -54,6 +63,12 @@ Signal ReadGraph(const QJsonObject& obj)
 		if (it != obj.end() && it->isArray())
 		{
 			signal.graphic.ticks = ToVector(it->toArray());
+		}
+
+		it = obj.find("tickLabels");
+		if (it != obj.end() && it->isArray())
+		{
+			signal.graphic.tickLabels = ToStrVector(it->toArray());
 		}
 	}
 
@@ -124,6 +139,13 @@ QJsonArray ToJsonArray(const QVector<qreal>& vec)
 	return arr;
 }
 
+QJsonArray ToJsonArray(const QVector<QString>& vec)
+{
+	QJsonArray arr;
+	std::copy(vec.begin(), vec.end(), std::back_inserter(arr));
+	return arr;
+}
+
 void WorkspaceSerializer::Write(const QString& fileName, const SignalData& data, const PlotInfo& plotInfo, bool writeValues /*= true*/)
 {
 	QJsonObject json;
@@ -144,6 +166,7 @@ void WorkspaceSerializer::Write(const QString& fileName, const SignalData& data,
 		if (writeValues)
 			signObj["values"] = ToJsonArray(signal.y);
 		signObj["ticks"] = ToJsonArray(signal.graphic.ticks);
+		signObj["tickLabels"] = ToJsonArray(signal.graphic.tickLabels);
 		signArray.push_back(std::move(signObj));
 	});
 	json["signals"] = signArray;
