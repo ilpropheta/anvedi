@@ -48,6 +48,8 @@ void Anvedi::OnExit()
 void Anvedi::OnDataImport()
 {
 	const auto files = QFileDialog::getOpenFileNames(this, "Import as JSON", ".", "*.json");
+	if (files.isEmpty())
+		return;
 	for (const auto& file : files)
 	{
 		WorkspaceSerializer::Read(file, m_data, m_plotInfo);
@@ -58,6 +60,8 @@ void Anvedi::OnDataImport()
 void Anvedi::OnDataExport()
 {
 	auto file = QFileDialog::getSaveFileName(this, "Export as JSON", ".", "*.json");
+	if (file.isEmpty())
+		return;
 	if (!file.endsWith(".json"))
 		file.append(".json");
 	WorkspaceSerializer::Write(file, m_data, m_plotInfo);
@@ -80,6 +84,8 @@ void Anvedi::keyPressEvent(QKeyEvent * e)
 void Anvedi::OnChartImport()
 {
 	const auto file = QFileDialog::getOpenFileName(this, "Import plot", ".", "*.plt");
+	if (file.isEmpty())
+		return;
 	WorkspaceSerializer::Read(file, m_data, m_plotInfo, [this](Signal&& signal){
 		m_data.addEmptyIfNotExists(signal.name);
 		m_data.setSignalGraphic(signal.name, std::move(signal.graphic));
@@ -89,6 +95,8 @@ void Anvedi::OnChartImport()
 void Anvedi::OnChartExport()
 {
 	auto file = QFileDialog::getSaveFileName(this, "Export plot", ".", "*.plt");
+	if (file.isEmpty())
+		return;
 	if (!file.endsWith(".plt"))
 		file.append(".plt");
 	WorkspaceSerializer::Write(file, m_data, m_plotInfo, false);

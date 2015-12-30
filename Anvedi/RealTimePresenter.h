@@ -3,6 +3,7 @@
 #include "RealTimePlayer.h"
 #include "ui_rtConfig.h"
 #include <QDialog>
+#include "RTSocketPlayer.h"
 
 struct RTMenuInfo
 {
@@ -33,5 +34,6 @@ private:
 	QDialog rtDialog;
 	RTMenuInfo rtMenuInfo;
 	RealTimePlayer player;
+	RTSocketPlayer socketPlayer;
 };
 

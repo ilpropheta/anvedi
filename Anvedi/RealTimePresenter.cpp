@@ -1,7 +1,7 @@
 #include "RealTimePresenter.h"
 
 RealTimePresenter::RealTimePresenter(SignalData& data, RTMenuInfo rtMenuActions)
-	: player(data), rtMenuInfo(rtMenuActions)
+	: player(data), socketPlayer(data), rtMenuInfo(rtMenuActions)
 {
 	ui.setupUi(&rtDialog);
 	
