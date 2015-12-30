@@ -147,6 +147,7 @@ void GraphPresenter::SetGraphicInfoFrom(QCPGraph& graph, const Signal& signal)
 {
 	graph.setPen(QPen(signal.graphic.color));
 	graph.setVisible(signal.graphic.visible);
+	graph.valueAxis()->setVisible(signal.graphic.visible);
 }
 
 void GraphPresenter::SetAxisInfo(QCPGraph& graph, const Signal& signal)
