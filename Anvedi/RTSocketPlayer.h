@@ -17,13 +17,7 @@ public:
 private slots:
 	void Start();
 public slots :
-	void Pause();
 	void Stop();
-signals:
-	void RTStarted();
-	void RTPaused();
-	void RTResumed();
-	void RTStopped();
 private:
 	SignalData& m_data;
 	QLocalServer server;

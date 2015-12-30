@@ -128,7 +128,7 @@ void WorkspaceSerializer::Write(const QString& fileName, const SignalData& data,
 {
 	QJsonObject json;
 	json["background"] = plotInfo.getBackgroundColor().name();
-	if (!writeValues)
+	if (writeValues)
 	{
 		if (auto domain = data.getDomain())
 			json["domain"] = domain->name;

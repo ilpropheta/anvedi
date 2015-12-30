@@ -18,6 +18,8 @@ RTSocketPlayer::RTSocketPlayer(SignalData& data)
 	{
 		QObject::connect(&server, SIGNAL(newConnection()), this, SLOT(Start()));
 	}
+
+	sender.setPacketCount(100);
 }
 
 void RTSocketPlayer::Start()
@@ -90,11 +92,6 @@ void RTSocketPlayer::Start()
 		sender.SetDataToSend(std::move(slice));
 		sender.SendData();
 	});
-}
-
-void RTSocketPlayer::Pause()
-{
-
 }
 
 void RTSocketPlayer::Stop()

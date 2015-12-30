@@ -29,6 +29,7 @@ public:
 	void setRangeMin(const QString& name, double lo);
 	void setRangeMax(const QString& name, double up);
 	void setAutoRange(const QString& name);
+	void setAutoRangeAll();
 	void setTicks(const QString& name, QVector<qreal> ticks);
 	// visitor
 	void onSignals(std::function<void(const Signal&)> fun) const;

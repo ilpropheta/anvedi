@@ -210,3 +210,12 @@ qreal SignalData::domainPrevValue(qreal refValue) const
 	}
 	return std::numeric_limits<qreal>::quiet_NaN();
 }
+
+void SignalData::setAutoRangeAll()
+{
+	for (auto& signal : m_data)
+	{
+		AutoRange(signal.second);
+		emit SignalRangeChanged(signal.second);
+	}
+}

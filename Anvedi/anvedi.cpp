@@ -22,8 +22,9 @@ Anvedi::Anvedi(QWidget *parent)
 
 	ScriptManager::InitWorkspace(m_data, m_plotInfo, *ui.console);
 
-	// window -> zoomer
-	QObject::connect(ui.actionResetAxes, SIGNAL(triggered()), rectZoomer.get(), SLOT(OnResetZoom()));
+	QObject::connect(ui.actionResetAxes, &QAction::triggered, [this]{
+		m_data.setAutoRangeAll();
+	});
 	// cursor -> list
 	QObject::connect(cursor.get(), SIGNAL(CursorChanged(qreal, size_t)), signalListPresenter.get(), SLOT(OnCursorValueChanged(qreal, size_t)));
 	// cursor -> graph
