@@ -157,13 +157,8 @@ void GraphPresenter::SetAxisInfo(QCPGraph& graph, const Signal& signal)
 		yAxis->setAutoTicks(false);
 		yAxis->grid()->setVisible(true);
 		yAxis->setTickVector(signal.graphic.ticks);
-		auto tp = yAxis->grid()->pen();
-		tp.setColor("black");
-		tp.setWidthF(1.3);
-		yAxis->grid()->setPen(tp);
-
 		if (!signal.graphic.tickLabels.empty())
-		{		
+		{
 			yAxis->setAutoTickLabels(false);
 			yAxis->setTickVectorLabels(signal.graphic.tickLabels);
 		}
