@@ -13,7 +13,7 @@ class GraphPresenter : public QObject
 {
 	Q_OBJECT
 public:
-	GraphPresenter(QCustomPlot* plot, const SignalData& data, PlotInfo& plotInfo);
+	GraphPresenter(QCustomPlot* plot, QScrollBar* rangeScroll, const SignalData& data, PlotInfo& plotInfo);
 public slots:
 	// data
 	void OnNewData(const DataMap& data);
@@ -29,6 +29,8 @@ public slots:
 	// plot info
 	void OnBackgroundChanged(const QColor& color);
 	void OnXRangeChanged(const QCPRange&);
+	// xrange scrollbar
+	void rangeScrollbarValueChanged(int);
 private:
 	void MakeGraphOrUseExistent(const Signal& signal, std::function<void(QCPGraph*)> action);
 	void MakeGraphOrUseExistent_WithFinalReplot(const Signal& signal, std::function<void(QCPGraph*)> action);
@@ -41,6 +43,7 @@ private:
 	void SetAxisColor(QCPAxis * yAxis);
 
 	QCustomPlot* plot;
+	QScrollBar* rangeScroll;
 	std::map<QString, QCPGraph*> displayedGraphs;
 	const SignalData& data;
 	PlotInfo& plotInfo;

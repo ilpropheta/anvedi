@@ -4,14 +4,20 @@
 #include "SignalData.h"
 #include "PlotInfo.h"
 
-GraphPresenter::GraphPresenter(QCustomPlot* plot, const SignalData& data, PlotInfo& plotInfo)
-	: plot(plot), data(data), plotInfo(plotInfo)
+static const int stepRes = 1;
+
+GraphPresenter::GraphPresenter(QCustomPlot* plot, QScrollBar* rangeScroll, const SignalData& data, PlotInfo& plotInfo)
+	: plot(plot), rangeScroll(rangeScroll), data(data), plotInfo(plotInfo)
 {
 	plot->yAxis->setVisible(false);
 	plot->xAxis->setAutoSubTicks(false);
 	plot->xAxis->setSubTickCount(0);
 	plot->xAxis->setTickLabels(false);
 	
+	rangeScroll->setVisible(false);
+	rangeScroll->setSingleStep(1);
+	rangeScroll->setPageStep(100);
+
 	// model
 	QObject::connect(&data, SIGNAL(DataAdded(const DataMap&)), this, SLOT(OnNewData(const DataMap&)));
 	QObject::connect(&data, SIGNAL(DataCleared()), this, SLOT(OnClearData()));
@@ -27,6 +33,8 @@ GraphPresenter::GraphPresenter(QCustomPlot* plot, const SignalData& data, PlotIn
 	QObject::connect(plot->xAxis, SIGNAL(rangeChanged(const QCPRange&)), this, SLOT(OnXRangeChanged(const QCPRange&)));
 	// plot-info
 	QObject::connect(&plotInfo, SIGNAL(BackgroundColorChanged(const QColor&)), this, SLOT(OnBackgroundChanged(const QColor&)));
+	// xrange scrollbar
+	QObject::connect(rangeScroll, SIGNAL(valueChanged(int)), this, SLOT(rangeScrollbarValueChanged(int)));
 }
 
 void GraphPresenter::OnNewData(const DataMap& d)
@@ -114,6 +122,7 @@ void GraphPresenter::OnClearData()
 		plot->axisRect(0)->removeAxis(plot->graph(i)->valueAxis());
 	displayedGraphs.clear();	
 	plot->clearGraphs();
+	rangeScroll->setVisible(false);
 	plot->replot();
 }
 
@@ -187,6 +196,8 @@ void GraphPresenter::OnDomainChanged(const Signal& domain)
 		});
 	});
 	plot->xAxis->rescale();
+	const auto xRange = plot->xAxis->range();
+	rangeScroll->setRange(xRange.lower, xRange.upper);
 	plot->replot();
 }
 
@@ -222,18 +233,26 @@ void GraphPresenter::OnCursorValueChanged(qreal value, size_t)
 	const auto xAxisRange = plot->xAxis->range();
 	if (value < xAxisRange.lower) // value is more left than rangeX
 	{
-		plot->xAxis->setRangeLower(value);
-		plot->xAxis->setRangeUpper(xAxisRange.upper - (xAxisRange.lower - value));
+		plot->xAxis->setRange(value, xAxisRange.size() + value);
 	}
 	else if (value > xAxisRange.upper) // value is more right than rangeX
 	{
-		plot->xAxis->setRangeLower(xAxisRange.lower + (value - xAxisRange.upper));
-		plot->xAxis->setRangeUpper(value);
+		plot->xAxis->setRange(value - xAxisRange.size(), value);
 	}
 }
 
-void GraphPresenter::OnXRangeChanged(const QCPRange&)
+void GraphPresenter::OnXRangeChanged(const QCPRange& newXRange)
 {
+	/*if (rangeScroll && data.getDomain())
+	{
+		const auto& domainVals = data.getDomain()->y;
+		const auto showScroll = newXRange.lower > domainVals.front() || newXRange.upper < domainVals.back();
+		if (showScroll)
+		{
+			rangeScroll->setValue(qRound(newXRange.lower));
+		}
+		rangeScroll->setVisible(showScroll);
+	}*/
 	plot->replot();
 }
 
@@ -244,10 +263,10 @@ void GraphPresenter::OnGraphsDataAdded(const QVector<qreal>& domainSlice, const 
 
 	// logic here should be moved out to kind of "PlotBrowser"
 	const auto rtPageSize = plotInfo.getRealTimePageSize();
+	// first packet?
 	if (rtPageSize && displayedGraphs.begin()->second->data()->empty())
 	{
-		plot->xAxis->setRangeLower(domainSlice.front());
-		plot->xAxis->setRangeUpper(rtPageSize);
+		plot->xAxis->setRange(domainSlice.front(), rtPageSize);
 	}
 
 	for (const auto& data : dataSlice)
@@ -258,6 +277,7 @@ void GraphPresenter::OnGraphsDataAdded(const QVector<qreal>& domainSlice, const 
 	}
 
 	auto xRange = plot->xAxis->range();
+	// new page?
 	if (rtPageSize && (xRange.upper < domainSlice.back()))
 	{
 		xRange.lower = xRange.upper;
@@ -298,4 +318,23 @@ void GraphPresenter::SetAxisColor(QCPAxis * yAxis)
 	{
 		yAxis->grid()->setPen(gridPen);
 	}
+}
+
+void GraphPresenter::rangeScrollbarValueChanged(int value)
+{
+	/*if (data.getDomain())
+	{
+		const auto xRange = plot->xAxis->range();
+		const auto lowerDelta = (value - xRange.lower);
+		auto upperValue = xRange.upper + lowerDelta;
+		if (upperValue >= data.getDomain()->y.back())
+		{
+			plot->xAxis->setRangeUpper(data.getDomain()->y.back());
+		}
+		else
+		{
+			plot->xAxis->setRange(value, upperValue);
+			plot->replot();
+		}
+	}*/
 }

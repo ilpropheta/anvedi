@@ -34,6 +34,13 @@
       </property>
      </widget>
     </item>
+    <item row="1" column="0">
+     <widget class="QScrollBar" name="rangeScroll">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
