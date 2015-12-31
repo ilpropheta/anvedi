@@ -14,6 +14,7 @@ class SignalData : public QObject
 public:
 	void add(DataMap data);
 	void addEmptyIfNotExists(const QString& name);
+	void addIfNotExists(Signal signal);
 	void clear();
 	// getters
 	const Signal& get(const QString& name) const;

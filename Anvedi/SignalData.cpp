@@ -51,6 +51,11 @@ void SignalData::addEmptyIfNotExists(const QString& name)
 	getOrInsert(name);
 }
 
+void SignalData::addIfNotExists(Signal signal)
+{
+	getOrInsert(signal.name) = std::move(signal);
+}
+
 void SignalData::setValues(const QString& name, QVector<qreal> vec)
 {
 	auto& signal = m_data.at(name);

@@ -10,7 +10,7 @@ RTInteractiveSender::RTInteractiveSender(SignalData& data)
 
 void RTInteractiveSender::Start(const QString& domainName, QVariantList signalNames)
 {
-	data.clear(); currentPacket.clear();
+	currentPacket.clear();
 	DataMap toSet;
 	for (const auto& name : signalNames)
 	{
@@ -23,7 +23,10 @@ void RTInteractiveSender::Start(const QString& domainName, QVariantList signalNa
 		toSet.emplace(domainName, Signal{ domainName });
 		currentPacket.emplace_back(domainName, QVector<qreal>{});
 	}
-	data.add(toSet);
+	for (auto& signal : toSet)
+	{
+		data.addIfNotExists(std::move(signal.second));
+	}
 	data.setAsDomain(domainName);
 }
 

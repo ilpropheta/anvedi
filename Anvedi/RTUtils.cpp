@@ -17,9 +17,10 @@ DataToReplay PrepareReplay(const QString& file, SignalData& signalData)
 		toSend.emplace_back(make_pair(signal.name, std::move(signal.y)));
 	});
 
-	signalData.clear();
-	signalData.add(toSet);
+	for (auto& signal : toSet)
+	{
+		signalData.addIfNotExists(std::move(signal.second));
+	}
 	signalData.setAsDomain(data.getDomain()->name);
-
 	return toSend;
 }
