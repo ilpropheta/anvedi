@@ -10,6 +10,7 @@ RealTimePlayer::RealTimePlayer(SignalData& data)
 	: m_data(data), sender(m_data)
 {
 	connect(&dataTimer, SIGNAL(timeout()), &sender, SLOT(SendData()));
+	connect(&sender, SIGNAL(NoMoreData()), this, SLOT(Stop()));
 }
 
 void RealTimePlayer::PrepareSender()

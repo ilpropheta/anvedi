@@ -22,6 +22,7 @@ public slots:
 	void SendData(int count);
 signals:
 	void DataSent();
+	void NoMoreData();
 private:
 	DataToReplay dataToSend;
 	SignalData& receiver;

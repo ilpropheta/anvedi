@@ -34,9 +34,14 @@ void RTSender::SendData(int count)
 	}
 	currentSampleIdx += count;
 	if (!sliceToSend.begin()->second.empty())
+	{
 		receiver.addValues(sliceToSend);
-	
-	emit DataSent();
+		emit DataSent();
+	}
+	else
+	{
+		emit NoMoreData();
+	}
 }
 
 int RTSender::getPacketCount() const
