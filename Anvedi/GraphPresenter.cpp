@@ -197,7 +197,7 @@ void GraphPresenter::OnDomainChanged(const Signal& domain)
 	});
 	plot->xAxis->rescale();
 	const auto xRange = plot->xAxis->range();
-	rangeScroll->setRange(xRange.lower, xRange.upper);
+	rangeScroll->setRange(0, 0);
 	plot->replot();
 }
 
@@ -243,16 +243,20 @@ void GraphPresenter::OnCursorValueChanged(qreal value, size_t)
 
 void GraphPresenter::OnXRangeChanged(const QCPRange& newXRange)
 {
-	/*if (rangeScroll && data.getDomain())
+	if (rangeScroll && data.getDomain())
 	{
 		const auto& domainVals = data.getDomain()->y;
 		const auto showScroll = newXRange.lower > domainVals.front() || newXRange.upper < domainVals.back();
 		if (showScroll)
 		{
-			rangeScroll->setValue(qRound(newXRange.lower));
+			const auto leftPos = data.domainLowerBound(newXRange.lower).second;
+			const auto rightPos = domainVals.size() - data.domainLowerBound(newXRange.upper).second;
+			rangeScroll->setMaximum(leftPos+rightPos);
+			rangeScroll->setValue(leftPos);
+			
 		}
 		rangeScroll->setVisible(showScroll);
-	}*/
+	}
 	plot->replot();
 }
 
@@ -268,6 +272,7 @@ void GraphPresenter::OnGraphsDataAdded(const QVector<qreal>& domainSlice, const 
 	{
 		plot->xAxis->setRange(domainSlice.front(), rtPageSize);
 	}
+	//rangeScroll->setMaximum(domainSlice.back());
 
 	for (const auto& data : dataSlice)
 	{
@@ -322,19 +327,22 @@ void GraphPresenter::SetAxisColor(QCPAxis * yAxis)
 
 void GraphPresenter::rangeScrollbarValueChanged(int value)
 {
-	/*if (data.getDomain())
+	qDebug() << value;
+	if (data.getDomain() && data.getDomain()->y.size() > value)
 	{
 		const auto xRange = plot->xAxis->range();
-		const auto lowerDelta = (value - xRange.lower);
-		auto upperValue = xRange.upper + lowerDelta;
-		if (upperValue >= data.getDomain()->y.back())
+		auto newLowerValue = data.getDomain()->y[value];
+		const auto lowerDelta = (newLowerValue - xRange.lower);
+		if (!lowerDelta)
+			return;
+		auto newUpperValue = xRange.upper + lowerDelta;
+		if (newUpperValue > data.getDomain()->y.back())
 		{
-			plot->xAxis->setRangeUpper(data.getDomain()->y.back());
+			newLowerValue = xRange.lower;
+			newUpperValue = data.getDomain()->y.back();
 		}
-		else
-		{
-			plot->xAxis->setRange(value, upperValue);
-			plot->replot();
-		}
-	}*/
+			
+		plot->xAxis->setRange(newLowerValue, newUpperValue);
+		plot->replot();
+	}
 }
