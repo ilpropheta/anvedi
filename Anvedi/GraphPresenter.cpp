@@ -196,9 +196,7 @@ void GraphPresenter::OnDomainChanged(const Signal& domain)
 		});
 	});
 	plot->xAxis->rescale();
-	const auto xRange = plot->xAxis->range();
 	rangeScroll->setRange(0, 0);
-	plot->replot();
 }
 
 /*	When the plot is zoomed in, value can be within a non-visible area.
@@ -249,10 +247,10 @@ void GraphPresenter::OnXRangeChanged(const QCPRange& newXRange)
 		const auto showScroll = newXRange.lower > domainVals.front() || newXRange.upper < domainVals.back();
 		if (showScroll)
 		{
-			const auto leftPos = data.domainLowerBound(newXRange.lower).second;
-			const auto rightPos = domainVals.size() - data.domainLowerBound(newXRange.upper).second;
-			rangeScroll->setMaximum(leftPos+rightPos);
-			rangeScroll->setValue(leftPos);
+			const auto leftRemaining = data.domainLowerBound(newXRange.lower).second;
+			const auto rightRemaining = domainVals.size() - data.domainLowerBound(newXRange.upper).second;
+			rangeScroll->setMaximum(leftRemaining+rightRemaining);
+			rangeScroll->setValue(leftRemaining);
 			
 		}
 		rangeScroll->setVisible(showScroll);
@@ -326,21 +324,19 @@ void GraphPresenter::SetAxisColor(QCPAxis * yAxis)
 
 void GraphPresenter::rangeScrollbarValueChanged(int value)
 {
-	qDebug() << value;
 	if (data.getDomain() && data.getDomain()->y.size() > value)
 	{
 		const auto xRange = plot->xAxis->range();
 		auto newLowerValue = data.getDomain()->y[value];
 		const auto lowerDelta = (newLowerValue - xRange.lower);
-		if (!lowerDelta)
+		if (lowerDelta==0)
 			return;
 		auto newUpperValue = xRange.upper + lowerDelta;
-		if (newUpperValue > data.getDomain()->y.back())
+		if (newUpperValue > data.getDomain()->y.back()) // saturate right
 		{
 			newLowerValue = xRange.lower;
 			newUpperValue = data.getDomain()->y.back();
 		}
-			
 		plot->xAxis->setRange(newLowerValue, newUpperValue);
 	}
 }
