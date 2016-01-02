@@ -87,7 +87,6 @@ void RectZoomer::OnMouseRelease(QMouseEvent*)
 		if (topLeftX < (bottomRightX + 1)) // skip just click
 		{
 			ZoomInPixelCoordinates(topLeftX, bottomRightX, bottomRightY, topLeftY);
-			plot->replot();
 		}
 		rubberBand.hide();
 	}
@@ -112,7 +111,6 @@ void RectZoomer::OnResetZoom()
 		graph->valueAxis()->setRange(signal.graphic.rangeLower, signal.graphic.rangeUpper);
 	}
 	plot->xAxis->rescale();
-	plot->replot();
 }
 
 void SetAxisRangeInPixelCoordsWithSaturation(QCPAxis& axis, double rangeLo, double rangeUp)
