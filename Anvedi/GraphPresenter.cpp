@@ -272,7 +272,6 @@ void GraphPresenter::OnGraphsDataAdded(const QVector<qreal>& domainSlice, const 
 	{
 		plot->xAxis->setRange(domainSlice.front(), rtPageSize);
 	}
-	//rangeScroll->setMaximum(domainSlice.back());
 
 	for (const auto& data : dataSlice)
 	{

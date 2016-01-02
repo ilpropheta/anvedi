@@ -2,6 +2,7 @@
 #include "qcustomplot.h"
 #include <QMouseEvent>
 #include "SignalData.h"
+#include "Utils.h"
 
 class IZoomAction
 {
@@ -92,25 +93,13 @@ void RectZoomer::OnMouseRelease(QMouseEvent*)
 	}
 }
 
-QPoint SaturateInXRange(QMouseEvent* mevent, const QCPAxis& xAxis)
-{
-	auto movePos = mevent->pos();
-	const auto rangeX = xAxis.range();
-	const auto rubberXToCoord = xAxis.pixelToCoord(movePos.x());
-	if (rubberXToCoord > rangeX.upper)
-		movePos.setX(xAxis.coordToPixel(rangeX.upper));
-	else if (rubberXToCoord < rangeX.lower)
-		movePos.setX(xAxis.coordToPixel(rangeX.lower));
-	return movePos;
-}
-
 void RectZoomer::OnMouseMove(QMouseEvent* mevent)
 {
 	if (rubberBand.isVisible())
 	{
 		rubberBand.setGeometry(QRect(
 			origin, 
-			zoomAction->OnMouseMove(*plot, SaturateInXRange(mevent, *plot->xAxis))).normalized());
+			zoomAction->OnMouseMove(*plot, mevent->pos())).normalized());
 	}
 }
 
@@ -128,22 +117,18 @@ void RectZoomer::OnResetZoom()
 
 void RectZoomer::ZoomInPixelCoordinates(double loX, double upX, double loY, double upY)
 {
+	const auto xRange = plot->xAxis->range();
 	plot->xAxis->setRange(
-		plot->xAxis->pixelToCoord(loX), 
-		plot->xAxis->pixelToCoord(upX)
+			SaturateLeft(plot->xAxis->pixelToCoord(loX), xRange.lower),
+			SaturateRight(plot->xAxis->pixelToCoord(upX), xRange.upper)
 	);
 
 	for (auto i = 0; i < plot->graphCount(); ++i)
 	{
 		auto yAxis = plot->graph(i)->valueAxis();
-		auto loCoord = yAxis->pixelToCoord(loY);
-		auto upCoord = yAxis->pixelToCoord(upY);
 		const auto currentRange = yAxis->range();
-		// saturate
-		if (loCoord < currentRange.lower)
-			loCoord = currentRange.lower;
-		if (upCoord > currentRange.upper)
-			upCoord = currentRange.upper;
-		yAxis->setRange(loCoord, upCoord);
+
+		yAxis->setRange(SaturateLeft(yAxis->pixelToCoord(loY), currentRange.lower), 
+						SaturateRight(yAxis->pixelToCoord(upY), currentRange.upper));
 	}
 }

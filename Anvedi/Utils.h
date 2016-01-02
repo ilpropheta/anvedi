@@ -14,6 +14,18 @@ inline QColor invert(const QColor& col)
 
 bool InvertPenColorIfNearTo(QPen& pen, const QColor& color);
 
+template<typename T>
+T SaturateLeft(const T& what, const T& within)
+{
+	return (what < within) ? within : what;
+}
+
+template<typename T>
+T SaturateRight(const T& what, const T& within)
+{
+	return (what > within) ? within : what;
+}
+
 QVector<qreal> ToVector(const QVariant& var);
 QVector<qreal> ToVector(const QVariantList& varList);
 QVariant ToVariant(const QVector<qreal>& vec);
