@@ -97,9 +97,9 @@ void PlotCursor::OnKeyboardPressed(QKeyEvent* e)
 	}
 }
 
-void PlotCursor::OnCursorInRT()
+void PlotCursor::OnCursorInRT(const QVector<qreal>& domainSlice)
 {
-	moveEnd();
+	set(domainSlice.back());
 }
 
 void PlotCursor::moveBegin()

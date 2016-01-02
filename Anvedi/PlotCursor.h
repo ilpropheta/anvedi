@@ -29,7 +29,7 @@ public slots:
 	void OnMouseEvent(QMouseEvent*);
 	void OnBackgroundChanged(const QColor&);
 	void OnKeyboardPressed(QKeyEvent*);
-	void OnCursorInRT();
+	void OnCursorInRT(const QVector<qreal>& domainSlice);
 	void OnSetCursorFollowingInRealTime(bool flag);
 signals:
 	void CursorChanged(qreal, size_t);
