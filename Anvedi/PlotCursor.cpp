@@ -29,7 +29,6 @@ void PlotCursor::initLinePos()
 void PlotCursor::reset()
 {
 	initLinePos();
-	plot->replot();
 	set(std::numeric_limits<qreal>::min());
 }
 

@@ -127,4 +127,5 @@ void RectZoomer::ZoomInPixelCoordinates(double loX, double upX, double loY, doub
 	{
 		SetAxisRangeInPixelCoordsWithSaturation(*plot->graph(i)->valueAxis(), loY, upY);
 	}
+	plot->replot();
 }
