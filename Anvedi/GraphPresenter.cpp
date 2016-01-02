@@ -342,6 +342,5 @@ void GraphPresenter::rangeScrollbarValueChanged(int value)
 		}
 			
 		plot->xAxis->setRange(newLowerValue, newUpperValue);
-		plot->replot();
 	}
 }
