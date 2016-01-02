@@ -115,19 +115,18 @@ void RectZoomer::OnResetZoom()
 	plot->replot();
 }
 
+void SetAxisRangeInPixelCoordsWithSaturation(QCPAxis& axis, double rangeLo, double rangeUp)
+{
+	const auto currentRange = axis.range();
+	axis.setRange(SaturateLeft(axis.pixelToCoord(rangeLo), currentRange.lower), SaturateRight(axis.pixelToCoord(rangeUp), currentRange.upper));
+}
+
 void RectZoomer::ZoomInPixelCoordinates(double loX, double upX, double loY, double upY)
 {
-	auto xAxis = plot->xAxis;
-	const auto xRange = xAxis->range();
-	plot->xAxis->setRange(SaturateLeft(xAxis->pixelToCoord(loX), xRange.lower),SaturateRight(xAxis->pixelToCoord(upX), xRange.upper)
-	);
+	SetAxisRangeInPixelCoordsWithSaturation(*plot->xAxis, loX, upX);
 
 	for (auto i = 0; i < plot->graphCount(); ++i)
 	{
-		auto yAxis = plot->graph(i)->valueAxis();
-		const auto currentRange = yAxis->range();
-
-		yAxis->setRange(SaturateLeft(yAxis->pixelToCoord(loY), currentRange.lower), 
-						SaturateRight(yAxis->pixelToCoord(upY), currentRange.upper));
+		SetAxisRangeInPixelCoordsWithSaturation(*plot->graph(i)->valueAxis(), loY, upY);
 	}
 }
