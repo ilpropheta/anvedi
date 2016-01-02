@@ -12,8 +12,8 @@ public:
 
 struct RectZoomAction : IZoomAction
 {
-	QPoint OnMousePress(const QCustomPlot& plot, const QPoint& clickPos) override { return clickPos; }
-	QPoint OnMouseMove(const QCustomPlot& plot, const QPoint& clickPos) override	{ return clickPos; }
+	QPoint OnMousePress(const QCustomPlot&, const QPoint& clickPos) override { return clickPos; }
+	QPoint OnMouseMove(const QCustomPlot&, const QPoint& clickPos) override	{ return clickPos; }
 };
 
 struct HorizontalZoomAction : IZoomAction
@@ -80,12 +80,12 @@ void RectZoomer::OnMouseRelease(QMouseEvent*)
 {
 	if (rubberBand.isVisible())
 	{
-		int xp1, yp1, xp2, yp2;
+		int topLeftX, topLeftY, bottomRightX, bottomRightY;
 		const auto zoomRect = rubberBand.geometry();
-		zoomRect.getCoords(&xp1, &yp1, &xp2, &yp2);
-		if (xp1 < (xp2 + 1)) // skip just click
+		zoomRect.getCoords(&topLeftX, &topLeftY, &bottomRightX, &bottomRightY);
+		if (topLeftX < (bottomRightX + 1)) // skip just click
 		{
-			ZoomInPixelCoordinates(xp1, xp2, yp1, yp2);
+			ZoomInPixelCoordinates(topLeftX, bottomRightX, bottomRightY, topLeftY);
 			plot->replot();
 		}
 		rubberBand.hide();
