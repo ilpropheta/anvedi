@@ -136,6 +136,14 @@ void RectZoomer::ZoomInPixelCoordinates(double loX, double upX, double loY, doub
 	for (auto i = 0; i < plot->graphCount(); ++i)
 	{
 		auto yAxis = plot->graph(i)->valueAxis();
-		yAxis->setRange(yAxis->pixelToCoord(loY), yAxis->pixelToCoord(upY));
+		auto loCoord = yAxis->pixelToCoord(loY);
+		auto upCoord = yAxis->pixelToCoord(upY);
+		const auto currentRange = yAxis->range();
+		// saturate
+		if (loCoord < currentRange.lower)
+			loCoord = currentRange.lower;
+		if (upCoord > currentRange.upper)
+			upCoord = currentRange.upper;
+		yAxis->setRange(loCoord, upCoord);
 	}
 }
