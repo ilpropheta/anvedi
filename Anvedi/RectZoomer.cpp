@@ -117,10 +117,9 @@ void RectZoomer::OnResetZoom()
 
 void RectZoomer::ZoomInPixelCoordinates(double loX, double upX, double loY, double upY)
 {
-	const auto xRange = plot->xAxis->range();
-	plot->xAxis->setRange(
-			SaturateLeft(plot->xAxis->pixelToCoord(loX), xRange.lower),
-			SaturateRight(plot->xAxis->pixelToCoord(upX), xRange.upper)
+	auto xAxis = plot->xAxis;
+	const auto xRange = xAxis->range();
+	plot->xAxis->setRange(SaturateLeft(xAxis->pixelToCoord(loX), xRange.lower),SaturateRight(xAxis->pixelToCoord(upX), xRange.upper)
 	);
 
 	for (auto i = 0; i < plot->graphCount(); ++i)
