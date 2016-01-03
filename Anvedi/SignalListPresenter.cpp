@@ -102,7 +102,7 @@ void SignalListPresenter::OnNewData(const DataMap& dataMap)
 		auto removeButton = new QPushButton(signalList);
 		removeButton->setText("X");
 		QObject::connect(removeButton, &QPushButton::clicked, [name, this]{
-			const auto reply = QMessageBox::question(nullptr, "Anvedi", "Sure to remove?", QMessageBox::Yes | QMessageBox::No);
+			const auto reply = QMessageBox::question(nullptr, "Anvedi", QString("Sure to remove '%1'?").arg(name), QMessageBox::Yes | QMessageBox::No);
 			if (reply == QMessageBox::Yes)
 			{
 				this->data.remove(name);

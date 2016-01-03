@@ -379,6 +379,7 @@ void GraphPresenter::OnSignalRenamed(const QString& oldName, const Signal& signa
 {
 	auto graph = displayedGraphs.find(oldName);
 	graph->second->setName(signal.name);
+	graph->second->valueAxis()->setLabel(signal.name);
 	displayedGraphs[signal.name] = graph->second;
 	displayedGraphs.erase(graph);
 }
