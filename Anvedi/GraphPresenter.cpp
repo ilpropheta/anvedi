@@ -367,6 +367,7 @@ void GraphPresenter::OnSignalRemoved(const QString& who)
 	{
 		if (plot->graph(i)->name() == who)
 		{
+			plot->axisRect(0)->removeAxis(plot->graph(i)->valueAxis());
 			plot->removeGraph(i);
 			break;
 		}

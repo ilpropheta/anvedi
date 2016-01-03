@@ -1,4 +1,5 @@
 #include "RealTimePresenter.h"
+#include <QFileDialog>
 
 RealTimePresenter::RealTimePresenter(SignalData& data, RTMenuInfo rtMenuActions)
 	: player(data), socketPlayer(data), rtMenuInfo(rtMenuActions)
@@ -15,6 +16,12 @@ RealTimePresenter::RealTimePresenter(SignalData& data, RTMenuInfo rtMenuActions)
 	QObject::connect(&player, SIGNAL(RTPaused()), this, SLOT(OnPause()));
 	QObject::connect(&player, SIGNAL(RTResumed()), this, SLOT(OnStart()));
 	QObject::connect(&player, SIGNAL(RTStopped()), this, SLOT(OnStop()));
+	// RT config dialog choose file button
+	QObject::connect(ui.btnFile, &QPushButton::pressed, [this]{
+		auto file = QFileDialog::getOpenFileName(&rtDialog, "Choose file to RT", ".", "*.json");
+		if (!file.isEmpty())
+			ui.editFile->setText(file);
+	});
 
 	rtMenuInfo.actionStopRT->setEnabled(false);
 }
