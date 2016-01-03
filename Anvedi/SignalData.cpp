@@ -88,22 +88,122 @@ void SignalData::setAutoRange(const QString& name)
 
 void SignalData::addValues(const std::map<QString, QVector<qreal>>& data)
 {
-	/* Note: this version does not support recovering (e.g. resending data from
-	   the past, or sending new data of the past). I have a version of this function
-	   properly supporting recovering. On the QCustomPlot side no problem because it
-	   uses a map (actually it was using .insertMulti and then I replace it with .insert).
-	*/
-	if (domain)
+	// Note: use this commented version if you just need to add new values
+	/*if (domain)
 	{
 		const auto& domainSlice = data.at(domain->name);
 		for (const auto& d : data)
+			m_data.at(d.first).y << d.second;
+		emit SignalAdded(domainSlice, data);
+	}*/
+
+	// the following piece of code supports re-sending old data (e.g. a recover) and sending new data of the past.
+	// The (usual) precondition is the increasing order of the domain values.
+
+	if (domain)
+	{
+		const auto& domainSlice = data.at(domain->name);
+
+		if (domain->y.empty())
 		{
-			auto& signal = m_data.at(d.first);
-			signal.y << d.second;
-			AutoRange(signal);
+			const auto& domainSlice = data.at(domain->name);
+			for (const auto& d : data)
+				m_data.at(d.first).y << d.second;
+			emit SignalAdded(domainSlice, data);
+			return;
 		}
+
+		// sugar to calculate the position of the iterator "to" 
+		// in the domainSlice vector
+		auto vectorIndex = [&](QVector<qreal>::const_iterator to){
+			return std::distance(domainSlice.begin(), to);
+		};
+
+		// sugar to get the iterator in vec corresponding to the position of the iterator domainIt in domainSlice
+		auto iteratorFromDomainIt = [&](const QVector<qreal>& vec, QVector<qreal>::const_iterator domainIt){
+			return vec.begin() + vectorIndex(domainIt);
+		};
+
+		// support ds for making easy to add data to each signal
+		// element i contains correspondence between ith-slice to its signal y vector
+		std::vector<std::pair<const QVector<qreal>*, QVector<qreal>*>> sliceToSignalValues;
+		sliceToSignalValues.reserve(data.size() - 1);
+		for (const auto& d : data)
+		{
+			if (d.first != domain->name)
+			{
+				auto& vals = m_data.at(d.first).y;
+				sliceToSignalValues.push_back(std::make_pair(&d.second, &vals));
+				// preparing for growing
+				vals.reserve(vals.size()+d.second.size());
+			}
+		}
+
+		// the current domain values 
+		// (can be already filled - e.g. you are comparing an RT with imported signals)
+		auto& domainValues = domain->y;
+
+		// for each added domain value 
+		for (auto it = domainSlice.begin(); it != domainSlice.end(); ++it)
+		{
+			/* since domainSlice has to be ordered, if this condition holds
+			   we can just add the remaining chunk of data
+			   note: this condition always holds if you are just sending completely
+			   new data */
+			if (*it > domainValues.back()) // insert all
+			{
+				std::copy(it, domainSlice.end(), std::back_inserter(domainValues));
+				for (auto& d : sliceToSignalValues)
+				{
+					std::copy(iteratorFromDomainIt(*d.first, it), d.first->end(), std::back_inserter(*d.second));
+				}
+				break; 
+			}
+			// we are receiving some new data of the past
+			if (*it < domainValues.front()) 
+			{
+				domainValues.push_front(*it);
+				for (auto& d : sliceToSignalValues)
+				{
+					d.second->push_front(d.first->at(vectorIndex(it)));
+				}
+			}
+			// we are receiving data within the current domain
+			else
+			{
+				auto eRange = std::equal_range(domainValues.begin(), domainValues.end(), *it);
+				if (eRange.first == eRange.second) // new data within the domain
+				{
+					domainValues.insert(eRange.first, *it);
+					for (auto& d : sliceToSignalValues)
+					{
+						const auto valueToAdd = *(iteratorFromDomainIt(*d.first, it));
+						d.second->insert(d.second->begin() + std::distance(domainValues.begin(), eRange.first), valueToAdd);
+					}
+				}
+				else // overwrite a possibly already added value within the domain
+				{
+					auto positionInCurrentDomain = std::distance(domainValues.begin(), eRange.first);
+					for (auto& d : sliceToSignalValues)
+					{
+						const auto valueToAdd = *(iteratorFromDomainIt(*d.first, it));
+						if (d.second->size() < positionInCurrentDomain) 
+						{
+							*(d.second->begin() + positionInCurrentDomain) = valueToAdd;
+						}
+						else
+						{
+							d.second->push_back(valueToAdd);
+							// e.g. domain already filled with values but signals yet to fill
+						}
+					}
+				}
+			}
+		}
+
 		emit SignalAdded(domainSlice, data);
 	}
+
 }
 
 void SignalData::setSignalGraphic(const QString& name, SignalGraphic info)
