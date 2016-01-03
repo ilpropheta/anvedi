@@ -62,6 +62,24 @@ QScriptValue GetDomain(QScriptContext *context, QScriptEngine *engine)
 	}
 }
 
+QScriptValue Remove(QScriptContext *context, QScriptEngine *engine)
+{
+	QScriptValue calleeData = context->callee().data();
+	auto data = qobject_cast<SignalData*>(calleeData.toQObject());
+	if (context->argument(0).isString())
+	{
+		try
+		{
+			data->remove(context->argument(0).toString());
+		}
+		catch (...)
+		{
+			return context->throwError(QScriptContext::UnknownError, "the specified signal does not exist");
+		}
+	}
+	return QScriptValue::UndefinedValue;
+}
+
 struct AnvediScriptEngine : QShellEngine_Qt
 {
 	AnvediScriptEngine(SignalData& data, PlotInfo& plot)
@@ -74,6 +92,7 @@ struct AnvediScriptEngine : QShellEngine_Qt
 		m_engine.globalObject().setProperty("graph", MakeSignalDataFunction(data, GraphWrapperCtor));
 		m_engine.globalObject().setProperty("SetDomain", MakeSignalDataFunction(data, SetDomain));
 		m_engine.globalObject().setProperty("GetDomain", MakeSignalDataFunction(data, GetDomain));
+		m_engine.globalObject().setProperty("Remove", MakeSignalDataFunction(data, Remove));
 	}
 
 	QScriptValue MakeSignalDataFunction(SignalData& data, QScriptValue(*fun)(QScriptContext*, QScriptEngine*))

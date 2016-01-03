@@ -17,6 +17,8 @@ public:
 public slots:
 	// data
 	void OnNewData(const DataMap& data);
+	void OnSignalRemoved(const QString& who);
+	void OnSignalRenamed(const QString& oldName, const Signal& signal);
 	void OnClearData();
 	void OnGraphDataChanged(const Signal& signal);
 	void OnGraphsDataAdded(const QVector<qreal>&, const std::map<QString, QVector<qreal>>&);

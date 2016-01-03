@@ -20,6 +20,9 @@ GraphPresenter::GraphPresenter(QCustomPlot* plot, QScrollBar* rangeScroll, const
 
 	// model
 	QObject::connect(&data, SIGNAL(DataAdded(const DataMap&)), this, SLOT(OnNewData(const DataMap&)));
+	QObject::connect(&data, SIGNAL(SignalRenamed(const QString&, const Signal&)), this, SLOT(OnSignalRenamed(const QString&, const Signal&)));
+	QObject::connect(&data, SIGNAL(SignalRemoved(const QString&)), this, SLOT(OnSignalRemoved(const QString&)));
+	QObject::connect(&data, SIGNAL(DataCleared()), this, SLOT(OnClearData()));
 	QObject::connect(&data, SIGNAL(DataCleared()), this, SLOT(OnClearData()));
 	QObject::connect(&data, SIGNAL(SignalGraphicChanged(const Signal&)), this, SLOT(OnGraphStyleInfoChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalColorChanged(const Signal&)), this, SLOT(OnGraphVisibilityChanged(const Signal&)));
@@ -355,4 +358,26 @@ void GraphPresenter::rangeScrollbarValueChanged(int value)
 		}
 		plot->xAxis->setRange(newLowerValue, newUpperValue);
 	}
+}
+
+void GraphPresenter::OnSignalRemoved(const QString& who)
+{
+	displayedGraphs.erase(displayedGraphs.find(who));
+	for (auto i = 0; i < plot->graphCount(); ++i)
+	{
+		if (plot->graph(i)->name() == who)
+		{
+			plot->removeGraph(i);
+			break;
+		}
+	}
+	plot->replot();
+}
+
+void GraphPresenter::OnSignalRenamed(const QString& oldName, const Signal& signal)
+{
+	auto graph = displayedGraphs.find(oldName);
+	graph->second->setName(signal.name);
+	displayedGraphs[signal.name] = graph->second;
+	displayedGraphs.erase(graph);
 }

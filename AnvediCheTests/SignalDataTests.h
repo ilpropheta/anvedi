@@ -9,6 +9,8 @@ private slots:
 	void On_empty_add_ShouldNotEmit_DataAdded();
 	void On_add_ShouldEmit_DataAdded();
 	void On_add_Should_AllowOverwritingElements();
+	void On_remove_ShouldEmit_SignalRemoved();
+	void On_rename_ShouldEmit_SignalRenamed();
 	void On_clear_ShouldEmit_DataCleared();
 	void On_setValues_ShouldEmit_SignalValuesChanged();
 	void On_setAsDomain_ShouldEmit_DomainChanged();

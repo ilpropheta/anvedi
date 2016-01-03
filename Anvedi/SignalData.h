@@ -16,6 +16,8 @@ public:
 	void addEmptyIfNotExists(const QString& name);
 	void addIfNotExists(Signal signal);
 	void clear();
+	void rename(const QString& what, const QString& newName);
+	void remove(const QString& what);
 	// getters
 	const Signal& get(const QString& name) const;
 	const Signal* getDomain() const;
@@ -39,6 +41,8 @@ public:
 	qreal domainPrevValue(qreal refValue) const;
 signals:
 	void DataAdded(const DataMap&);
+	void SignalRemoved(const QString&);
+	void SignalRenamed(const QString& oldName, const Signal&);
 	void SignalValuesChanged(const Signal&);
 	void SignalValuesAdded(const Signal&, const QVector<qreal>&, const QVector<qreal>&);
 	void SignalAdded(const QVector<qreal>&, const std::map<QString, QVector<qreal>>&);

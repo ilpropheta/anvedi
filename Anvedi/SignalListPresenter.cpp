@@ -40,6 +40,9 @@ SignalListPresenter::SignalListPresenter(QTableWidget* signalList, QLineEdit* fi
 
 	// model
 	QObject::connect(&data, SIGNAL(DataAdded(const DataMap&)), this, SLOT(OnNewData(const DataMap&)));
+	QObject::connect(&data, SIGNAL(SignalRenamed(const QString&, const Signal&)), this, SLOT(OnSignalRenamed(const QString&, const Signal&)));
+	QObject::connect(&data, SIGNAL(SignalRemoved(const QString&)), this, SLOT(OnSignalRemoved(const QString&)));
+	QObject::connect(&data, SIGNAL(DataCleared()), this, SLOT(OnClearData()));
 	QObject::connect(&data, SIGNAL(DataCleared()), this, SLOT(OnClearData()));
 	QObject::connect(&data, SIGNAL(SignalGraphicChanged(const Signal&)), this, SLOT(OnSignalGraphicChanged(const Signal&)));
 	QObject::connect(&data, SIGNAL(SignalColorChanged(const Signal&)), this, SLOT(OnSignalColorChanged(const Signal&)));
@@ -206,4 +209,16 @@ void SignalListPresenter::OnSignalGraphicChanged(const Signal& signal)
 {
 	OnSignalVisibilityChanged(signal);
 	OnSignalColorChanged(signal);
+}
+
+void SignalListPresenter::OnSignalRemoved(const QString& name)
+{
+	auto items = signalList->findItems(name, Qt::MatchExactly);
+	signalList->removeRow(items.at(0)->row());
+}
+
+void SignalListPresenter::OnSignalRenamed(const QString& oldName, const Signal& signal)
+{
+	auto items = signalList->findItems(oldName, Qt::MatchExactly);
+	items.at(0)->setText(signal.name);
 }

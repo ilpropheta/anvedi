@@ -322,3 +322,28 @@ void SignalData::setAutoRangeAll()
 		emit SignalRangeChanged(signal.second);
 	}
 }
+
+void SignalData::remove(const QString& what)
+{
+	auto it = m_data.find(what);
+	if (it == m_data.end())
+		throw std::exception("This signal does not exist");
+	m_data.erase(it);
+	emit SignalRemoved(what);
+}
+
+void SignalData::rename(const QString& what, const QString& newName)
+{
+	auto whatIt = m_data.find(what);
+	auto newNameIt = m_data.find(newName);
+	if (newNameIt != m_data.end())
+		throw std::exception("This name already exists");
+	if (whatIt == m_data.end())
+		throw std::exception("This signal does not exist");
+	
+	auto signalToRename = whatIt->second;
+	m_data.erase(whatIt);
+	signalToRename.name = newName;
+	auto inserted = m_data.insert(std::make_pair(newName, std::move(signalToRename)));
+	emit SignalRenamed(what, inserted.first->second);
+}

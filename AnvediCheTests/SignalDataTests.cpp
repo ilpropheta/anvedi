@@ -54,6 +54,42 @@ void SignalDataTests::On_add_Should_AllowOverwritingElements()
 	QCOMPARE(finalMap, expectedMap);
 }
 
+void SignalDataTests::On_remove_ShouldEmit_SignalRemoved()
+{
+	SignalData data;
+	data.add({
+		{ "signal", { "signal", {}, { {}, true } } },
+		{ "line", { "line", {}, { {}, false } } }
+	});
+
+	QSignalSpy spy(&data, SIGNAL(SignalRemoved(const QString&)));
+	data.remove("signal");
+	QCOMPARE(spy.count(), 1);
+
+	auto removedName = spy.takeFirst().takeFirst().value<QString>();
+	QCOMPARE(removedName, QString("signal"));
+}
+
+void SignalDataTests::On_rename_ShouldEmit_SignalRenamed()
+{
+	SignalData data;
+	data.add({
+		{ "signal", { "signal", {}, { {}, true } } },
+		{ "line", { "line", {}, { {}, false } } }
+	});
+
+	QSignalSpy spy(&data, SIGNAL(SignalRenamed(const QString&, const Signal&)));
+	data.rename("signal", "signal2");
+	QCOMPARE(spy.count(), 1);
+
+	auto signalParams = spy.takeFirst();
+	auto oldName = signalParams.at(0).value<QString>();
+	auto newSignal = signalParams.at(1).value<Signal>();
+	QCOMPARE(oldName, QString("signal"));
+	Signal expectedSignal{ "signal2", {}, { {}, true } };
+	QCOMPARE(newSignal, expectedSignal);
+}
+
 void SignalDataTests::On_clear_ShouldEmit_DataCleared()
 {
 	SignalData data;

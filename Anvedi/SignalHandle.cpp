@@ -79,3 +79,19 @@ void SignalHandle::setTicks(const QVariant& values)
 {
 	data.setTicks(signalName, ToVector(values));
 }
+
+QString SignalHandle::getName() const
+{
+	return signalName;
+}
+
+void SignalHandle::setName(const QString& name)
+{
+	try
+	{
+		data.rename(signalName, name);
+		signalName = name;
+	}
+	catch (...)
+	{}
+}

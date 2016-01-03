@@ -16,6 +16,8 @@ public:
 	SignalListPresenter(QTableWidget* signalList, QLineEdit* filterEdit, QLabel* signalCntLabel, QLabel* domainLabel, SignalData& data);
 public slots:
 	void OnNewData(const DataMap& data);
+	void OnSignalRemoved(const QString& name);
+	void OnSignalRenamed(const QString& oldName, const Signal& signal);
 	void OnClearData();
 	void OnSignalFilterEdited(const QString& filter);
 	void OnSignalGraphicChanged(const Signal& signal);
