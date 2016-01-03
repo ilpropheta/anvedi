@@ -300,6 +300,11 @@
            <string>Color</string>
           </property>
          </column>
+         <column>
+          <property name="text">
+           <string>X</string>
+          </property>
+         </column>
         </widget>
        </item>
       </layout>

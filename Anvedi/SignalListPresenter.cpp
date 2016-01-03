@@ -4,18 +4,22 @@
 #include <QPushButton>
 #include <QColorDialog>
 #include <QLineEdit>
+#include <QMessageBox>
 
 static const int SignalNameIdx = 0;
 static const int SignalValueAtDomainIdx = 1;
 static const int SignalColorIdx = 2;
+static const int SignalRemoveIdx = 3;
 
 SignalListPresenter::SignalListPresenter(QTableWidget* signalList, QLineEdit* filterEdit, QLabel* signalCntLabel, QLabel* domainLabel, SignalData& data)
 	: infoPresenter(data), signalList(signalList), filterEdit(filterEdit), signalCntLabel(signalCntLabel), domainLabel(domainLabel), domain(nullptr), data(data)
 {
 	const auto& tableHFont = signalList->horizontalHeader()->font();
 	QFontMetrics fm(tableHFont);
-	const auto colorLabelWidth = fm.width(signalList->horizontalHeaderItem(2)->text());
-	signalList->setColumnWidth(2, colorLabelWidth + 7);
+	const auto colorLabelWidth = fm.width(signalList->horizontalHeaderItem(SignalColorIdx)->text());
+	const auto removeSignalWidth = fm.width(signalList->horizontalHeaderItem(SignalRemoveIdx)->text());
+	signalList->setColumnWidth(SignalColorIdx, colorLabelWidth + 7);
+	signalList->setColumnWidth(SignalRemoveIdx, removeSignalWidth+7);
 	signalList->verticalHeader()->setVisible(false);
 
 	// table
@@ -95,10 +99,21 @@ void SignalListPresenter::OnNewData(const DataMap& dataMap)
 			}
 		});
 		
+		auto removeButton = new QPushButton(signalList);
+		removeButton->setText("X");
+		QObject::connect(removeButton, &QPushButton::clicked, [name, this]{
+			const auto reply = QMessageBox::question(nullptr, "Anvedi", "Sure to remove?", QMessageBox::Yes | QMessageBox::No);
+			if (reply == QMessageBox::Yes)
+			{
+				this->data.remove(name);
+			}
+		});
+
 		// adding them all
 		signalList->setItem(currentCount, SignalNameIdx, chanNameItem);
 		signalList->setItem(currentCount, SignalValueAtDomainIdx, chanValueItem);
 		signalList->setCellWidget(currentCount, SignalColorIdx, colorButton);
+		signalList->setCellWidget(currentCount, SignalRemoveIdx, removeButton);
 
 		currentCount++;
 	}

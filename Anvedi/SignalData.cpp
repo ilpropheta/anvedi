@@ -328,6 +328,8 @@ void SignalData::remove(const QString& what)
 	auto it = m_data.find(what);
 	if (it == m_data.end())
 		throw std::exception("This signal does not exist");
+	if (&it->second == getDomain())
+		domain = nullptr;
 	m_data.erase(it);
 	emit SignalRemoved(what);
 }

@@ -13,14 +13,16 @@ void SignalListPresenterTests::initTestCase()
 {
 	// currently just copy/paste from ui_anvedi.h
 	signalList.reset(new QTableWidget());
-	if (signalList->columnCount() < 3)
-		signalList->setColumnCount(3);
+	if (signalList->columnCount() < 4)
+		signalList->setColumnCount(4);
 	QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
 	signalList->setHorizontalHeaderItem(0, __qtablewidgetitem);
 	QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
 	signalList->setHorizontalHeaderItem(1, __qtablewidgetitem1);
 	QTableWidgetItem *__qtablewidgetitem2 = new QTableWidgetItem();
 	signalList->setHorizontalHeaderItem(2, __qtablewidgetitem2);
+	QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
+	signalList->setHorizontalHeaderItem(3, __qtablewidgetitem3);
 	signalList->setObjectName(QStringLiteral("signalList"));
 	signalList->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	signalList->setDragDropOverwriteMode(false);
