@@ -54,9 +54,10 @@ void RTSocketPlayer::Start()
 			data.emplace(currNameAsQString, Signal{currNameAsQString});
 			names.push_back(currNameAsQString);
 		}
-
-		m_data.clear();
-		m_data.add(std::move(data));
+		for (auto& signal : data)
+		{
+			m_data.addIfNotExists(std::move(signal.second));
+		}
 		m_data.setAsDomain(domainName.c_str());
 	}
 	else
