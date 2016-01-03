@@ -41,7 +41,9 @@ private:
 	void SetRangeInfo(QCPGraph& graph, const Signal& signal);
 	// setting axis, grid, etc color and pen
 	void SetAxisColor(QCPAxis * yAxis);
-
+	// RT
+	bool IsFirstRTPacket(const std::map<QString, QVector<qreal>>& dataSlice);
+	
 	QCustomPlot* plot;
 	QScrollBar* rangeScroll;
 	std::map<QString, QCPGraph*> displayedGraphs;

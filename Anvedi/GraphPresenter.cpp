@@ -261,6 +261,19 @@ void GraphPresenter::OnXRangeChanged(const QCPRange& newXRange)
 	plot->replot();
 }
 
+// Note: an RTStarted event would be definitely better...
+bool GraphPresenter::IsFirstRTPacket(const std::map<QString, QVector<qreal>>& dataSlice)
+{
+	auto firstDataAsGraph = displayedGraphs.find(dataSlice.begin()->first);
+	// domain may already have data...
+	if (firstDataAsGraph->first != data.getDomain()->name)
+	{
+		return firstDataAsGraph->second->data()->empty();
+	}
+	// if we are sending just domain data we are fucked :)
+	return displayedGraphs.at((++dataSlice.begin())->first)->data()->empty();
+}
+
 void GraphPresenter::OnGraphsDataAdded(const QVector<qreal>& domainSlice, const std::map<QString, QVector<qreal>>& dataSlice)
 {
 	if (domainSlice.empty())
@@ -269,7 +282,7 @@ void GraphPresenter::OnGraphsDataAdded(const QVector<qreal>& domainSlice, const 
 	// logic here should be moved out to kind of "PlotBrowser"
 	const auto rtPageSize = plotInfo.getRealTimePageSize();
 	// first packet?
-	if (rtPageSize && displayedGraphs.begin()->second->data()->empty())
+	if (rtPageSize && IsFirstRTPacket(dataSlice))
 	{
 		plot->xAxis->setRange(domainSlice.front(), rtPageSize);
 	}
