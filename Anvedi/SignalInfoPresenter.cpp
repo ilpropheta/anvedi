@@ -1,6 +1,7 @@
 #include "SignalInfoPresenter.h"
 #include "SignalData.h"
 #include <algorithm>
+#include <QMessageBox>
 
 SignalInfoPresenter::SignalInfoPresenter(SignalData& data)
 	: data(data)
@@ -36,6 +37,7 @@ void SignalInfoPresenter::Config(const QString& signalName)
 {
 	const auto& signal = data.get(signalName);
 	configDialog.setWindowTitle(QString("Edit Signal Info - %1").arg(signalName));
+	ui.editName->setText(signal.name);
 	ui.spinRangeMin->setValue(signal.graphic.rangeLower);
 	ui.spinRangeMax->setValue(signal.graphic.rangeUpper);
 	ui.editTicks->setText(ToString(signal.graphic.ticks));
@@ -48,5 +50,16 @@ void SignalInfoPresenter::Config(const QString& signalName)
 			data.setRange(signal.name, ui.spinRangeMin->value(), ui.spinRangeMax->value());
 		data.setTicks(signalName, GetTicks(ui.editTicks->text()));
 		data.setTickLabels(signalName, GetTickLabels(ui.editTickLabels->text()));
+		try
+		{
+			if (ui.editName->text() != signalName)
+				data.rename(signalName, ui.editName->text());
+		}
+		catch (const std::exception& ex)
+		{
+			QMessageBox::critical(nullptr, tr("Anvedi"),
+				tr("The name already exists..."));
+		}
+		
 	}
 }
