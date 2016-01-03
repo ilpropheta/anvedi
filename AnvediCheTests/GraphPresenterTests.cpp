@@ -11,7 +11,8 @@ void DoGraphPresenterTest(TestCode t)
 	QCustomPlot plot;
 	SignalData data;
 	PlotInfo info;
-	GraphPresenter presenter(&plot, data, info);
+	QScrollBar rangeScrollBar;
+	GraphPresenter presenter(&plot, &rangeScrollBar, data, info);
 	t(presenter, plot, data);
 }
 
