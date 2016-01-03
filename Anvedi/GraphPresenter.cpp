@@ -251,7 +251,10 @@ void GraphPresenter::OnXRangeChanged(const QCPRange& newXRange)
 			const auto rightRemaining = domainVals.size() - data.domainLowerBound(newXRange.upper).second;
 			rangeScroll->setMaximum(leftRemaining+rightRemaining);
 			rangeScroll->setValue(leftRemaining);
-			
+		}
+		else
+		{
+			rangeScroll->setRange(0, 0);
 		}
 		rangeScroll->setVisible(showScroll);
 	}
