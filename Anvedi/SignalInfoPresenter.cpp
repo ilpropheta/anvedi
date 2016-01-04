@@ -10,11 +10,11 @@ SignalInfoPresenter::SignalInfoPresenter(SignalData& data)
 }
 
 template<typename T>
-QString ToString(const QVector<T>& vec)
+QString ToString(const QVector<T>& vec, char sep = ' ')
 {
 	QString ss;
 	for (const auto& elem : vec)
-		ss.append(QString("%1 ").arg(elem));
+		ss.append(QString("%1%2").arg(elem).arg(sep));
 	return ss;
 }
 
@@ -41,6 +41,7 @@ void SignalInfoPresenter::Config(const QString& signalName)
 	ui.spinRangeMin->setValue(signal.graphic.rangeLower);
 	ui.spinRangeMax->setValue(signal.graphic.rangeUpper);
 	ui.editTicks->setText(ToString(signal.graphic.ticks));
+	ui.editTickLabels->setText(ToString(signal.graphic.tickLabels, ','));
 
 	if (configDialog.exec() == QDialog::Accepted)
 	{
