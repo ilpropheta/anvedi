@@ -2,6 +2,8 @@
 
 A data viewer prototype made with Qt and [QCustomPlot](http://qcustomplot.com).
 
+![alt text](https://github.com/ilpropheta/anvedi/blob/master/pics/main-view.png "anvedi")
+
 ## In a nutshell
 
 anvedi is a little project I've been shaping to play with [QCustomPlot](http://qcustomplot.com), an excellent Qt library for plotting. Note it's a prototype, this means I allowed myself some design shortcuts and Ive been checking edge cases sparingly.
