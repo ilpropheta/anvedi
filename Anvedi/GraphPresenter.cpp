@@ -348,7 +348,7 @@ void GraphPresenter::rangeScrollbarValueChanged(int value)
 		const auto xRange = plot->xAxis->range();
 		auto newLowerValue = data.getDomain()->y[value];
 		const auto lowerDelta = (newLowerValue - xRange.lower);
-		if (lowerDelta==0)
+		if (fabs(lowerDelta)<10e-7)
 			return;
 		auto newUpperValue = xRange.upper + lowerDelta;
 		if (newUpperValue > data.getDomain()->y.back()) // saturate right
