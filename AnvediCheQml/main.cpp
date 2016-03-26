@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 	QmlModulesInstaller::Install();
 	QQuickView view(QUrl("../Anvedi/qml/main.qml"));
 	view.setResizeMode(QQuickView::SizeRootObjectToView);
-	view.resize(500, 500);
+	view.resize(800, 600);
 	view.show();
 	return a.exec();
 }

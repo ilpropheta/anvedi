@@ -6,7 +6,7 @@ Item {
  
             id: customPlot
             anchors.fill: parent
-			background : "gray"
+			background : "white"
 			legend : Legend {
 				font : "helvetica,-1,18,5,0,0,0,0,0,0"
 			}			
@@ -26,9 +26,6 @@ Item {
 						label : Label {
 							text : "domain"
 						}
-					}
-					yAxis : Axis {
-						useDefault : false	
 					}
 				},
 				Graph {
