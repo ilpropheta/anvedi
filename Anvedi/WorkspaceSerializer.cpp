@@ -80,8 +80,9 @@ void Read(const QString& fileName, SignalData& data, PlotInfo& plotInfo, std::fu
 	QFile in(fileName);
 	if (!in.open(QIODevice::ReadOnly | QFile::Text))
 	{
-		QMessageBox::critical(nullptr, "Anvedi", QString("Cannot open specified file -> %1").arg(fileName));
-		return;
+		auto mex = QString("Cannot open specified file -> %1").arg(fileName);
+		QMessageBox::critical(nullptr, "Anvedi", mex);
+		throw std::exception(mex.toUtf8().data());
 	}
 	const auto json = QJsonDocument::fromJson(in.readAll()).object();
 

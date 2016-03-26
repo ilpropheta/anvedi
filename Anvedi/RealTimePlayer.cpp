@@ -28,7 +28,14 @@ void RealTimePlayer::Start()
 		return;
 	}
 	
-	PrepareSender();
+	try
+	{
+		PrepareSender();
+	}
+	catch (const exception&)
+	{
+		return;
+	}
 	emit RTStarted();
 	dataTimer.start(timerInterval);	
 }

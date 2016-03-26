@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AnvediCheExe", "AnvediCheEx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AnvediCheQml", "AnvediCheQml\AnvediCheQml.vcxproj", "{5D926744-2374-4669-93AE-B54297D12D0A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloQCustomPlot", "HelloQCustomPlot\HelloQCustomPlot.vcxproj", "{0D29C39B-CB2A-4723-BF5F-01BD932D0922}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -83,6 +85,18 @@ Global
 		{5D926744-2374-4669-93AE-B54297D12D0A}.Release|Win32.Build.0 = Release|Win32
 		{5D926744-2374-4669-93AE-B54297D12D0A}.Release|x64.ActiveCfg = Release|x64
 		{5D926744-2374-4669-93AE-B54297D12D0A}.Release|x64.Build.0 = Release|x64
+		{0D29C39B-CB2A-4723-BF5F-01BD932D0922}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{0D29C39B-CB2A-4723-BF5F-01BD932D0922}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{0D29C39B-CB2A-4723-BF5F-01BD932D0922}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0D29C39B-CB2A-4723-BF5F-01BD932D0922}.Debug|Win32.Build.0 = Debug|Win32
+		{0D29C39B-CB2A-4723-BF5F-01BD932D0922}.Debug|x64.ActiveCfg = Debug|x64
+		{0D29C39B-CB2A-4723-BF5F-01BD932D0922}.Debug|x64.Build.0 = Debug|x64
+		{0D29C39B-CB2A-4723-BF5F-01BD932D0922}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{0D29C39B-CB2A-4723-BF5F-01BD932D0922}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{0D29C39B-CB2A-4723-BF5F-01BD932D0922}.Release|Win32.ActiveCfg = Release|Win32
+		{0D29C39B-CB2A-4723-BF5F-01BD932D0922}.Release|Win32.Build.0 = Release|Win32
+		{0D29C39B-CB2A-4723-BF5F-01BD932D0922}.Release|x64.ActiveCfg = Release|x64
+		{0D29C39B-CB2A-4723-BF5F-01BD932D0922}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
