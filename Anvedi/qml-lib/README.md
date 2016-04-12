@@ -90,7 +90,7 @@ graphs : [
 				...
 ```
 
-As you see I wrapped several properties to customize a graph. Obviously this porting is really incomplete, but it should be simple - and long - to implement missing things.
+As you see, I wrapped several properties to customize a graph. Obviously this porting is really incomplete, but it should be simple - and long - to implement missing things.
 
 Adding data and setting range can be done via Javascript, for example in the [OnCompleted](http://doc.qt.io/qt-5/qml-qtqml-component.html#completed-signal) signal:
 
@@ -110,9 +110,9 @@ Component.onCompleted: {
 			}
 ```
 
+![Rendering of the previous example](https://github.com/ilpropheta/anvedi/blob/master/pics/qml-example.png)
 
-
-QCustomPlot's addData function is provided also to simulate real-time behavior:
+QCustomPlot's addData function is provided also to simulate real-time behavior. For example:
 
 ```js
 Timer {
@@ -131,7 +131,8 @@ Timer {
 						xCurr += i;
 					}
 					customPlot.addData(0, newX, newY);
-					customPlot.addData(1, newX, newY);
 				}
 			}
 ```
+
+![Real-Time via QML](https://github.com/ilpropheta/anvedi/blob/master/pics/qml-real-time.gif)
