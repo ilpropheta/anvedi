@@ -10,33 +10,33 @@ Replaying some data in Real Time mode:
 
 ## In a nutshell
 
-anvedi is a little project I've been shaping to play with [QCustomPlot](http://qcustomplot.com), an excellent Qt library for plotting. Note it's a prototype, this means I allowed myself some design shortcuts and Ive been checking edge cases sparingly.
+anvedi is a little project I've shaped to play with [QCustomPlot](http://qcustomplot.com), an awesome Qt library for plotting. Note it's a prototype, this means I allowed myself some design shortcuts and I've worked on edge cases sparingly.
 
 You can use anvedi both via GUI or via scripting. I usually integrate my Qt projects with QtScript by using another project I developed in 2011: [QShell](https://github.com/ilpropheta/anvedi/tree/master/QShell).
 
-I also ported some QCustomPlot bricks to *QML*, since it's not provided by default. [This part](https://github.com/ilpropheta/anvedi/tree/master/Anvedi/qml-lib) of the repo is devoted to QML porting. More details to be added soon.
+I have also ported some QCustomPlot bricks to *QML*, since it's not provided by default. [This part](https://github.com/ilpropheta/anvedi/tree/master/Anvedi/qml-lib) of the repo is devoted to QML porting. More details to be added at some point.
 
-Last but not least, anvedi is partially (more tests to be added) tested with QTestLib. Refer to [AnvediCheTests](https://github.com/ilpropheta/anvedi/tree/master/AnvediCheTests) for test cases.
+Last but not least, anvedi is partially tested with QTestLib. Refer to [AnvediCheTests](https://github.com/ilpropheta/anvedi/tree/master/AnvediCheTests) for test cases.
 
 What anvedi does:
 
-* The main purpose of anvedi is plotting data with the same domain (e.g. time series)
+* The main purpose of anvedi is plotting data sharing a common domain (e.g. time)
 * Import/Export of the workspace data (JSON files for simplicity)
-* Import/Export of just plot - graphical - information
+* Import/Export of just plot - graphical - information (JSON files for simplicity)
 * Scripting integration
 * Per-curve customization
    * Pen color
    * Filtering and hiding
    * Ticks and labels
-   * Ranges (min/max)
+   * Ranges (auto and manual)
 * Viewer capabilities
    * Customizable background color
    * Rect zoom
    * Vertical cursor
-   * Axis auto scaling
+   * Common plot browsing (horizontal scrollbar, keyboard, etc).
 * Real Time
    * replay of workspace files
-   * really simple acquisition protocol via PIPES
+   * simple acquisition protocol via PIPES (QLocalSocket)
    * interactive Real Time generation by using the console
 
 ## Building anvedi
