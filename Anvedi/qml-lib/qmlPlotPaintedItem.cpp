@@ -134,6 +134,8 @@ void qmlPlotPaintedItem::appendGraph(QQmlListProperty<qmlGraph> *list, qmlGraph 
 			if (!qmlAx->isDefault())
 				ref = m_CustomPlot.axisRect(0)->addAxis(type);
 
+			ref->setVisible(qmlAx->isVisible());
+
 			if (auto label = qmlAx->getLabel())
 			{
 				if (!label->getText().isEmpty())
@@ -141,7 +143,10 @@ void qmlPlotPaintedItem::appendGraph(QQmlListProperty<qmlGraph> *list, qmlGraph 
 				if (label->getColor().isValid())
 					ref->setLabelColor(label->getColor());
 				if (!label->getFont().isEmpty())
-					ref->setLabelFont(label->getFont());
+				{
+					QFont axFont; axFont.fromString(label->getFont());
+					ref->setLabelFont(axFont);
+				}
 			}
 			
 			if (auto tick = qmlAx->getTick())

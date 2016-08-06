@@ -32,4 +32,14 @@ void qmlAxis::setUseDefault(bool d)
 	default = d;
 }
 
+bool qmlAxis::isVisible() const
+{
+	return visible;
+}
+
+void qmlAxis::setVisible(bool d)
+{
+	visible = d;
+}
+
 

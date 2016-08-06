@@ -39,7 +39,7 @@ private:
 	bool isPaused = false;
 	QTimer dataTimer;
 	// props
-	QString fileToReplay = R"(..\anvedi\json\physx.json)";
+	QString fileToReplay = R"(C:\Users\Marco\Source\Repos\anvedi\Anvedi\json\physx-0204.json)";
 	int timerInterval = 200;
 	RTSender sender;
 };

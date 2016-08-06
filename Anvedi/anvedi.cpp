@@ -39,6 +39,8 @@ Anvedi::Anvedi(QWidget *parent)
 		if (color.isValid())
 			m_plotInfo.setBackgroundColor(color);
 	});	
+
+	ui.actionCursorRT->trigger();
 }
 
 void Anvedi::OnExit()

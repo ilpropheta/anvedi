@@ -25,6 +25,6 @@ signals:
 	void BackgroundColorChanged(const QColor&);
 private:
 	QColor backgroundColor;
-	int realTimePageSize = 1000;
+	int realTimePageSize = 50;
 	QCustomPlot* plot;
 };

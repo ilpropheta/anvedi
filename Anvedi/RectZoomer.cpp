@@ -65,6 +65,12 @@ void RectZoomer::OnMousePress(QMouseEvent* mevent)
 
 	switch (mevent->button())
 	{
+	case Qt::LeftButton:
+		if (mevent->modifiers().testFlag(Qt::KeyboardModifier::ShiftModifier))
+		{
+			OnResetZoom();
+		}
+		break;
 	case Qt::RightButton:
 		zoomAction = GetZoomAction(mevent);
 		origin = zoomAction->OnMousePress(*plot, mevent->pos());

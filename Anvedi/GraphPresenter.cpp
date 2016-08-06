@@ -18,6 +18,8 @@ GraphPresenter::GraphPresenter(QCustomPlot* plot, QScrollBar* rangeScroll, const
 	rangeScroll->setSingleStep(1);
 	rangeScroll->setPageStep(100);
 
+	plot->setInteraction(QCP::Interaction::iRangeZoom);
+
 	// model
 	QObject::connect(&data, SIGNAL(DataAdded(const DataMap&)), this, SLOT(OnNewData(const DataMap&)));
 	QObject::connect(&data, SIGNAL(SignalRenamed(const QString&, const Signal&)), this, SLOT(OnSignalRenamed(const QString&, const Signal&)));
@@ -253,7 +255,11 @@ void GraphPresenter::OnXRangeChanged(const QCPRange& newXRange)
 			const auto leftRemaining = data.domainLowerBound(newXRange.lower).second;
 			const auto rightRemaining = domainVals.size() - data.domainLowerBound(newXRange.upper).second;
 			rangeScroll->setMaximum(leftRemaining+rightRemaining);
-			rangeScroll->setValue(leftRemaining);
+			if (newXRange.upper <= domainVals.back())
+			{
+				rangeScroll->setValue(leftRemaining);
+			}
+			rangeScroll->setPageStep(domainVals.size() - rangeScroll->maximum());
 		}
 		else
 		{
@@ -382,4 +388,5 @@ void GraphPresenter::OnSignalRenamed(const QString& oldName, const Signal& signa
 	graph->second->valueAxis()->setLabel(signal.name);
 	displayedGraphs[signal.name] = graph->second;
 	displayedGraphs.erase(graph);
+	plot->replot();
 }

@@ -93,6 +93,8 @@ struct AnvediScriptEngine : QShellEngine_Qt
 		m_engine.globalObject().setProperty("SetDomain", MakeSignalDataFunction(data, SetDomain));
 		m_engine.globalObject().setProperty("GetDomain", MakeSignalDataFunction(data, GetDomain));
 		m_engine.globalObject().setProperty("Remove", MakeSignalDataFunction(data, Remove));
+		// fill function
+		m_engine.evaluate("Array.prototype.fill = function(fn) { var O = Object(this); for(i=0; i<O.length; i++) { O[i]=fn(); } return O; }");
 	}
 
 	QScriptValue MakeSignalDataFunction(SignalData& data, QScriptValue(*fun)(QScriptContext*, QScriptEngine*))

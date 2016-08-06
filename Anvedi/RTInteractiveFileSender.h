@@ -20,6 +20,6 @@ public slots:
 private:
 	SignalData& data;
 	RTSender sender;
-	QString fileToReplay = R"(..\anvedi\json\physx.json)";
+	QString fileToReplay = R"(C:\Users\Marco\Source\Repos\anvedi\Anvedi\json\physx-0204.json)";
 };
 

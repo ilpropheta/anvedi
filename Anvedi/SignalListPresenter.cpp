@@ -236,4 +236,29 @@ void SignalListPresenter::OnSignalRenamed(const QString& oldName, const Signal& 
 {
 	auto items = signalList->findItems(oldName, Qt::MatchExactly);
 	items.at(0)->setText(signal.name);
+
+	auto colorButton = static_cast<QPushButton*>(signalList->cellWidget(items.at(0)->row(), SignalColorIdx));
+	auto removeButton = static_cast<QPushButton*>(signalList->cellWidget(items.at(0)->row(), SignalRemoveIdx));
+
+	const auto& currColor = signal.graphic.color;
+	const auto& name = signal.name;
+
+	QObject::disconnect(colorButton, &QPushButton::clicked, nullptr, nullptr);
+	QObject::disconnect(removeButton, &QPushButton::clicked, nullptr, nullptr);
+
+	QObject::connect(colorButton, &QPushButton::clicked, [&currColor, name, colorButton, this]{
+		const auto color = QColorDialog::getColor(currColor, this->signalList, QString("Change color of %1").arg(name));
+		if (color.isValid())
+		{
+			this->data.setColor(name, color);
+		}
+	});
+
+	QObject::connect(removeButton, &QPushButton::clicked, [name, this]{
+		const auto reply = QMessageBox::question(nullptr, "Anvedi", QString("Sure to remove '%1'?").arg(name), QMessageBox::Yes | QMessageBox::No);
+		if (reply == QMessageBox::Yes)
+		{
+			this->data.remove(name);
+		}
+	});
 }
